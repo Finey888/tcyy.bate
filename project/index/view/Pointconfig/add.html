@@ -1,0 +1,80 @@
+{layout name="Public/layout" /}
+<body class="childrenBody">
+	<form class="layui-form">
+                <div class="layui-form-item">
+			<label class="layui-form-label">规则标题</label>
+			<div class="layui-input-block">
+				<input type="text" class="layui-input nickname" name='title' lay-verify="required" placeholder="请输入规则标题">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">次数</label>
+			<div class="layui-input-inline">
+				<input type="text" class="layui-input name" name='travel' lay-verify="required" placeholder="请输入次数">
+			</div>
+                        <div class="layui-form-mid layui-word-aux">每日点赞多少次才加积分,0表示没有次数限制</div>
+		</div>
+                <div class="layui-form-item">
+			<label class="layui-form-label">积分</label>
+			<div class="layui-input-block">
+				<input type="text" class="layui-input phone" name='point' lay-verify="required" placeholder="请输入积分">
+			</div>
+		</div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">加/减</label>
+                    <div class="layui-input-block">
+                      <input type="radio" name="jj" value="1" title="加" checked=""><div class="layui-unselect layui-form-radio layui-form-radioed"><i class="layui-anim layui-icon layui-anim-scaleSpring"></i><span>加</span></div>
+                      <input type="radio" name="jj" value="2" title="减" ><div class="layui-unselect layui-form-radio"><i class="layui-anim layui-icon"></i><span>减</span></div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+			<label class="layui-form-label">状态</label>
+			<div class="layui-input-block">
+                                <input class="status" type="checkbox" lay-skin="switch" lay-text="启用|禁用" lay-filter="isShow" checked>
+			</div>
+		</div>
+                
+		<div class="layui-form-item">
+			<div class="layui-input-block">
+				<button class="layui-btn" lay-submit="" lay-filter="addNews">添加</button>
+				<button type="reset" class="layui-btn layui-btn-primary">重置</button>
+		    </div>
+		</div>
+	</form>
+    <script type="text/javascript">
+        layui.config({
+                base : "admin/js/"
+        }).use(['form','layer','jquery'],function(){
+                var form = layui.form(),
+                        layer = parent.layer === undefined ? layui.layer : parent.layer,
+                        $ = layui.jquery;
+              form.on('switch(isShow)', function(data){
+                        var status=1;
+                        $(this).is(":checked")?status=1:status=2;
+                        $('#status').val(status);
+                  })
+                form.on("submit(addNews)",function(data){
+                        //弹出loading
+                        var index = top.layer.msg('数据提交中，请稍候',{icon: 16,time:false,shade:0.8});
+                        $.ajax({
+                            type: "POST",
+                            url: "{:url('Pointconfig/saveData')}",
+                            data: $("form").serialize(),
+                            dataType: "json",
+                            success: function(data){
+                                top.layer.close(index);
+                                if(data.status == 1){
+                                    top.layer.msg(data.msg,{icon: 6});
+                                    layer.closeAll("iframe");
+                                    parent.location.reload();
+                                }else{
+                                    top.layer.msg(data.msg,{icon: 5,btn: ['知道了']});
+                                }
+                            }
+                        });
+                        return false;
+                })
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,127 @@
+{layout name="Public/layout" /}
+<style>
+    .selectMsg{ width:110px; margin-right: 15px; }
+
+    .msg_info,.msg_time,.msg_reply,.msg_opr{min-height:50px; text-align:center;}
+    .msg_info{text-align:left; position: relative; }
+    .msg_info>img{ position: absolute; left:10px; top:10px; cursor:pointer; }
+    .msg_info .user_info{ padding-left:55px; line-height:25px; }
+    .msg_info .user_info h2{ color:#222; cursor:pointer; }
+    .msg_info .user_info h2:hover{ color:#1AA094;}
+    .msg_info .user_info p{ color:#8d8d8d; }
+    .msg_reply{ color:#e15f63; }
+    /*回复*/
+.replay_edit{ overflow: hidden; margin-bottom:20px; }
+.replay_edit a{margin-top: 10px; width:100px; float:right;}
+</style>
+<body class="childrenBody">
+	<form class="layui-form">
+		<div class="replay_edit">
+			<textarea class="layui-textarea" id="msgReply"></textarea>
+			<a class="layui-btn send_msg">回复</a>
+		</div>
+		<table class="layui-table msg_box" lay-skin="line">
+			<colgroup>
+				<col width="50%">
+				<col width="30%">
+				<col>
+			</colgroup>
+                        <tbody class="msgReplyHtml">
+                            <tr>  
+                                <td class="msg_info">    
+                                    <img src="{$data.user_info.headurl}" width="50" height="50">    
+                                    <div class="user_info">        
+                                        <h2>{$data.user_info.nickname}</h2>        
+                                        <p>{$data.contents}</p>    
+                                    </div>  
+                                </td>  
+                                <td class="msg_time">{$data.time1}</td>  
+                                <td class="msg_reply"></td>
+                            </tr>
+                            
+                            {notempty name='data.huifu'}
+                            <tr>  
+                                <td class="msg_info">    
+                                    <h1 style="color:red">回复：</h1>      
+                                    <div class="user_info">    
+                                        <p>{$data.huifu}</p>    
+                                    </div>  
+                                </td>  
+                                <td class="msg_time">{$data.time2}</td>  
+                                <td class="msg_reply"></td>
+                            </tr>
+                            {/notempty}
+                        </tbody>
+		</table>
+	</form>
+    <div id='contents' style='display: none'>{$data.contents}</div>
+    <script>
+        var $;
+        layui.config({
+                base : "admin/js/"
+        }).use(['form','layer','layedit','laypage'],function(){
+             var form = layui.form(),
+            layer = parent.layer === undefined ? layui.layer : parent.layer,laypage = layui.laypage,
+                layedit = layui.layedit;
+                $ = layui.jquery;
+            //消息回复
+            var editIndex = layedit.build('msgReply',{
+                 tool: [],
+                 height:100
+            });
+
+
+            //提交回复
+            var message = [];
+            $(".send_msg").click(function(){
+                var loadIndex = layer.load(2);
+                if(layedit.getContent(editIndex) != ''){
+                    $.ajax({
+                        type: "POST", 
+                        url: "{:url('Sugest/reply')}",
+                        data: {
+                            huifu:layedit.getContent(editIndex),
+                            id:'{$data.id}',
+                            uid:'{$data.uid}',
+                            contents:$('#contents').html()
+                        },
+                        dataType: "json",
+                        success: function(data){
+                            if(data.status == 1){
+                             //   $('.replay_edit').hide();
+                               var replyHtml = '';
+                               replyHtml =  '<tr>'+  
+                                    '<td class="msg_info"> '+   
+                                        '<h1 style="color:red">回复：</h1>  '+    
+                                        '<div class="user_info">   '+ 
+                                           ' <p>'+layedit.getContent(editIndex)+'</p>   '+ 
+                                        '</div>  '+
+                                  '  </td>  '+
+                                    '<td class="msg_time">'+formatTime(new Date())+'</td>  '+
+                                    '<td class="msg_reply"></td>'+
+                                '</tr>'
+                                $(".msgReplyHtml").append(replyHtml);
+                                $("#LAY_layedit_1").contents().find("body").html('');
+                            }else{
+                                layer.msg(data.msg);
+                            }
+                            layer.close(loadIndex);
+                        }
+                    });
+                }else{
+                    layer.msg("请输入回复信息");
+                }
+            })
+        })
+
+        function formatTime(_time){
+            var year = _time.getFullYear();
+            var month = _time.getMonth()+1<10 ? "0"+(_time.getMonth()+1) : _time.getMonth()+1;
+            var day = _time.getDate()<10 ? "0"+_time.getDate() : _time.getDate();
+            var hour = _time.getHours()<10 ? "0"+_time.getHours() : _time.getHours();
+            var minute = _time.getMinutes()<10 ? "0"+_time.getMinutes() : _time.getMinutes();
+            return year+"-"+month+"-"+day+" "+hour+":"+minute;
+        }
+    </script>
+</body>
+</html>

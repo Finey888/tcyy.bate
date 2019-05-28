@@ -1,0 +1,120 @@
+{layout name="Public/layout" /}
+<body class="childrenBody">
+	<blockquote class="layui-elem-quote">
+            公司信息
+        </blockquote>
+        <form class="layui-form layui-form-pane" id='company' action="">
+            <input type='hidden' value='{$data.id}' name='id'/>
+            <div class="layui-form-item">
+                <label class="layui-form-label">公司名称</label>
+                <div class="layui-input-block">
+                  <input type="text" name="title" autocomplete="off" placeholder="请输入公司名称" lay-verify="required" class="layui-input" value='{$data.title}'>
+                </div>
+            </div>
+            
+            <div class="layui-form-item">
+              <label class="layui-form-label">公司LOGO</label>
+              <div class="layui-input-block">
+                    <div style='position: relative;width: 300px;'>
+                      <img id="show-img" src="{$data.logo}" style='max-width: 300px;max-height: 150px'>
+                      <div class='site-demo-upload' style=' margin-top: 10px'>
+                        <input type="file" name="logo" class="layui-upload-file" id='logo'>
+                      </div>
+                    </div>
+                    <input type='hidden' value='{$data.logo}' name='logo' id='logourl'/>
+              </div>
+            </div>
+             <div class="layui-form-item">
+                <label class="layui-form-label">网站</label>
+                <div class="layui-input-block">
+                  <input type="text" name="website" autocomplete="off" placeholder="请输入网站" lay-verify="required" class="layui-input" value='{$data.website}'>
+                </div>
+            </div>
+            
+            <div class="layui-form-item">
+                <label class="layui-form-label">电话</label>
+                <div class="layui-input-block">
+                  <input type="text" name="phone" autocomplete="off" placeholder="请输入电话" lay-verify="required" class="layui-input" value='{$data.phone}'>
+                </div>
+            </div>
+            
+            <div class="layui-form-item">
+                <label class="layui-form-label">QQ</label>
+                <div class="layui-input-block">
+                  <input type="text" name="qq" autocomplete="off" placeholder="请输入QQ" lay-verify="required" class="layui-input" value='{$data.qq}'>
+                </div>
+            </div>
+            
+            <div class="layui-form-item">
+                <label class="layui-form-label">法律顾问信息</label>
+                <div class="layui-input-block">
+                  <input type="text" name="counsel" autocomplete="off" placeholder="请输入法律顾问信息" lay-verify="required" class="layui-input" value='{$data.counsel}'>
+                </div>
+            </div>
+            
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">公司简介</label>
+                <div class="layui-input-block">
+                  <textarea placeholder="请输入公司简介" class="layui-textarea" lay-verify="required" name='info'>{$data.info}</textarea>
+                </div>
+            </div>
+            
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">公司地址</label>
+                <div class="layui-input-block">
+                  <textarea placeholder="请输入公司地址" class="layui-textarea" lay-verify="required" name='address'>{$data.address}</textarea>
+                </div>
+            </div>
+           <div class="layui-form-item">
+                            <button class="layui-btn" lay-submit="" lay-filter="addNews">保存</button>
+            </div>
+        </form>
+    <script type="text/javascript">
+        layui.config({
+                base : "admin/js/"
+        }).use(['form','layer','jquery','upload'],function(){
+                var form = layui.form(),
+                        layer = parent.layer === undefined ? layui.layer : parent.layer,
+                        $ = layui.jquery;
+                var upload; 
+                layui.upload({
+                    url: '{:url("Company/uploadImg")}'
+                    ,elem: '#logo' //指定原始元素，默认直接查找class="layui-upload-file"
+                    ,method: 'post' //上传接口的http类型
+                    ,success: function(res){
+                        if(res.status == 1){
+                            $('#show-img').attr('src',res.data);
+                            $('#logourl').val(res.data);
+                        }else{
+                            layer.msg(res.msg,{icon: 5,btn: ['知道了']});
+                        }
+                       layer.close(upload);
+                    },before:function(){
+                        upload = layer.msg('图片上传中，请稍候',{icon: 16,time:false,shade:0.8});
+                    }
+                });    
+                
+                form.on("submit(addNews)",function(data){
+                        //弹出loading
+                        var index = layer.msg('数据提交中，请稍候',{icon: 16,time:false,shade:0.8});
+                        $.ajax({
+                            type: "POST",
+                            url: "{:url('Company/saveData')}",
+                            data: $("#company").serialize(),
+                            dataType: "json",
+                            success: function(data){
+                                layer.close(index);
+                                if(data.status == 1){
+                                    layer.msg(data.msg,{icon: 6});
+                                    location.reload();
+                                }else{
+                                    layer.msg(data.msg,{icon: 5,btn: ['知道了']});
+                                }
+                            }
+                        });
+                        return false;
+                })
+        })
+    </script>
+</body>
+</html>

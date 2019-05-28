@@ -1,0 +1,114 @@
+{layout name="Public/layout" /}
+<body class="childrenBody">
+	<form class="layui-form">
+		<div class="layui-form-item">
+			<label class="layui-form-label">分组标题</label>
+			<div class="layui-input-block">
+				<input type="text" class="layui-input name" name='title' lay-verify="required" placeholder="请输入分组标题">
+			</div>
+		</div>
+                <div class="layui-form-item">
+			<label class="layui-form-label">状态</label>
+			<div class="layui-input-block">
+                                <input class="status" type="checkbox" lay-skin="switch" lay-text="启用|禁用" lay-filter="isShow" checked>
+                                <input id="status" type="hidden" name="status" value="1"/>
+			</div>
+		</div>
+            
+                <div class='rule'>
+                           
+                </div>
+                
+            
+		<div class="layui-form-item">
+			<div class="layui-input-block">
+				<button class="layui-btn" lay-submit="" lay-filter="addNews">添加</button>
+				<button type="reset" class="layui-btn layui-btn-primary">重置</button>
+		    </div>
+		</div>
+	</form>
+    <script type="text/javascript">
+        layui.config({
+                base : "admin/js/"
+        }).use(['form','layer','jquery'],function(){
+                var form = layui.form(),
+                        layer = parent.layer === undefined ? layui.layer : parent.layer,
+                        $ = layui.jquery;
+                var index = layer.load(2);
+                $.ajax({
+                        type: "POST",
+                        url: "{:url('Rule/getList')}",
+                        data: {},
+                        dataType: "json",
+                        success: function(data){
+                            if(data.status == 1){
+                                $(".rule").html(renderDate(data.data));
+                                form.render();
+                            }else{
+                                layer.msg(data.msg);
+                            }
+                            layer.close(index);
+                        }
+                    });
+                //渲染数据
+                function renderDate(data){
+                        var dataHtml = '';
+                        if(data.length != 0){
+                                var i=0;
+                                $.each(data,function(index,content){
+                                    dataHtml += '<blockquote class="layui-elem-quote title">'+content.title+' <input type="checkbox" class="isShow"  lay-filter="qx" title="全选" value="'+content.id+'"></blockquote>';
+                                    dataHtml +='<div class="layui-elem-quote layui-quote-nm">'
+                                                +'<div class="layui-input-block">';
+                                    if(content.childs.length != 0){
+                                            $.each(content.childs,function(ck,cv){
+                                                dataHtml+='<input type="checkbox" name="rules[]" class="isShow qx'+content.id+'" title="'+cv.title+'" value="'+cv.id+'">';
+                                            })
+                                        }
+                                    dataHtml +='</div>'
+                                             +'</div>';
+                                });
+                        }else{
+                                dataHtml = '<blockquote class="layui-elem-quote title">暂无数据</blockquote>';
+                        }
+                    return dataHtml;
+                }
+                form.on('switch(isShow)', function(data){
+                        var status=1;
+                        $(this).is(":checked")?status=1:status=2;
+                        $('#status').val(status);
+                  })
+                form.on("submit(addNews)",function(data){
+                        //弹出loading
+                        var index = top.layer.msg('数据提交中，请稍候',{icon: 16,time:false,shade:0.8});
+                        
+                        $.ajax({
+                            type: "POST",
+                            url: "{:url('Group/saveData')}",
+                            data: $("form").serialize(),
+                            dataType: "json",
+                            success: function(data){
+                                top.layer.close(index);
+                                if(data.status == 1){
+                                    top.layer.msg(data.msg,{icon: 6});
+                                    layer.closeAll("iframe");
+                                    parent.location.reload();
+                                }else{
+                                    top.layer.msg(data.msg,{icon: 5,btn: ['知道了']});
+                                }
+                            }
+                        });
+                        return false;
+                })
+                
+                form.on('checkbox(qx)', function(data){
+                    var id = $(data.elem).val();
+                    var child = $('.qx'+id);
+                    child.each(function(index, item){
+                            item.checked = data.elem.checked;
+                    });
+                    form.render('checkbox');
+                  });
+        })
+    </script>
+</body>
+</html>

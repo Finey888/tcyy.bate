@@ -1,0 +1,143 @@
+{layout name="Public/layout" /}
+<body class="childrenBody">
+	<form class="layui-form">
+		<div class="layui-form-item">
+			<label class="layui-form-label">商品名称</label>
+			<div class="layui-input-block">
+				<input type="text" class="layui-input name" name='title' lay-verify="required" placeholder="请输入商品名称">
+			</div>
+		</div>
+                <div class="layui-form-item">
+                  <label class="layui-form-label">图片</label>
+                  <div class="layui-input-block">
+                        <div style='position: relative;width: 200px;'>
+                          <img id="show-img" src="" style='max-width: 200px;max-height: 200px;'>
+                          <div class='site-demo-upload' style=' margin-top: 10px'>
+                            <input type="file" name="image" class="layui-upload-file" id='logo'>
+                          </div>
+                        </div>
+                        <input type='hidden' value='' name='image' id='logourl' lay-verify="required" />
+                  </div>
+                </div>
+                <div class="layui-form-item">
+			<label class="layui-form-label">积分</label>
+			<div class="layui-input-block">
+                            <input type="text" class="layui-input point" name='point' value="0" lay-verify="required" placeholder="请输入积分">
+			</div>
+		</div>
+                <div class="layui-form-item">
+			<label class="layui-form-label">价值（RMB）</label>
+			<div class="layui-input-block">
+                            <input type="text" class="layui-input price" name='price' value="0" lay-verify="required" placeholder="请输入价值">
+			</div>
+		</div>
+                <div class="layui-form-item">
+			<label class="layui-form-label">总数量</label>
+			<div class="layui-input-block">
+                            <input type="text" class="layui-input name" name='number' value="0" lay-verify="required" placeholder="请输入总数量">
+			</div>
+		</div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                      <label class="layui-form-label">活动时间</label>
+                      <div class="layui-input-inline" style="width: 200px;">
+                        <input type="text" name="starttime" id="date" lay-verify="date" placeholder="yyyy-mm-dd" autocomplete="off" class="layui-input" onclick="layui.laydate({elem: this})">
+                      </div>
+                      <div class="layui-form-mid">-</div>
+                      <div class="layui-input-inline" style="width: 200px;">
+                        <input type="text" name="endtime" id="date" lay-verify="date" placeholder="yyyy-mm-dd" autocomplete="off" class="layui-input" onclick="layui.laydate({elem: this})">
+                      </div>
+                    </div>
+                  </div>
+                <div class="layui-form-item">
+			<label class="layui-form-label">商品介绍</label>
+			<div class="layui-input-block">
+                                <script id ="contents" name="contents" type="text/plain" style="width:800px;height:500px;"></script>
+			</div>
+		</div>
+                
+                <div class="layui-form-item">
+			<label class="layui-form-label">排序</label>
+			<div class="layui-input-block">
+                            <input type="text" class="layui-input name" name='sort' value="0" placeholder="请输入排序">
+			</div>
+		</div>
+                <div class="layui-form-item">
+			<label class="layui-form-label">状态</label>
+			<div class="layui-input-block">
+                                <input class="status" type="checkbox" lay-skin="switch" lay-text="启用|禁用" lay-filter="isShow" checked>
+                                <input id="status" type="hidden" name="status" value="1"/>
+			</div>
+		</div>
+            
+		<div class="layui-form-item">
+			<div class="layui-input-block">
+				<button class="layui-btn" lay-submit="" lay-filter="addNews">添加</button>
+				<button type="reset" class="layui-btn layui-btn-primary">重置</button>
+		    </div>
+		</div>
+	</form>
+    
+    <script type="text/javascript" src="/ueditor/ueditor.config.js"></script>  
+    <script type="text/javascript" src="/ueditor/ueditor.all.min.js"></script> 
+    <script type="text/javascript">
+        layui.config({
+                base : "admin/js/"
+        }).use(['form','layer','jquery','upload','laydate'],function(){
+                var form = layui.form(),
+                        layer = parent.layer === undefined ? layui.layer : parent.layer,laydate = layui.laydate
+                        $ = layui.jquery;
+                        
+                        //富文本编辑器实例化   								
+                         var ue = UE.getEditor('contents');
+                         //var content = UE.getEditor('content').getContent();
+                         
+               var upload; 
+                layui.upload({
+                    url: '{:url("Pointshop/uploadImg")}'
+                    ,elem: '#logo' //指定原始元素，默认直接查找class="layui-upload-file"
+                    ,method: 'post' //上传接口的http类型
+                    ,success: function(res){
+                        if(res.status == 1){
+                            $('#show-img').attr('src',res.data);
+                            $('#logourl').val(res.data);
+                        }else{
+                            layer.msg(res.msg,{icon: 5,btn: ['知道了']});
+                        }
+                       layer.close(upload);
+                    },before:function(as){
+                        upload = layer.msg('图片上传中，请稍候',{icon: 16,time:false,shade:0.8});
+                    }
+                }); 
+                
+                form.on('switch(isShow)', function(data){
+                        var status=1;
+                        $(this).is(":checked")?status=1:status=2;
+                        $('#status').val(status);
+                  })
+                  
+                form.on("submit(addNews)",function(data){
+                        //弹出loading
+                        var index = top.layer.msg('数据提交中，请稍候',{icon: 16,time:false,shade:0.8});
+                        $.ajax({
+                            type: "POST",
+                            url: "{:url('Pointshop/saveData')}",
+                            data: $("form").serialize(),
+                            dataType: "json",
+                            success: function(data){
+                                top.layer.close(index);
+                                if(data.status == 1){
+                                    top.layer.msg(data.msg,{icon: 6});
+                                    layer.closeAll("iframe");
+                                    parent.location.reload();
+                                }else{
+                                    top.layer.msg(data.msg,{icon: 5,btn: ['知道了']});
+                                }
+                            }
+                        });
+                        return false;
+                })
+        })
+    </script>
+</body>
+</html>

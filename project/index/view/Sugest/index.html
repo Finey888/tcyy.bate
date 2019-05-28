@@ -1,0 +1,170 @@
+{layout name="Public/layout" /}
+<style>
+    .selectMsg{ width:110px; margin-right: 15px; }
+
+    .msg_info,.msg_time,.msg_reply,.msg_opr{min-height:50px; text-align:center;}
+    .msg_info{text-align:left; position: relative; }
+    .msg_info>img{ position: absolute; left:10px; top:10px; cursor:pointer; }
+    .msg_info .user_info{ padding-left:55px; line-height:25px; }
+    .msg_info .user_info h2{ color:#222; cursor:pointer; }
+    .msg_info .user_info h2:hover{ color:#1AA094;}
+    .msg_info .user_info p{ color:#8d8d8d; }
+    .msg_reply{ color:#e15f63; }
+</style>
+<body class="childrenBody">
+		<blockquote class="layui-elem-quote news_search">
+                    <form id="searchForm" action="{:url('Sugest/index')}" method="get">
+                        <div class="layui-inline layui-form">
+                            <select lay-filter="browseLook" id="type" name='type'>
+                                <option value="0" {eq name=":input('param.type')" value='0'}selected = "selected"{/eq}>状态</option>
+                                <option value="1" {eq name=":input('param.type')" value='1'}selected = "selected"{/eq}>未回复</option>
+                                <option value="2" {eq name=":input('param.type')" value='2'}selected = "selected"{/eq}>已回复</option>
+                            </select>
+                        </div>
+                        
+                        <div class="layui-inline">
+                            <a class="layui-btn search_btn" href="javascript:;" id="search">查询</a>
+                        </div>
+                        
+                        <div class="layui-inline">
+                                <div class="layui-form-mid layui-word-aux">本页所有数据均为静态，刷新后所有操作无效</div>
+                        </div>
+                    </form>
+                   
+		</blockquote>
+		<table class="layui-table msg_box" lay-skin="line">
+			<colgroup>
+				<col width="45%">
+				<col width="25%">
+				<col width="15%">
+				<col>
+			</colgroup>
+			<tbody class="msgHtml"></tbody>
+		</table>
+                <div id="page"></div>
+    <script>
+        var $;
+        layui.config({
+                base : "admin/js/"
+        }).use(['form','layer','layedit','laypage'],function(){
+            var form = layui.form(),
+                layer = parent.layer === undefined ? layui.layer : parent.layer,laypage = layui.laypage,
+                layedit = layui.layedit;
+                $ = layui.jquery;
+                var dataUrl="{:url('Sugest/getList')}";
+                var nums=10;
+                var countPage=parseInt('{$count}');
+                var newsData='';
+                
+                $('#search').click(function(){
+                    $('#searchForm').submit();
+                })
+                //加载页面数据
+                newsList();
+            //消息回复
+                var editIndex = layedit.build('msgReply',{
+                     tool: ['face'],
+                     height:100
+                });
+                //回复
+            $("body").on("click",".reply_msg,.msgHtml .user_info h2,.msgHtml .msg_info>img",function(){
+                var id = $(this).parents("tr").find("input[type=hidden]").val();
+                var userName = $(this).parents("tr").find(".user_info h2").text();
+                var index = layui.layer.open({
+                    title : userName+" 的意见",
+                    type : 2,
+                    content : "{:url('Sugest/details')}?id="+id,
+                    success : function(layero, index){
+                        setTimeout(function(){
+                            layui.layer.tips('点击此处返回消息列表', '.layui-layer-setwin .layui-layer-close', {
+                                tips: 3
+                            });
+                        },500)
+                    }
+                })
+                //改变窗口大小时，重置弹窗的高度，防止超出可视区域（如F12调出debug的操作）
+                $(window).resize(function(){
+                    layui.layer.full(index);
+                })
+                layui.layer.full(index);
+            })
+            
+function newsList(that){
+        //渲染数据
+        function renderDate(data){
+            var dataHtml = '';
+            if(data.length != 0){
+                $.each(data,function(index,content){
+                        var msgReply = '';
+                        if(content.huifu && content.huifu.length != 0){
+                                msgReply = content.time2+" 回复";
+                            }else{
+                                msgReply = "";
+                            }
+                            
+                            dataHtml += '<tr>';
+                            dataHtml += '  <td class="msg_info">';
+                            dataHtml += '    <img src="'+content.user_info.headurl+'" width="50" height="50"><input type="hidden" value="'+content.id+'">';
+                            dataHtml += '    <div class="user_info">';
+                            dataHtml += '        <h2>'+content.user_info.nickname+'</h2>';
+                            dataHtml += '        <p>'+content.contents+'</p>';
+                            dataHtml += '    </div>';
+                            dataHtml += '  </td>';
+                            dataHtml += '  <td class="msg_time">'+content.time1+'</td>';
+                            dataHtml += '  <td class="msg_reply">'+msgReply+'</td>';
+                            dataHtml += '  <td class="msg_opr">';
+                            dataHtml += '    <a class="layui-btn layui-btn-mini reply_msg"><i class="layui-icon">&#xe611;</i> 回复</a>';
+                            dataHtml += '  </td>';
+                            dataHtml += '</tr>';
+                });
+
+            }else{
+                dataHtml = '<tr><td colspan="6">暂无数据</td></tr>';
+            }
+            return dataHtml;
+        }
+
+        if(that){
+            newsData = that;
+        }
+
+        //获取数据
+        function page(){
+            laypage({
+                cont : "page",
+                pages : Math.ceil(countPage/nums),
+                skip:true,
+                jump : function(obj){
+                    var loadIndex = layer.load(2);
+                    $.ajax({
+                        type: "GET", 
+                        url: dataUrl,
+                        data: {
+                            page:obj.curr,
+                            count:nums,
+                            type:$('#type').val(),
+                        },
+                        dataType: "json",
+                        success: function(data){
+                            if(data.status == 1){
+                                //正常加载信息
+                                countPage = data.pagecount;
+                                newsData = data.data;
+                                $(".msgHtml").html(renderDate(newsData));
+                                form.render();
+                            }else{
+                                layer.msg(data.msg);
+                            }
+                            layer.close(loadIndex);
+                        }
+                    });
+                }
+            })
+        }
+        page();
+    }
+        })
+
+    </script>
+</body>
+</html>

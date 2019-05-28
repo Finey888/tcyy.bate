@@ -1,0 +1,126 @@
+{layout name="Public/layout" /}
+<body class="childrenBody">
+	<form class="layui-form">
+                <input type='hidden' name='id' value='{$data.id}'/>
+		<div class="layui-form-item">
+			<label class="layui-form-label">标题</label>
+			<div class="layui-input-block">
+				<input type="text" class="layui-input name" name='title' lay-verify="required" placeholder="请输入分组标题" value='{$data.title}'>
+			</div>
+		</div>
+                <div class="layui-form-item">
+                  <label class="layui-form-label">图片</label>
+                  <div class="layui-input-block">
+                        <div style='position: relative;width: 200px;'>
+                          <img id="show-img" src="{$data.image}" style='max-width: 200px;max-height: 200px;'>
+                          <div class='site-demo-upload' style=' margin-top: 10px'>
+                            <input type="file" name="image" class="layui-upload-file" id='logo'>
+                          </div>
+                        </div>
+                        <input type='hidden' value='{$data.image}' name='image' id='logourl' lay-verify="required" />
+                  </div>
+                </div>
+                <div class="layui-form-item">
+			<label class="layui-form-label">排序</label>
+			<div class="layui-input-block">
+                            <input type="text" class="layui-input name" name='sort' value="{$data.sort}" placeholder="请输入排序">
+			</div>
+		</div>
+                
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">简介</label>
+                    <div class="layui-input-block">
+                      <textarea placeholder="请输入品牌简介" class="layui-textarea" lay-verify="required" name='info'>{$data.info}</textarea>
+                    </div>
+                </div>
+                
+                <div class="layui-form-item">
+			<label class="layui-form-label">所属扩展</label>
+			<div class="layui-input-block">
+                            {volist name='ExtendGroup' id='dt'}
+                            <input type="checkbox" class="isShow"  lay-filter="lx" name="type[]" title="{$dt.title}" {in name="dt.id" value="$data['type']"}checked{/in} value="{$dt.id}">
+                            {/volist}
+                           
+			</div>
+		</div>
+            
+                <div class="layui-form-item">
+			<label class="layui-form-label">品牌分类</label>
+			<div class="layui-input-block">
+                            {volist name='class' id='dt'}
+                                <input type="checkbox" class="isShow"  lay-filter="fl" name="class[]" title="{$dt.title}" {in name="dt.id" value="$data['class']"}checked{/in} value="{$dt.id}">
+                            {/volist}
+			</div>
+		</div>
+                <div class="layui-form-item">
+			<label class="layui-form-label">状态</label>
+			<div class="layui-input-block">
+                                <input class="status" type="checkbox" lay-skin="switch" lay-text="启用|禁用" lay-filter="isShow" {eq name='data.status' value='1'}checked{/eq}>
+                                <input id="status" type="hidden" name="status" value="1"/>
+			</div>
+		</div>
+            
+		<div class="layui-form-item">
+			<div class="layui-input-block">
+				<button class="layui-btn" lay-submit="" lay-filter="addNews">保存</button>
+				<button type="reset" class="layui-btn layui-btn-primary">重置</button>
+		    </div>
+		</div>
+	</form>
+    <script type="text/javascript">
+        layui.config({
+                base : "admin/js/"
+        }).use(['form','layer','jquery','upload'],function(){
+                var form = layui.form(),
+                        layer = parent.layer === undefined ? layui.layer : parent.layer,
+                        $ = layui.jquery;
+               
+               var upload; 
+                layui.upload({
+                    url: '{:url("Brand/uploadImg")}'
+                    ,elem: '#logo' //指定原始元素，默认直接查找class="layui-upload-file"
+                    ,method: 'post' //上传接口的http类型
+                    ,success: function(res){
+                        if(res.status == 1){
+                            $('#show-img').attr('src',res.data);
+                            $('#logourl').val(res.data);
+                        }else{
+                            layer.msg(res.msg,{icon: 5,btn: ['知道了']});
+                        }
+                       layer.close(upload);
+                    },before:function(as){
+                        upload = layer.msg('图片上传中，请稍候',{icon: 16,time:false,shade:0.8});
+                    }
+                }); 
+                
+                form.on('switch(isShow)', function(data){
+                        var status=1;
+                        $(this).is(":checked")?status=1:status=2;
+                        $('#status').val(status);
+                  })
+                  
+                form.on("submit(addNews)",function(data){
+                        //弹出loading
+                        var index = top.layer.msg('数据提交中，请稍候',{icon: 16,time:false,shade:0.8});
+                        $.ajax({
+                            type: "POST",
+                            url: "{:url('Brand/saveData')}",
+                            data: $("form").serialize(),
+                            dataType: "json",
+                            success: function(data){
+                                top.layer.close(index);
+                                if(data.status == 1){
+                                    top.layer.msg(data.msg,{icon: 6});
+                                    layer.closeAll("iframe");
+                                    parent.location.reload();
+                                }else{
+                                    top.layer.msg(data.msg,{icon: 5,btn: ['知道了']});
+                                }
+                            }
+                        });
+                        return false;
+                })
+        })
+    </script>
+</body>
+</html>

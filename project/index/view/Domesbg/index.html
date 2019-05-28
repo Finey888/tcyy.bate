@@ -1,0 +1,168 @@
+{layout name="Public/layout" /}
+<style>
+    .layui-flow-more{ clear: both; margin-top: 20px; }
+    #Images li{ width:15%; margin:0.5% 0.5%; float: left; overflow:hidden;     height: 200px;position: relative;}
+    #Images li img{ max-width: 100% }
+    #Images li .operate{ display: block; height: 52px; width:100%; background:#f4f5f9; position: absolute;bottom: 0;}
+    #Images li .operate .check{ float:left; margin-left:11px; height:18px; padding:11px 0; width: 70%}
+     #Images li .operate .check label{height: 20px;overflow: hidden;display: block;}
+    #Images li .operate .img_del{ float:right; margin:7px 11px 0 0; font-size: 22px; cursor:pointer; }
+    #Images li .operate .img_del:hover{ color:#f00; }
+    #Images li .operate .img_edit{ float:right; margin:7px 1px 0 0; font-size: 22px; cursor:pointer; }
+    #Images li .operate .img_edit:hover{ color:#004cff; }
+    
+
+    /*适配*/
+    @media screen and (max-width:1050px){
+            /*用户信息*/
+            #Images li{ width:24%;}
+    }
+    @media screen and (max-width: 750px){
+            /*用户信息*/
+            #Images li{ width:49%;}
+    }
+    @media screen and (max-width:432px){
+            /*用户信息*/
+            #Images li{ width:99%;}
+    }
+</style>
+<body class="childrenBody">
+		<blockquote class="layui-elem-quote news_search">
+                    
+                    <form class="layui-form" id="searchForm" action="{:url('Domesbg/index')}" method="get">
+                        <div class="layui-inline">
+                        <a href="{:url('Domes/index')}" class="layui-btn">返回</a>
+                </div>
+                    <div class="layui-inline layui-form">
+                                <select lay-filter="browseLook" id="status" name='status'>
+                                    <option value="0" {eq name=":input('param.status')" value='0'}selected = "selected"{/eq}>状态</option>
+                                    <option value="1" {eq name=":input('param.status')" value='1'}selected = "selected"{/eq}>启用</option>
+                                    <option value="2" {eq name=":input('param.status')" value='2'}selected = "selected"{/eq}>禁用</option>                                
+                                </select>
+                    </div>
+                    <div class="layui-inline">
+                        <a class="layui-btn search_btn" href="javascript:;" id="search">查询 </a>
+                    </div>
+                        <div class="layui-inline">
+                                <a class="layui-btn layui-btn-normal newsAdd_btn">添加图片</a>
+                        </div>
+                        
+			<div class="layui-inline">
+				<div class="layui-form-mid layui-word-aux">　本页所有数据均为静态，刷新后所有操作无效</div>
+			</div>
+                    </form>
+		</blockquote>
+            
+    <ul id="Images" class="site-doc-img">
+        {volist name='data' id='dt'}
+            <li>
+                <img class="img_list" src="{$dt.image}">
+                <div class="operate">
+                    <div class="check">
+                        <label name="belle" lay-filter="choose" lay-skin="primary" >
+                           {$dt.title}
+                        </label>
+                    </div>
+                    <i class="layui-icon img_edit" data-id="{$dt.id}">&#xe642;</i>
+                    <i class="layui-icon img_del" data-id="{$dt.id}" data-title="{$dt.title}">&#xe640;</i>
+                </div>
+            </li>
+        {/volist}
+    </ul>
+                <hr/>
+                <div id="page"></div>
+	
+        <script type="text/javascript">
+            layui.config({
+                    base : "admin/js/"
+            }).use(['form','layer','jquery','laypage'],function(){
+                    var form = layui.form(),
+                    layer = parent.layer === undefined ? layui.layer : parent.layer,
+                    $ = layui.jquery;
+                    
+                //删除单张图片
+                $("body").on("click",".img_del",function(){
+                    var _this = $(this);
+                    var id = $(this).attr('data-id');
+                    var title = $(this).attr('data-title');
+                    layer.confirm('确定删除图片"'+title+'"吗？',{icon:3, title:'提示信息'},function(index){
+                        $.ajax({
+                                type: "POST",
+                                url: '{:url("Domesbg/del")}',
+                                data: {id:id},
+                                dataType: "json",
+                                success: function(data){
+                                    if(data.status == 1){
+                                        layer.close(index);
+                                        _this.parents("li").hide(1000);
+                                        setTimeout(function(){_this.parents("li").remove();},950);
+                                        layer.msg(data.msg, {icon: 6});
+                                    }else{
+                                        layer.close(index);
+                                        layer.msg(data.msg, {
+                                            icon: 5
+                                            ,btn: ['知道了']
+                                          });
+                                    }
+                                }
+                            });
+                    });
+                })
+
+                
+                //改变窗口大小时，重置弹窗的高度，防止超出可视区域（如F12调出debug的操作）
+                    $(window).one("resize",function(){
+                         $("body").on("click",".img_list",function(){
+                              var src = $(this).attr('src');
+                                var img = new Image();
+                                img.src =src ;
+                                var w = img.width;
+                                var h = img.height;
+                                layer.open({
+                                        type: 1,
+                                        title: false,
+                                        closeBtn: 1,
+                                        area: w+'px',
+                                        skin: 'layui-layer-nobg', //没有背景色
+                                        shadeClose: true,
+                                        content: '<div id="tong" class="hide layui-layer-wrap" style="display: block;text-align: center;">'+
+                                                    '<img src="'+src+'">'+
+                                                '</div>'
+                                      });
+                            })
+                            
+                            $(".newsAdd_btn").click(function(){
+                                    var add = layui.layer.open({
+                                            title : "添加图片",
+                                            type : 2,
+                                            maxmin :true,
+                                            area:  ['800px', '600px'],
+                                            content : "{:url('Domesbg/add')}",
+                                            success : function(layero, index){
+                                                  
+                                            }
+                                    })			
+                            })
+                            $("body").on("click",".img_edit",function(){  //编辑
+                                    var id = $(this).attr('data-id');
+                                    var edit = layui.layer.open({
+                                            title : "修改图片",
+                                            type : 2,
+                                            maxmin :true,
+                                            area:  ['800px', '600px'],
+                                            content : "{:url('Domesbg/edit')}?id="+id,
+                                            success : function(layero, index){
+                                                 
+                                            }
+                                    })			
+                            })
+                        
+                    }).resize();
+                    
+                    $('#search').click(function(){
+                        $('#searchForm').submit();
+                    })
+            })
+        </script>
+</body>
+</html>

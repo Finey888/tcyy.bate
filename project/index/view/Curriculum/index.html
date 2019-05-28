@@ -1,0 +1,274 @@
+{layout name="Public/layout" /}
+<body class="childrenBody">
+	<blockquote class="layui-elem-quote news_search">
+            <form id="searchForm" action="{:url('Curriculum/index')}" method="get">
+                <div class="layui-inline layui-form">
+                            <select lay-filter="browseLook" id="status" name='status'>
+                                <option value="0" {eq name=":input('param.status')" value='0'}selected = "selected"{/eq}>状态</option>
+                                <option value="1" {eq name=":input('param.status')" value='1'}selected = "selected"{/eq}>启用</option>
+                                <option value="2" {eq name=":input('param.status')" value='2'}selected = "selected"{/eq}>禁用</option>                                
+                            </select>
+                </div>
+                <div class="layui-inline layui-form">
+                            <select lay-filter="browseLook" id="type" name='type'>
+                                <option value="0" {eq name=":input('param.type')" value='0'}selected = "selected"{/eq}>收费类型</option>
+                                <option value="1" {eq name=":input('param.type')" value='1'}selected = "selected"{/eq}>免费</option>
+                                <option value="2" {eq name=":input('param.type')" value='2'}selected = "selected"{/eq}>限会员</option>                                
+                                <option value="3" {eq name=":input('param.type')" value='3'}selected = "selected"{/eq}>付款买断</option>
+                            </select>
+                </div>
+                <div class="layui-inline layui-form">
+                            <select lay-filter="browseLook" id="group_id" name='group_id'>
+                                <option value="0" {eq name=":input('param.group_id')" value='0'}selected = "selected"{/eq}>选择分类</option>
+                                {volist name='group' id='gdt'}
+                                <option value="{$gdt.id}" {eq name=":input('param.group_id')" value='$gdt["id"]'}selected = "selected"{/eq}>{$gdt.title}</option>
+                                {/volist}                             
+                            </select>
+                </div>
+                <div class="layui-inline">
+		    <div class="layui-input-inline">
+		    	<input type="text" id="keyword" name='keyword' placeholder="请输入课程名称" class="layui-input search_input" value="{:input('param.keyword')}">
+		    </div>
+                    <a class="layui-btn search_btn" href="javascript:;" id="search">查询 </a>
+		</div>
+		<div class="layui-inline">
+                    <a class="layui-btn layui-btn-normal newsAdd_btn">添加课堂</a>
+		</div>
+		<div class="layui-inline">
+			<div class="layui-form-mid layui-word-aux">本页面刷新后除新添加的外所有操作无效，关闭页面所有数据重置</div>
+		</div>
+            </form>
+	</blockquote>
+	<div class="layui-form news_list">
+	  	<table class="layui-table">
+		    <colgroup>
+				<col width="50">
+				<col width="10%">
+                                <col width="10%">
+                                <col width="9%">
+				<col width="9%">
+                                <col width="9%">
+                                <col width="9%">
+                                <col width="9%">
+                                <col width="9%">
+				<col>
+		    </colgroup>
+		    <thead>
+				<tr>
+					<th>#</th>
+					<th>课程</th>
+                                        <th>讲师</th>
+                                        <th>分类</th>
+					<th>价钱</th>
+                                        <th>上课人数</th>
+                                        <th>时间</th>
+                                        <th>排序</th>
+                                        <th>状态</th>
+					<th>操作</th>
+				</tr> 
+		    </thead>
+		    <tbody class="news_content"></tbody>
+		</table>
+	</div>
+	<div id="page"></div>
+        <script type="text/javascript">
+            var dataUrl="{:url('Curriculum/getList')}";
+            layui.config({
+                    base : "admin/js/"
+            }).use(['form','layer','jquery','laypage'],function(){
+                    var form = layui.form(),
+                            layer = parent.layer === undefined ? layui.layer : parent.layer,
+                            laypage = layui.laypage,
+                            $ = layui.jquery;
+                    var nums = 10; //每页出现的数据量
+                    var countPage = parseInt("{$countPage}");//总页数 
+                    var newsData = '';
+                    //加载页面数据
+                    newsList();
+                    //添加文章
+                    //改变窗口大小时，重置弹窗的高度，防止超出可视区域（如F12调出debug的操作）
+                    $(window).one("resize",function(){
+                            $(".newsAdd_btn").click(function(){
+                                    var add = layui.layer.open({
+                                            title : "添加账号",
+                                            type : 2,
+                                            maxmin :true,
+                                            area:  ['800px', '600px'],
+                                            content : "{:url('Curriculum/add')}",
+                                            success : function(layero, index){
+                                                   setTimeout(function(){
+                                                            layui.layer.tips('点击此处返回列表', '.layui-layer-setwin .layui-layer-close', {
+                                                                    tips: 3
+                                                            });
+                                                    },500)
+                                            }
+                                    })
+                                    layui.layer.full(add);
+                            })
+                            $("body").on("click",".news_edit",function(){  //编辑
+                                    var id = $(this).attr('data-id');
+                                    var edit = layui.layer.open({
+                                            title : "修改账号",
+                                            type : 2,
+                                            maxmin :true,
+                                            area:  ['800px', '600px'],
+                                            content : "{:url('Curriculum/edit')}?id="+id,
+                                            success : function(layero, index){
+                                                setTimeout(function(){
+                                                            layui.layer.tips('点击此处返回列表', '.layui-layer-setwin .layui-layer-close', {
+                                                                    tips: 3
+                                                            });
+                                                    },500)
+                                            }
+                                    })
+                                    layui.layer.full(edit);
+                            })
+                            $("body").on("click",".subjects",function(){  //编辑
+                                    var id = $(this).attr('data-id');
+                                    window.parent.addTab($(this));
+                            })
+                            
+                    }).resize();
+                    
+                    //删除
+                    $("body").on("click",".news_del",function(){  //删除
+                            var id = $(this).attr('data-id');
+                            var _this = $(this);
+                            layer.confirm('确定删除此信息？',{icon:3, title:'提示信息'},function(index){
+                                   $.ajax({
+                                        type: "POST",
+                                        url: "{:url('Curriculum/del')}",
+                                        data: {id:id},
+                                        dataType: "json",
+                                        success: function(data){
+                                                    if(data.status == 1){
+                                                        _this.parents("tr").remove();
+                                                        layer.close(index);
+                                                        layer.msg(data.msg, {icon: 6});
+                                                    }else{
+                                                        layer.close(index);
+                                                        layer.msg(data.msg, {
+                                                            icon: 5
+                                                            ,btn: ['知道了']
+                                                          });
+                                                    }
+                                                 }
+                                    });
+                                    
+                            });
+                    })
+        
+                    //是否禁用
+                    form.on('switch(isShow)', function(data){
+                            var index = layer.msg('修改中，请稍候',{icon: 16,time:false,shade:0.8});
+                            var id = $(this).attr('data-id');
+                            var status=1;
+                            $(this).is(":checked")?status=1:status=2;
+                            $.ajax({
+                                type: "GET",
+                                url: '{:url("Curriculum/editStatus")}',
+                                data: {id:id,status:status},
+                                dataType: "json",
+                                success: function(data){
+                                    if(data.status == 1){
+                                        layer.close(index);
+                                        layer.msg('修改成功', {icon: 6});
+                                    }else{
+                                        layer.close(index);
+                                        layer.msg(data.msg, {
+                                            icon: 5
+                                            ,btn: ['知道了']
+                                          });
+                                    }
+                                }
+                            });
+                    })
+                    
+                    function newsList(that){
+                            //渲染数据
+                            function renderDate(data){
+                                    var dataHtml = '';
+                                    if(data.length != 0){
+                                            var i=0;
+                                            $.each(data,function(index,content){
+                                                var pstatus='';
+                                                if(content.status == 1){
+                                                    var pstatus='checked';
+                                                }
+                                                var typestr = '';
+                                                if(content.type == 1){
+                                                    var typestr='免费';
+                                                }else if(content.type == 2){
+                                                    var typestr='限会员';
+                                                }else{
+                                                    var typestr=content.price;
+                                                }
+                                                
+                                                i+=1;
+                                                dataHtml += '<tr>'
+                                                            +'<td>'+i+'</td>'
+                                                            +'<td>'+content.title+'</td>'
+                                                            +'<td>'+content.user_info.nickname+'</td>'
+                                                            +'<td>'+content.group.title+'</td>'
+                                                            +'<td>'+typestr+'</td>'
+                                                            +'<td>'+content.num+'</td>'
+                                                            +'<td>'+content.creattime+'</td>'
+                                                            +'<td>'+content.sort+'</td>'
+                                                            +'<td><input type="checkbox" name="show" lay-skin="switch" lay-text="启用|禁用" lay-filter="isShow"'+pstatus+' data-id="'+content.id+'"></td>'
+                                                            +'<td>'
+                                                            +  '<a class="layui-btn layui-btn-mini  layui-btn-normal subjects" href="javascript:;" data-url="{:url("Curriculum/subjects")}?cid='+content.id+'" data-id="'+content.id+'"><i class="layui-icon">&#xe615;</i><cite style="display: none;">【课】'+content.title+'</cite> 查看课程</a>'
+                                                            +  '<a class="layui-btn layui-btn-mini news_edit" data-id="'+content.id+'"><i class="iconfont icon-edit"></i> 编辑</a>'
+                                                            +  '<a class="layui-btn layui-btn-danger layui-btn-mini news_del" data-id="'+content.id+'"><i class="layui-icon">&#xe640;</i> 删除</a>'
+                                                            +'</td>'
+                                                            +'</tr>';
+                                            });
+                           
+                                    }else{
+                                            dataHtml = '<tr><td colspan="7">暂无数据</td></tr>';
+                                    }
+                                return dataHtml;
+                            }
+                            
+                            if(that){
+                                newsData = that;
+                            }
+                            
+                            page();
+                            function page(){
+                                laypage({
+                                        cont : "page",
+                                        pages : Math.ceil(countPage/nums),
+                                        skip:true,
+                                        jump : function(obj){
+                                                var loadIndex = layer.load(2);
+                                                $.ajax({
+                                                    type: "GET",
+                                                    url: dataUrl,
+                                                    data: {page:obj.curr,count:nums,status:$('#status').val(),keyword:$('#keyword').val(),group_id:$('#group_id').val(),type:$('#type').val()},
+                                                    dataType: "json",
+                                                    success: function(data){
+                                                                if(data.status == 1){
+                                                                    //正常加载信息
+                                                                    countPage = data.pagecount;
+                                                                    newsData = data.data;
+                                                                    $(".news_content").html(renderDate(newsData));
+                                                                    form.render();
+                                                                }else{
+                                                                    layer.msg(data.msg);
+                                                                }
+                                                                layer.close(loadIndex);
+                                                             }
+                                                });
+                                        }
+                                })
+                            }
+                    }
+                    
+                    
+                    $('#search').click(function(){
+                        $('#searchForm').submit();
+                    })
+            })
+        </script>
+</body>
+</html>

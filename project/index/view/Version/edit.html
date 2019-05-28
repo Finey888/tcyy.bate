@@ -1,0 +1,92 @@
+{layout name="Public/layout" /}
+<body class="childrenBody">
+	<form class="layui-form">
+                <input type="hidden" name="id" value="{$data.id}"/>
+                <div class="layui-form-item">
+			<label class="layui-form-label">用户名</label>
+			<div class="layui-input-block">
+                            <input type="text" class="layui-input name" readonly="" value='{$data.username}'>
+			</div>
+		</div>
+                <div class="layui-form-item">
+			<label class="layui-form-label">昵称</label>
+			<div class="layui-input-block">
+				<input type="text" class="layui-input nickname" name='nickname' lay-verify="required" placeholder="请输入昵称" value='{$data.nickname}'>
+			</div>
+		</div>
+		
+                <div class="layui-form-item">
+			<label class="layui-form-label">电话</label>
+			<div class="layui-input-block">
+				<input type="text" class="layui-input phone" name='phone' placeholder="请输入电话" value='{$data.phone}'>
+			</div>
+		</div>
+                <div class="layui-form-item">
+			<label class="layui-form-label">状态</label>
+			<div class="layui-input-block">
+                                <input class="status" type="checkbox" lay-skin="switch" lay-text="启用|禁用" lay-filter="isShow" {eq name='data.status' value='1'}checked{/eq}>
+                                <input id="status" type="hidden" name="status" value="{$data.status}"/>
+			</div>
+		</div>
+                <div class="layui-form-item">
+			<div class="layui-inline">
+				<label class="layui-form-label">角色权限</label>
+				<div class="layui-input-inline">
+					<select name="group_id" lay-filter="browseLook">
+                                            {volist name='group' id='it'}
+                                                <option value="{$it.id}" {notempty name='data.auth_group'}{eq name='data.auth_group["0"]["id"]' value='$it["id"]'}selected{/eq}{/notempty} >{$it.title}</option>
+                                            {/volist}
+                                        </select>
+				</div>
+			</div>
+		</div>
+                <div class="layui-form-item">
+			<label class="layui-form-label">备注</label>
+			<div class="layui-input-block">
+                            <textarea name="remarks" placeholder="请输入备注" class="layui-textarea">{$data.remarks}</textarea>
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<div class="layui-input-block">
+				<button class="layui-btn" lay-submit="" lay-filter="addNews">保存</button>
+				<button type="reset" class="layui-btn layui-btn-primary">重置</button>
+		    </div>
+		</div>
+	</form>
+    <script type="text/javascript">
+        layui.config({
+                base : "admin/js/"
+        }).use(['form','layer','jquery'],function(){
+                var form = layui.form(),
+                        layer = parent.layer === undefined ? layui.layer : parent.layer,
+                        $ = layui.jquery;
+                form.on('switch(isShow)', function(data){
+                        var status=1;
+                        $(this).is(":checked")?status=1:status=2;
+                        $('#status').val(status);
+                  })
+                form.on("submit(addNews)",function(data){
+                        //弹出loading
+                        var index = top.layer.msg('数据提交中，请稍候',{icon: 16,time:false,shade:0.8});
+                        $.ajax({
+                            type: "POST",
+                            url: "{:url('Member/saveData')}",
+                            data: $("form").serialize(),
+                            dataType: "json",
+                            success: function(data){
+                                top.layer.close(index);
+                                if(data.status == 1){
+                                    top.layer.msg(data.msg,{icon: 6});
+                                    layer.closeAll("iframe");
+                                    parent.location.reload();
+                                }else{
+                                    top.layer.msg(data.msg,{icon: 5,btn: ['知道了']});
+                                }
+                            }
+                        });
+                        return false;
+                })
+        })
+    </script>
+</body>
+</html>

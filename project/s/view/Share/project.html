@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>天齿月牙</title>
+    <link href="/share/css/mui.min.css" rel="stylesheet"/>
+	<link href="/share/fonts/iconfont.css" rel="stylesheet"/>
+    <link href="/share/css/css.css" rel="stylesheet"/>
+    <style>
+        html{
+            height: 100%;
+        }
+    	body {
+            height: 98%;
+		    font-family: "微软雅黑";
+		    font-size: 12px;
+		}
+		.mui-content{ padding-bottom: 50px; }
+		.mui-card-header{ position: relative; }
+		.rt{ position: absolute; right: 0; width: 50px; top: 0; color: #007aff; font-size: 16px; line-height: 54px; text-align: center; cursor: pointer;} 
+		.mui-media{ margin: 4px; padding: 0; }
+		.mui-card-content-inner{ margin-top: -10px; }
+		.share{ position: absolute; right: 0; width: 80px; top: 0; color: #007aff; font-size: 16px; line-height: 54px; text-align: center; cursor: pointer;} 
+
+		.pinglun{ border-top:1px solid #ddd; position: relative; }
+		.pinglun::before{ content:''; width: 0; height: 0; border-width: 8px; border-color:  transparent  transparent  #333 transparent; border-style: solid; position: absolute;  z-index: 10; margin-top: -16px; margin-left: -8px; left: 50%; top:0;}
+		.pinglun::after{ content:''; width: 0; height: 0; border-width: 8px; border-color:  transparent  transparent  #fff transparent; border-style: solid; position: absolute;  z-index: 10; margin-top: -16px; margin-left: -8px; left: 50%; top:0;}
+
+		.pinglun .mui-card-header.mui-card-media::after{ background: #fff; border-bottom: 1px dotted #ddd; margin: 0 15px; }
+		.mui-card-header>img{  overflow: hidden; }
+		.pinglun .mui-media-body{}
+		.pinglun .content{ padding-left: 42px; padding-top: 6px; font-size: 12px; color: #333; margin-bottom: 0; }
+
+		.pinglun .no-comment{ text-align: center; padding: 30px 10px; }
+		.pinglun .no-comment.hidden{ display: none; }
+
+		.mui-bar-tab{ background: #fff; box-shadow: 0 0 3px #ccc;}
+		.mui-bar-tab input{ margin-bottom: 0; }
+		.mui-bar-tab input:focus{position: fixed; top:0;left:0; right:0;}
+		.mui-bar-tab button{ position: absolute;  line-height: 1.8; top: 5px;width: 100%;}
+
+
+
+		.mui-card-link .icon2{ display: none; }
+
+		.active,.active b{ color: #717171!important; }
+		.active .icon1{ display: none; }
+		.active .icon2{ display: inline-block; }
+
+		.iconfont{ font-size: 18px; }
+		a{color:#717171}
+		
+#downloadBar {
+
+    position: fixed;
+	
+	bottom: 0;
+	height: 40px;
+}
+#downloadBar {
+    width: 100%;
+
+    color: #fff;
+    font-size: 12px;
+    box-sizing: border-box;
+    z-index: 99999;
+}
+#downloadBar span {
+    display: block;
+    width: 100%;
+    height: 40px;
+    padding-left: 45px;
+    line-height: 40px;
+    background-color: #000;
+    opacity: 0.7;
+}
+
+#downloadBar .bar-item.downloadbar-close {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 36px;
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC0AAAAtCAQAAACQEyoRAAAABGdBT…VYdGRhdGU6bW9kaWZ5ADIwMTYtMDMtMzFUMTc6MTc6MjQrMDg6MDCXgdlZAAAAAElFTkSuQmCC);
+    background-size: 50%;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+#downloadBar .bar-item {
+    height: 40px;
+    line-height: 40px;
+}
+
+#downloadBar .bar-item.downloadbar-logo {
+    position: absolute;
+    left: 10px;
+    top: 0;
+    width: 26px;
+    background-image: url(/Public/Uploads/logo/logo.png);
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+#downloadBar .bar-item.downloadbar-open {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 70px;
+    background-color: #a70095;
+    text-align: center;
+    cursor: pointer;
+}
+
+
+
+
+	.mui-preview-image.mui-fullscreen {
+		position: fixed;
+		z-index: 20;
+		background-color: #000;
+	}
+	.mui-preview-header,
+	.mui-preview-footer {
+		position: absolute;
+		width: 100%;
+		left: 0;
+		z-index: 10;
+	}
+	.mui-preview-header {
+		height: 44px;
+		bottom: 0;
+	}
+	.mui-preview-footer {
+		height: 50px;
+		bottom: 0px;
+	}
+	.mui-preview-header .mui-preview-indicator {
+		display: block;
+		line-height: 25px;
+		color: #fff;
+		text-align: center;
+		margin: 15px auto 4px;
+		width: 70px;
+		background-color: rgba(0, 0, 0, 0.4);
+		border-radius: 12px;
+		font-size: 16px;
+	}
+	.mui-preview-image {
+		display: none;
+		-webkit-animation-duration: 0.5s;
+		animation-duration: 0.5s;
+		-webkit-animation-fill-mode: both;
+		animation-fill-mode: both;
+	}
+	.mui-preview-image.mui-preview-in {
+		-webkit-animation-name: fadeIn;
+		animation-name: fadeIn;
+	}
+	.mui-preview-image.mui-preview-out {
+		background: none;
+		-webkit-animation-name: fadeOut;
+		animation-name: fadeOut;
+	}
+	.mui-preview-image.mui-preview-out .mui-preview-header,
+	.mui-preview-image.mui-preview-out .mui-preview-footer {
+		display: none;
+	}
+	.mui-zoom-scroller {
+		position: absolute;
+		display: -webkit-box;
+		display: -webkit-flex;
+		display: flex;
+		-webkit-box-align: center;
+		-webkit-align-items: center;
+		align-items: center;
+		-webkit-box-pack: center;
+		-webkit-justify-content: center;
+		justify-content: center;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
+		margin: 0;
+		-webkit-backface-visibility: hidden;
+	}
+	.mui-zoom {
+		-webkit-transform-style: preserve-3d;
+		transform-style: preserve-3d;
+	}
+	.mui-slider .mui-slider-group .mui-slider-item img {
+		width: auto;
+		height: auto;
+		max-width: 100%;
+		max-height: 100%;
+	}
+	.mui-android-4-1 .mui-slider .mui-slider-group .mui-slider-item img {
+		width: 100%;
+	}
+	.mui-android-4-1 .mui-slider.mui-preview-image .mui-slider-group .mui-slider-item {
+		display: inline-table;
+	}
+	.mui-android-4-1 .mui-slider.mui-preview-image .mui-zoom-scroller img {
+		display: table-cell;
+		vertical-align: middle;
+	}
+	.mui-preview-loading {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		top: 0;
+		left: 0;
+		display: none;
+	}
+	.mui-preview-loading.mui-active {
+		display: block;
+	}
+	.mui-preview-loading .mui-spinner-white {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		margin-left: -25px;
+		margin-top: -25px;
+		height: 50px;
+		width: 50px;
+	}
+	.mui-preview-image img.mui-transitioning {
+		-webkit-transition: -webkit-transform 0.5s ease, opacity 0.5s ease;
+		transition: transform 0.5s ease, opacity 0.5s ease;
+	}
+	@-webkit-keyframes fadeIn {
+		0% {
+			opacity: 0;
+		}
+		100% {
+			opacity: 1;
+		}
+	}
+	@keyframes fadeIn {
+		0% {
+			opacity: 0;
+		}
+		100% {
+			opacity: 1;
+		}
+	}
+	@-webkit-keyframes fadeOut {
+		0% {
+			opacity: 1;
+		}
+		100% {
+			opacity: 0;
+		}
+	}
+	@keyframes fadeOut {
+		0% {
+			opacity: 1;
+		}
+		100% {
+			opacity: 0;
+		}
+	}
+    </style>
+</head>
+<body>
+
+<div id="downloadBar">
+	<span>安装天齿月牙APP享受更多精彩</span>
+	<!--div class="bar-item downloadbar-close"></div-->
+	<div class="bar-item downloadbar-logo"></div>
+	<div class="bar-item downloadbar-open" id="open">下载APP</div>
+</div>
+<div class="mui-content">
+	<div class="mui-card">
+            {volist name='data.project' id='pt'}
+		<div class="mui-card-header mui-card-media" style='overflow: hidden;'>
+                        <img src="{$pt.image}" data-preview-src="{$pt.image}" data-preview-group="1" data-big-image="{$pt.image}" data-num="{$i-1}" alt="" style='width:80px;height:auto '>
+                        <div class="mui-media-body" style="    line-height: 24px;margin-left: 2px">
+                            &nbsp;&nbsp;{$pt.title}<label style='color:red'>&nbsp;&nbsp;* {$pt.num}</label>
+                            <p>
+                                <label>&nbsp;&nbsp;{$pt.number} </label>
+                                <label style='float: right; color:red'>&nbsp;&nbsp;{php}echo $pt['price']*$pt['num'];{/php} 元</label>
+                            </p>
+			</div>
+		</div>
+            {/volist}
+                <div class="mui-card-header mui-card-media" style='overflow: hidden;'>
+                        <div class="mui-media-body" style="    line-height: 24px;margin-left: 2px">
+                            <span style='float: right'>合计：<label style='color:red'>&nbsp;&nbsp;{$data.totalprice} 元</label></span>
+			</div>
+		</div>
+            <div class="mui-card-header mui-card-media" style='overflow: hidden;'>
+                        <div class="mui-media-body" style="    line-height: 24px;margin-left: 2px">
+                            照片：<img src="{$data.image}" data-preview-src="{$data.image}" data-preview-group="2" data-big-image="{$data.image}" alt="" style='height: 100px;margin-top: 10px;'>
+			</div>
+		</div>
+                <div class="mui-card-header mui-card-media" style='overflow: hidden;'>
+                        <div class="mui-media-body" style="    line-height: 24px;margin-left: 2px">
+                            姓名：{$data.name}
+			</div>
+		</div>
+            <div class="mui-card-header mui-card-media" style='overflow: hidden;'>
+                        <div class="mui-media-body" style="    line-height: 24px;margin-left: 2px">
+                            性别：{eq name='data.sex' value='1'}男{else/}女{/eq}
+			</div>
+		</div>
+                <div class="mui-card-header mui-card-media" style='overflow: hidden;'>
+                        <div class="mui-media-body" style="    line-height: 24px;margin-left: 2px">
+                            年龄：{$data.age}
+			</div>
+		</div>
+                <div class="mui-card-header mui-card-media" style='overflow: hidden;'>
+                        <div class="mui-media-body" style="    line-height: 24px;margin-left: 2px">
+                            电话：{$data.phone}
+			</div>
+		</div>
+                <div class="mui-card-header mui-card-media" style='overflow: hidden;'>
+                        <div class="mui-media-body" style="    line-height: 24px;margin-left: 2px">
+                            预约时间：{$data.booktime}
+			</div>
+		</div>
+                
+                <div class="mui-card-header mui-card-media" style='overflow: hidden;'>
+                        <div class="mui-media-body" style="    line-height: 24px;margin-left: 2px">
+                            预约状态：{eq name='data.status' value='1'}等待就诊{/eq}
+                                    {eq name='data.status' value='2'}未来就诊{/eq}
+                                    {eq name='data.status' value='3'}确定完成{/eq}
+			</div>
+		</div>
+                <div class="mui-card-header mui-card-media" style='overflow: hidden;'>
+                        <div class="mui-media-body" style="    line-height: 24px;margin-left: 2px">
+                            接诊师：{$data.jzs}
+			</div>
+		</div>
+                <div class="mui-card-header mui-card-media" style='overflow: hidden;'>
+                        <div class="mui-media-body" style="    line-height: 24px;margin-left: 2px">
+                            主诊师：{$data.zzys}
+			</div>
+		</div>
+	</div>
+</div>
+
+</body>
+
+<script src="/share/js/mui.min.js"></script>
+<script src="/share/js/mui.previewimage.js"></script>
+<script src="/share/js/mui.zoom.js"></script>
+<script src="/share/js/zepto.min.js"></script>
+
+<script>
+mui.init();
+mui.previewImage();
+
+mui('#downloadBar').on('tap','#open', function(e) {
+window.location.href = "http://www.tianchiyueya.vip/";
+});
+
+(function(m,$) {
+//阻尼系数
+	var deceleration = mui.os.ios?0.003:0.0009;
+	m('.mui-scroll-wrapper').scroll({
+		bounce: false,
+		indicators: true, //是否显示滚动条
+		deceleration:deceleration
+	});
+})(mui,Zepto);
+
+</script>
+</html>

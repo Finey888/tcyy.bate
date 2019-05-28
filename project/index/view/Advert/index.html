@@ -1,0 +1,218 @@
+{layout name="Public/layout" /}
+<body class="childrenBody">
+	<blockquote class="layui-elem-quote news_search">
+		<div class="layui-inline">
+			<a class="layui-btn layui-btn-normal newsAdd_btn">添加启动页</a>
+		</div>
+                <div class="layui-inline">
+			<a class="layui-btn layui-btn-normal color_btn">字体颜色设置</a>
+		</div>
+		<div class="layui-inline">
+			<div class="layui-form-mid layui-word-aux">本页面刷新后除新添加的外所有操作无效，关闭页面所有数据重置</div>
+		</div>
+	</blockquote>
+	<div class="layui-form news_list">
+	  	<div id="LAY_preview">
+                    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+                      <legend>启动页图片</legend>
+                    </fieldset>
+                    <style>
+                        .site-doc-img li {
+                            display: inline-block;
+                            vertical-align: middle;
+                            width: 210px;
+                            min-height: 310px;
+                            line-height: 25px;
+                            padding: 5px 0;
+                            margin-right: 10px;
+                            margin-bottom: 10px;
+                            border: 1px solid #e2e2e2;
+                            font-size: 14px;
+                            text-align: center;
+                            color: #666;
+                            transition: all .3s;
+                            -webkit-transition: all .3s;
+                            position: relative;
+                            cursor: pointer;
+                        }
+                        .site-doc-img li:hover{
+                            background-color: #cecece;
+                        }
+                        .site-doc-img li:hover .but{
+                            display: block;
+                        }
+                        .site-doc-img img{
+                            padding: 5px;
+                            max-width: 180px;
+                            max-height: 300px;
+                        }
+                        
+                        .site-doc-img .but{
+                            width: 100%;
+                            position: absolute;
+                            bottom: 26px;
+                            display: none;
+                        }
+                        .site-doc-img .imgtitle{    
+                            width: 100%;
+                            background-color: #393d49;
+                            color: white;
+                            bottom: 0px;
+                            position: absolute;
+                            height: 25px;
+                        }
+                        
+                        
+                    </style>
+                    <ul class="site-doc-img">
+                        {volist name='data' id='dt'}
+                            <li class='img-item'>
+                                <img class="imglist" src='{$dt.image}' alt='{$dt.title}'/>
+                                <div class='imgtitle'>{$dt.title}</div>
+                                <div class='but'>
+                                <input class='status' type="checkbox" name="show" lay-skin="switch" lay-text="启用|禁用" lay-filter="isShow" {eq name='dt.status' value='1'}checked{/eq} data-id="{$dt.id}">
+                                <button class="layui-btn layui-btn-normal layui-btn-small edit" data-id='{$dt.id}'><i class="layui-icon"></i></button>
+                                <button class="layui-btn layui-btn-danger layui-btn-small del"  data-id='{$dt.id}'><i class="layui-icon"></i></button>
+                                </div>
+                            </li>
+                        {/volist}
+                    </ul>
+                </div>
+	</div>
+	<div id="page"></div>
+        <script type="text/javascript">
+            layui.config({
+                    base : "admin/js/"
+            }).use(['form','layer','jquery'],function(){
+                    
+                    
+                    
+                    var form = layui.form(),
+                            layer = parent.layer === undefined ? layui.layer : parent.layer,
+                            $ = layui.jquery;
+   
+                            /*layui.layer.photos({
+                                    photos: '.site-doc-img'
+                                  })*/
+                                  
+                    //改变窗口大小时，重置弹窗的高度，防止超出可视区域（如F12调出debug的操作）
+                    $(window).one("resize",function(){
+                        $("body").on("click",".imglist",function(){
+                                var src = $(this).attr('src');
+                                var img = new Image();
+                                img.src =src ;
+                                var w = img.width;
+                                var h = img.height;
+                                
+                                layer.open({
+                                        type: 1,
+                                        title: false,
+                                        closeBtn: 1,
+                                        area: w+'px',
+                                        skin: 'layui-layer-nobg', //没有背景色
+                                        shadeClose: true,
+                                        content: '<div id="tong" class="hide layui-layer-wrap" style="display: block;text-align: center;">'+
+                                                    '<img src="'+src+'">'+
+                                                '</div>'
+                                      });
+                            })
+                            
+                            $(".newsAdd_btn").click(function(){
+                                    var add = layui.layer.open({
+                                            title : "添加启动图片",
+                                            type : 2,
+                                            maxmin :true,
+                                            area:  ['800px', '600px'],
+                                            content : "{:url('Advert/add')}",
+                                            success : function(layero, index){
+                                                  
+                                            }
+                                    })			
+                            })
+                            $(".color_btn").click(function(){
+                                    var add = layui.layer.open({
+                                            title : "字体颜色",
+                                            type : 2,
+                                            maxmin :true,
+                                            area:  ['800px', '600px'],
+                                            content : "{:url('Advert/setColor')}",
+                                            success : function(layero, index){
+                                                  
+                                            }
+                                    })			
+                            })
+                            
+                            $("body").on("click",".edit",function(){  //编辑
+                                    var id = $(this).attr('data-id');
+                                    var edit = layui.layer.open({
+                                            title : "修改启动图片",
+                                            type : 2,
+                                            maxmin :true,
+                                            area:  ['800px', '600px'],
+                                            content : "{:url('Advert/edit')}?id="+id,
+                                            success : function(layero, index){
+                                                 
+                                            }
+                                    })			
+                            })
+                        
+                    }).resize();
+                    
+                    //删除
+                    $("body").on("click",".del",function(){  //删除
+                            var id = $(this).attr('data-id');
+                            var _this = $(this);
+                            layer.confirm('确定删除此信息？',{icon:3, title:'提示信息'},function(index){
+                                   $.ajax({
+                                        type: "POST",
+                                        url: "{:url('Advert/del')}",
+                                        data: {id:id},
+                                        dataType: "json",
+                                        success: function(data){
+                                                    if(data.status == 1){
+                                                        _this.parents("li").remove();
+                                                        layer.close(index);
+                                                        layer.msg(data.msg, {icon: 6});
+                                                    }else{
+                                                        layer.close(index);
+                                                        layer.msg(data.msg, {
+                                                            icon: 5
+                                                            ,btn: ['知道了']
+                                                          });
+                                                    }
+                                                 }
+                                    });
+                                    
+                            });
+                    })
+        
+                    //是否禁用
+                    form.on('switch(isShow)', function(data){
+                            var index = layer.msg('修改中，请稍候',{icon: 16,time:false,shade:0.8});
+                            var id = $(this).attr('data-id');
+                            var status=1;
+                            $(this).is(":checked")?status=1:status=2;
+                            $.ajax({
+                                type: "GET",
+                                url: '{:url("Advert/editStatus")}',
+                                data: {id:id,status:status},
+                                dataType: "json",
+                                success: function(data){
+                                    if(data.status == 1){
+                                        layer.close(index);
+                                        layer.msg('修改成功', {icon: 6});
+                                    }else{
+                                        layer.close(index);
+                                        layer.msg(data.msg, {
+                                            icon: 5
+                                            ,btn: ['知道了']
+                                          });
+                                    }
+                                }
+                            });
+                    })
+                    
+            })
+        </script>
+</body>
+</html>
