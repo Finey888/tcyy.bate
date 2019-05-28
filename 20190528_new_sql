@@ -1,0 +1,206 @@
+drop table if exists tcyy_base_dict;
+
+drop table if exists tccybate.tcyy_personal_company;
+
+drop table if exists tccybate.tcyy_personal_deliver;
+
+drop table if exists tccybate.tcyy_personal_education;
+
+drop table if exists tccybate.tcyy_personal_experience;
+
+drop table if exists tccybate.tcyy_personal_position;
+
+drop table if exists tccybate.tcyy_personal_qualification;
+
+drop table if exists tccybate.tcyy_personal_resume;
+
+drop table if exists tccybate.tcyy_personal_resume_view_log;
+
+/*==============================================================*/
+/* User: tccybate                                               */
+/*==============================================================*/
+create user tccybate;
+
+/*==============================================================*/
+/* Table: tcyy_base_dict                                        */
+/*==============================================================*/
+create table tcyy_base_dict
+(
+   id                   int(11) not null auto_increment comment '流水编号-主键',
+   dict_code            varchar(10),
+   dict_value           int(11),
+   dict_name            varchar(50),
+   dict_sort            int,
+   remark               varchar(30),
+   primary key (id)
+);
+
+alter table tcyy_base_dict comment '基础字典表';
+
+/*==============================================================*/
+/* Table: tcyy_personal_company                                 */
+/*==============================================================*/
+create table tccybate.tcyy_personal_company
+(
+   id                   int(11) not null auto_increment,
+   name                 varchar(255) not null comment '公司名称',
+   offcialcurl          varchar(255) comment '公司官网',
+   logo                 varchar(255) not null comment 'logo',
+   people               int(11) not null default 1 comment '人数规模',
+   region               varchar(255) not null comment '所在区域(省市区县)',
+   createrdate          int(11) comment '成立日期',
+   registermoney        int(11) comment '注册资金 单位万',
+   contacts             varchar(255) comment '联系人',
+   email                varchar(255) comment '邮件地址',
+   phone                varchar(255) comment '联系电话',
+   companyinfo          text not null comment '公司简介',
+   uid                  int(11) not null comment '关联用户',
+   authurl              varchar(255) comment '营业执照图片url',
+   status               tinyint(4) not null default 1 comment '状态：1.等待审核 2.通过认证  3.不通过 4.禁用',
+   address              varchar(255) not null comment '详细地址',
+   creattime            int(11) not null comment '创建时间',
+   primary key (id)
+);
+
+alter table tccybate.tcyy_personal_company comment '会员-公司信息表';
+
+/*==============================================================*/
+/* Table: tcyy_personal_deliver                                 */
+/*==============================================================*/
+create table tccybate.tcyy_personal_deliver
+(
+   id                   int(11) not null auto_increment,
+   rid                  int(11) not null comment '简历编号',
+   jid                  int(11) not null comment '职位编号',
+   delivertime          date not null comment '投递时间',
+   primary key (id)
+);
+
+alter table tccybate.tcyy_personal_deliver comment '会员-个人投递职位记录';
+
+/*==============================================================*/
+/* Table: tcyy_personal_education                               */
+/*==============================================================*/
+create table tccybate.tcyy_personal_education
+(
+   id                   int(11) not null auto_increment,
+   education            varchar(255) not null comment '1.应届毕业生 2.大专 3.本科 4.硕士 5.博士',
+   name                 varchar(255) not null comment '学校名称',
+   profession           varchar(255) not null comment '专业课程',
+   entrancedate         varchar(12) not null comment '入学时间',
+   graduatedate         varchar(12) not null comment '毕业时间',
+   uid                  int(11) not null,
+   status               tinyint(4) not null default 1 comment '1.显示 2.禁用 -1.删除',
+   primary key (id)
+);
+
+alter table tccybate.tcyy_personal_education comment '会员-个人教育经历';
+
+/*==============================================================*/
+/* Table: tcyy_personal_experience                              */
+/*==============================================================*/
+create table tccybate.tcyy_personal_experience
+(
+   id                   int(11) not null auto_increment,
+   uid                  int(11) not null,
+   companyname          varchar(255) comment '公司名称',
+   entrancedate         varchar(255) not null comment '入职时间',
+   dimissiondate        varchar(255) not null comment '离职时间',
+   position             varchar(255) not null comment '所在职位',
+   workcontent          text not null comment '工作内容',
+   status               tinyint(4) not null default 1 comment '1.显示 2.禁用 -1.删除',
+   primary key (id)
+);
+
+alter table tccybate.tcyy_personal_experience comment '会员-个人工作经历';
+
+/*==============================================================*/
+/* Table: tcyy_personal_position                                */
+/*==============================================================*/
+create table tccybate.tcyy_personal_position
+(
+   id                   int(11) not null auto_increment,
+   type                 int(11) not null comment '职位类型 1.口腔护士 2.全科医师 3.洽谈师 4.儿童牙科 5.口腔正畸 6.口腔种植 7.口腔内科',
+   region               varchar(150) comment '职位区域(省市区县)',
+   address              varchar(255) not null comment '工作地点',
+   wages                int(255) not null default 0 comment '工资范围  0.面议',
+   nums                 int(11) not null comment '招聘人数',
+   nature               tinyint(4) not null default 1 comment '1.全职 2.兼职',
+   experience           int(11) not null comment '工作经验',
+   education            int(255) not null default 1 comment '1.应届毕业生 2.大专 3.本科 4.硕士 5.博士',
+   descriptions         text not null comment '职位描述',
+   cid                  int(11) not null comment '关联会员公司编号',
+   professional         varchar(255) not null comment '职称',
+   creatime             int(11) not null comment '创建时间',
+   status               tinyint(4) not null default 1 comment '1.开通 2关闭',
+   lasttime             int(11) not null comment '最后刷新招聘时间',
+   primary key (id)
+);
+
+alter table tccybate.tcyy_personal_position comment '会员公司招聘信息';
+
+/*==============================================================*/
+/* Table: tcyy_personal_qualification                           */
+/*==============================================================*/
+create table tccybate.tcyy_personal_qualification
+(
+   id                   int(11) not null auto_increment,
+   rid                  int(11) not null comment '简历编号',
+   qualifyname          varchar(100) not null comment '资格证书名称',
+   qualifyurl           varchar(255) not null comment '资格证书URL',
+   qualify_time         varchar(12) comment '证书获取时间',
+   createtime           date comment '创建时间',
+   primary key (id)
+);
+
+alter table tccybate.tcyy_personal_qualification comment '会员个人执业资格信息表';
+
+/*==============================================================*/
+/* Table: tcyy_personal_resume                                  */
+/*==============================================================*/
+create table tccybate.tcyy_personal_resume
+(
+   id                   int(11) not null auto_increment,
+   name                 varchar(255) comment '姓名',
+   birthday             varchar(12) comment '出生日期',
+   education            varchar(255) not null default '1' comment '学历 1.应届毕业生 2.大专 3.本科 4.硕士 5.博士',
+   jobstatus            tinyint(4) not null default 2 comment '1.在职  2.不在职   求职状态',
+   marriage             tinyint(4) not null default 1 comment '1.未婚 2.已婚',
+   address              varchar(255) comment '现住地址',
+   telephone            varchar(255) comment '联系电话',
+   email                varchar(255) comment '邮箱地址',
+   expectregion         varchar(255) comment '期望工作区域',
+   wages                varchar(255) not null default '1' comment '期望工资0.面议',
+   type                 int(11) not null default 1 comment '职位类型 1.口腔护士 2.全科医师 3.洽谈师 4.儿童牙科 5.口腔正畸 6.口腔种植 7.口腔内科',
+   selfevaluation       text comment '自我评价',
+   jointime             int(11) comment '参加工作时间',
+   arrivaltime          varchar(255) comment '到岗时间',
+   status               tinyint(4) not null default 1 comment '1.显示  2.隐藏  3.禁用',
+   uid                  int(11) not null comment '关联用户表',
+   sex                  tinyint(4) not null default 1 comment '1.男 2.女',
+   intentposition       varchar(255) comment '意向职位',
+   worknature           tinyint(4) not null default 1 comment '工作性质 1.全职 2.兼职',
+   refreshtime          int(11) not null default 0 comment '刷新时间',
+   ispub                int(11) not null default 1 comment '0-否 1-是',
+   ethnic               varchar(255) comment '民族',
+   attachurl            varchar(255) comment '简历附件',
+   workexperience       varchar(255) comment '工作经验',
+   primary key (id)
+);
+
+alter table tccybate.tcyy_personal_resume comment '会员-个人简历';
+
+/*==============================================================*/
+/* Table: tcyy_personal_resume_view_log                         */
+/*==============================================================*/
+create table tccybate.tcyy_personal_resume_view_log
+(
+   id                   int(11) not null auto_increment,
+   rid                  int(11) not null comment '简历编号',
+   cid                  int(11) not null comment '企业编号',
+   viewtime             date comment '查看时间',
+   iscollect            int default 0 comment '是否收藏简历 0-否 1-是',
+   primary key (id)
+);
+
+alter table tccybate.tcyy_personal_resume_view_log comment '会员-企业查看个人简历记录录';
