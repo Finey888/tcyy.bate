@@ -1,0 +1,240 @@
+{extend name="layout" /}
+{block name="content"}
+<!-- 内容区域 -->
+<div class="tpl-content-wrapper">
+		<div class="row-content am-cf">
+		<div class="row">
+				<div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+						<div class="widget am-cf">
+								<div class="widget-head am-cf">
+										<div class="widget-title am-fl">编辑tcyy_personal_resume</div>
+										<div class="widget-function am-fr">
+												<a href="javascript:;" class="am-icon-cog"></a>
+										</div>
+								</div>
+								<div class="widget-body am-fr">
+										<form class="am-form tpl-form-border-form" method="post">
+	 
+	<input type="hidden" name="id" value="{$personal_resume.id}" />
+		<div class="am-form-group">
+			<label for="personname" class="am-u-sm-12 am-form-label am-text-left">personname					<span class="tpl-form-line-small-title">personname</span></label>
+			<div class="am-u-sm-12">
+					<input type="text" 
+	value="{if condition="isset($personal_resume.personname)"}{$personal_resume.personname}{/if}"
+	class="tpl-form-input am-margin-top-xs" id="personname" name="personname" 
+	placeholder="请输入personname">			</div>
+	</div>
+		<div class="am-form-group">
+			<label for="birthday" class="am-u-sm-12 am-form-label am-text-left">birthday					<span class="tpl-form-line-small-title">birthday</span></label>
+			<div class="am-u-sm-12">
+					<input type="text" 
+	value="{if condition="isset($personal_resume.birthday)"}{$personal_resume.birthday}{/if}"
+	class="tpl-form-input am-margin-top-xs" id="birthday" name="birthday" 
+	placeholder="请输入birthday">			</div>
+	</div>
+		<div class="am-form-group">
+			<label for="education" class="am-u-sm-12 am-form-label am-text-left">education					<span class="tpl-form-line-small-title">education</span></label>
+			<div class="am-u-sm-12">
+					<input type="text" 
+	value="{if condition="isset($personal_resume.education)"}{$personal_resume.education}{/if}"
+	class="tpl-form-input am-margin-top-xs" id="education" name="education" 
+	placeholder="请输入education">			</div>
+	</div>
+		<div class="am-form-group">
+			<label for="jobstatus" class="am-u-sm-12 am-form-label am-text-left">jobstatus					<span class="tpl-form-line-small-title">jobstatus</span></label>
+			<div class="am-u-sm-12">
+					<input type="text" 
+	value="{if condition="isset($personal_resume.jobstatus)"}{$personal_resume.jobstatus}{/if}"
+	class="tpl-form-input am-margin-top-xs" id="jobstatus" name="jobstatus" 
+	placeholder="请输入jobstatus">			</div>
+	</div>
+		<div class="am-form-group">
+			<label for="marriage" class="am-u-sm-12 am-form-label am-text-left">marriage					<span class="tpl-form-line-small-title">marriage</span></label>
+			<div class="am-u-sm-12">
+					<input type="text" 
+	value="{if condition="isset($personal_resume.marriage)"}{$personal_resume.marriage}{/if}"
+	class="tpl-form-input am-margin-top-xs" id="marriage" name="marriage" 
+	placeholder="请输入marriage">			</div>
+	</div>
+		<div class="am-form-group">
+			<label for="address" class="am-u-sm-12 am-form-label am-text-left">address					<span class="tpl-form-line-small-title">address</span></label>
+			<div class="am-u-sm-12">
+					<input type="text" 
+	value="{if condition="isset($personal_resume.address)"}{$personal_resume.address}{/if}"
+	class="tpl-form-input am-margin-top-xs" id="address" name="address" 
+	placeholder="请输入address">			</div>
+	</div>
+		<div class="am-form-group">
+			<label for="telephone" class="am-u-sm-12 am-form-label am-text-left">telephone					<span class="tpl-form-line-small-title">telephone</span></label>
+			<div class="am-u-sm-12">
+					<input type="text" 
+	value="{if condition="isset($personal_resume.telephone)"}{$personal_resume.telephone}{/if}"
+	class="tpl-form-input am-margin-top-xs" id="telephone" name="telephone" 
+	placeholder="请输入telephone">			</div>
+	</div>
+		<div class="am-form-group">
+			<label for="email" class="am-u-sm-12 am-form-label am-text-left">email					<span class="tpl-form-line-small-title">email</span></label>
+			<div class="am-u-sm-12">
+					<input type="text" 
+	value="{if condition="isset($personal_resume.email)"}{$personal_resume.email}{/if}"
+	class="tpl-form-input am-margin-top-xs" id="email" name="email" 
+	placeholder="请输入email">			</div>
+	</div>
+		<div class="am-form-group">
+			<label for="expectregion" class="am-u-sm-12 am-form-label am-text-left">expectregion					<span class="tpl-form-line-small-title">expectregion</span></label>
+			<div class="am-u-sm-12">
+					<input type="text" 
+	value="{if condition="isset($personal_resume.expectregion)"}{$personal_resume.expectregion}{/if}"
+	class="tpl-form-input am-margin-top-xs" id="expectregion" name="expectregion" 
+	placeholder="请输入expectregion">			</div>
+	</div>
+		<div class="am-form-group">
+			<label for="wages" class="am-u-sm-12 am-form-label am-text-left">wages					<span class="tpl-form-line-small-title">wages</span></label>
+			<div class="am-u-sm-12">
+					<input type="text" 
+	value="{if condition="isset($personal_resume.wages)"}{$personal_resume.wages}{/if}"
+	class="tpl-form-input am-margin-top-xs" id="wages" name="wages" 
+	placeholder="请输入wages">			</div>
+	</div>
+		<div class="am-form-group">
+			<label for="positiontype" class="am-u-sm-12 am-form-label am-text-left">positiontype					<span class="tpl-form-line-small-title">positiontype</span></label>
+			<div class="am-u-sm-12">
+					<input type="text" 
+	value="{if condition="isset($personal_resume.positiontype)"}{$personal_resume.positiontype}{/if}"
+	class="tpl-form-input am-margin-top-xs" id="positiontype" name="positiontype" 
+	placeholder="请输入positiontype">			</div>
+	</div>
+		<div class="am-form-group">
+			<label for="selfevaluation" class="am-u-sm-12 am-form-label am-text-left">selfevaluation					<span class="tpl-form-line-small-title">selfevaluation</span></label>
+			<div class="am-u-sm-12">
+					<input type="text" 
+	value="{if condition="isset($personal_resume.selfevaluation)"}{$personal_resume.selfevaluation}{/if}"
+	class="tpl-form-input am-margin-top-xs" id="selfevaluation" name="selfevaluation" 
+	placeholder="请输入selfevaluation">			</div>
+	</div>
+		<div class="am-form-group">
+			<label for="jointime" class="am-u-sm-12 am-form-label am-text-left">jointime					<span class="tpl-form-line-small-title">jointime</span></label>
+			<div class="am-u-sm-12">
+					<input type="text" 
+	value="{if condition="isset($personal_resume.jointime)"}{$personal_resume.jointime}{/if}"
+	class="tpl-form-input am-margin-top-xs" id="jointime" name="jointime" 
+	placeholder="请输入jointime">			</div>
+	</div>
+		<div class="am-form-group">
+			<label for="arrivaltime" class="am-u-sm-12 am-form-label am-text-left">arrivaltime					<span class="tpl-form-line-small-title">arrivaltime</span></label>
+			<div class="am-u-sm-12">
+					<input type="text" 
+	value="{if condition="isset($personal_resume.arrivaltime)"}{$personal_resume.arrivaltime}{/if}"
+	class="tpl-form-input am-margin-top-xs" id="arrivaltime" name="arrivaltime" 
+	placeholder="请输入arrivaltime">			</div>
+	</div>
+		<div class="am-form-group">
+			<label for="status" class="am-u-sm-12 am-form-label am-text-left">status					<span class="tpl-form-line-small-title">status</span></label>
+			<div class="am-u-sm-12">
+					<input type="text" 
+	value="{if condition="isset($personal_resume.status)"}{$personal_resume.status}{/if}"
+	class="tpl-form-input am-margin-top-xs" id="status" name="status" 
+	placeholder="请输入status">			</div>
+	</div>
+		<div class="am-form-group">
+			<label for="uid" class="am-u-sm-12 am-form-label am-text-left">uid					<span class="tpl-form-line-small-title">uid</span></label>
+			<div class="am-u-sm-12">
+					<input type="text" 
+	value="{if condition="isset($personal_resume.uid)"}{$personal_resume.uid}{/if}"
+	class="tpl-form-input am-margin-top-xs" id="uid" name="uid" 
+	placeholder="请输入uid">			</div>
+	</div>
+		<div class="am-form-group">
+			<label for="sex" class="am-u-sm-12 am-form-label am-text-left">sex					<span class="tpl-form-line-small-title">sex</span></label>
+			<div class="am-u-sm-12">
+					<input type="text" 
+	value="{if condition="isset($personal_resume.sex)"}{$personal_resume.sex}{/if}"
+	class="tpl-form-input am-margin-top-xs" id="sex" name="sex" 
+	placeholder="请输入sex">			</div>
+	</div>
+		<div class="am-form-group">
+			<label for="intentposition" class="am-u-sm-12 am-form-label am-text-left">intentposition					<span class="tpl-form-line-small-title">intentposition</span></label>
+			<div class="am-u-sm-12">
+					<input type="text" 
+	value="{if condition="isset($personal_resume.intentposition)"}{$personal_resume.intentposition}{/if}"
+	class="tpl-form-input am-margin-top-xs" id="intentposition" name="intentposition" 
+	placeholder="请输入intentposition">			</div>
+	</div>
+		<div class="am-form-group">
+			<label for="worknature" class="am-u-sm-12 am-form-label am-text-left">worknature					<span class="tpl-form-line-small-title">worknature</span></label>
+			<div class="am-u-sm-12">
+					<input type="text" 
+	value="{if condition="isset($personal_resume.worknature)"}{$personal_resume.worknature}{/if}"
+	class="tpl-form-input am-margin-top-xs" id="worknature" name="worknature" 
+	placeholder="请输入worknature">			</div>
+	</div>
+		<div class="am-form-group">
+			<label for="refreshtime" class="am-u-sm-12 am-form-label am-text-left">refreshtime					<span class="tpl-form-line-small-title">refreshtime</span></label>
+			<div class="am-u-sm-12">
+					<input type="text" 
+	value="{if condition="isset($personal_resume.refreshtime)"}{$personal_resume.refreshtime}{/if}"
+	class="tpl-form-input am-margin-top-xs" id="refreshtime" name="refreshtime" 
+	placeholder="请输入refreshtime">			</div>
+	</div>
+		<div class="am-form-group">
+			<label for="ispub" class="am-u-sm-12 am-form-label am-text-left">ispub					<span class="tpl-form-line-small-title">ispub</span></label>
+			<div class="am-u-sm-12">
+					<input type="text" 
+	value="{if condition="isset($personal_resume.ispub)"}{$personal_resume.ispub}{/if}"
+	class="tpl-form-input am-margin-top-xs" id="ispub" name="ispub" 
+	placeholder="请输入ispub">			</div>
+	</div>
+		<div class="am-form-group">
+			<label for="ethnic" class="am-u-sm-12 am-form-label am-text-left">ethnic					<span class="tpl-form-line-small-title">ethnic</span></label>
+			<div class="am-u-sm-12">
+					<input type="text" 
+	value="{if condition="isset($personal_resume.ethnic)"}{$personal_resume.ethnic}{/if}"
+	class="tpl-form-input am-margin-top-xs" id="ethnic" name="ethnic" 
+	placeholder="请输入ethnic">			</div>
+	</div>
+		<div class="am-form-group">
+			<label for="attachurl" class="am-u-sm-12 am-form-label am-text-left">attachurl					<span class="tpl-form-line-small-title">attachurl</span></label>
+			<div class="am-u-sm-12">
+					<input type="text" 
+	value="{if condition="isset($personal_resume.attachurl)"}{$personal_resume.attachurl}{/if}"
+	class="tpl-form-input am-margin-top-xs" id="attachurl" name="attachurl" 
+	placeholder="请输入attachurl">			</div>
+	</div>
+		<div class="am-form-group">
+			<label for="workexperience" class="am-u-sm-12 am-form-label am-text-left">workexperience					<span class="tpl-form-line-small-title">workexperience</span></label>
+			<div class="am-u-sm-12">
+					<input type="text" 
+	value="{if condition="isset($personal_resume.workexperience)"}{$personal_resume.workexperience}{/if}"
+	class="tpl-form-input am-margin-top-xs" id="workexperience" name="workexperience" 
+	placeholder="请输入workexperience">			</div>
+	</div>
+		<div class="am-form-group">
+			<label for="auditstatus" class="am-u-sm-12 am-form-label am-text-left">auditstatus					<span class="tpl-form-line-small-title">auditstatus</span></label>
+			<div class="am-u-sm-12">
+					<input type="text" 
+	value="{if condition="isset($personal_resume.auditstatus)"}{$personal_resume.auditstatus}{/if}"
+	class="tpl-form-input am-margin-top-xs" id="auditstatus" name="auditstatus" 
+	placeholder="请输入auditstatus">			</div>
+	</div>
+		<div class="am-form-group">
+			<label for="isdel" class="am-u-sm-12 am-form-label am-text-left">isdel					<span class="tpl-form-line-small-title">isdel</span></label>
+			<div class="am-u-sm-12">
+					<input type="text" 
+	value="{if condition="isset($personal_resume.isdel)"}{$personal_resume.isdel}{/if}"
+	class="tpl-form-input am-margin-top-xs" id="isdel" name="isdel" 
+	placeholder="请输入isdel">			</div>
+	</div>
+		<div class="am-form-group">
+			<div class="am-u-sm-12 am-u-sm-push-12">
+					<button type="submit" class="am-btn am-btn-primary tpl-btn-bg-color-success ">提交</button>
+			</div>
+	</div>
+</form>
+
+								</div>
+						</div>
+				</div>
+		</div>
+	</div>
+</div>
+{/block}

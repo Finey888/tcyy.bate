@@ -1,0 +1,61 @@
+{layout name="Public/layout" /}
+{block name="content"}
+<!-- 内容区域 -->
+<div class="tpl-content-wrapper">
+		<div class="row-content am-cf">
+		<div class="row">
+				<div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+						<div class="widget am-cf">
+								<div class="widget-head am-cf">
+										<div class="widget-title am-fl">新建tcyy_area</div>
+										<div class="widget-function am-fr">
+											<a href="javascript:;" class="am-icon-cog"></a>
+										</div>
+								</div>
+								<div class="widget-body am-fr">
+										<form class="am-form tpl-form-border-form" method="post">
+		<div class="am-form-group">
+			<label for="name" class="am-u-sm-12 am-form-label am-text-left">name					<span class="tpl-form-line-small-title">name</span></label>
+			<div class="am-u-sm-12">
+					<input type="text" 
+	value="{if condition="isset($area.name)"}{$area.name}{/if}"
+	class="tpl-form-input am-margin-top-xs" id="name" name="name" 
+	placeholder="请输入name">			</div>
+	</div>
+		<div class="am-form-group">
+			<label for="level" class="am-u-sm-12 am-form-label am-text-left">level					<span class="tpl-form-line-small-title">level</span></label>
+			<div class="am-u-sm-12">
+					<input type="text" 
+	value="{if condition="isset($area.level)"}{$area.level}{/if}"
+	class="tpl-form-input am-margin-top-xs" id="level" name="level" 
+	placeholder="请输入level">			</div>
+	</div>
+		<div class="am-form-group">
+			<label for="upid" class="am-u-sm-12 am-form-label am-text-left">upid					<span class="tpl-form-line-small-title">upid</span></label>
+			<div class="am-u-sm-12">
+					<input type="text" 
+	value="{if condition="isset($area.upid)"}{$area.upid}{/if}"
+	class="tpl-form-input am-margin-top-xs" id="upid" name="upid" 
+	placeholder="请输入upid">			</div>
+	</div>
+		<div class="am-form-group">
+			<label for="displayorder" class="am-u-sm-12 am-form-label am-text-left">displayorder					<span class="tpl-form-line-small-title">displayorder</span></label>
+			<div class="am-u-sm-12">
+					<input type="text" 
+	value="{if condition="isset($area.displayorder)"}{$area.displayorder}{/if}"
+	class="tpl-form-input am-margin-top-xs" id="displayorder" name="displayorder" 
+	placeholder="请输入displayorder">			</div>
+	</div>
+		<div class="am-form-group">
+			<div class="am-u-sm-12 am-u-sm-push-12">
+					<button type="submit" class="am-btn am-btn-primary tpl-btn-bg-color-success ">提交</button>
+			</div>
+	</div>
+</form>
+								</div>
+						</div>
+				</div>
+		</div>
+	</div>
+</div>
+{/block}

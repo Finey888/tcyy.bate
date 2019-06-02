@@ -1,0 +1,123 @@
+{extend name="layout" /}
+{block name="content"}
+<!-- 内容区域 -->
+<div class="tpl-content-wrapper">
+		<div class="row-content am-cf">
+				<div class="row">
+						<div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+								<div class="widget am-cf">
+										<div class="widget-head am-cf">
+												<div class="widget-title  am-cf">管理personal_resume</div>
+										</div>
+										<div class="widget-body  am-fr">
+	<div class="am-u-sm-12 am-u-md-6 am-u-lg-6">
+		<div class="am-form-group">
+			<div class="am-btn-toolbar">
+				<div class="am-btn-group am-btn-group-xs">
+					<a class="am-btn am-btn-default am-btn-success" href="{:url('personal_resume/add')}">
+						<span class="am-icon-plus"></span> 新增
+					</a>
+					<!--
+					<button type="button" class="am-btn am-btn-default am-btn-secondary"><span class="am-icon-save"></span> 保存</button>
+					<button type="button" class="am-btn am-btn-default am-btn-warning"><span class="am-icon-archive"></span> 审核</button>
+					<button type="button" class="am-btn am-btn-default am-btn-danger"><span class="am-icon-trash-o"></span> 删除</button>
+					-->
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="am-u-sm-12">
+		<table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black " id="example-r">
+				<thead>
+					<tr>
+												<th>id</th>
+												<th>personname</th>
+												<th>birthday</th>
+												<th>education</th>
+												<th>jobstatus</th>
+												<th>marriage</th>
+												<th>address</th>
+												<th>telephone</th>
+												<th>email</th>
+												<th>expectregion</th>
+												<th>wages</th>
+												<th>positiontype</th>
+												<th>selfevaluation</th>
+												<th>jointime</th>
+												<th>arrivaltime</th>
+												<th>status</th>
+												<th>uid</th>
+												<th>sex</th>
+												<th>intentposition</th>
+												<th>worknature</th>
+												<th>refreshtime</th>
+												<th>ispub</th>
+												<th>ethnic</th>
+												<th>attachurl</th>
+												<th>workexperience</th>
+												<th>auditstatus</th>
+												<th>isdel</th>
+												<th>操作</th>
+					</tr>
+				</thead>
+				<tbody>
+						{volist name="personal_resumeList" id="vo"}
+						<tr class="gradeX">
+																<td>{$vo.id}</td>
+																<td>{$vo.personname}</td>
+																<td>{$vo.birthday}</td>
+																<td>{$vo.education}</td>
+																<td>{$vo.jobstatus}</td>
+																<td>{$vo.marriage}</td>
+																<td>{$vo.address}</td>
+																<td>{$vo.telephone}</td>
+																<td>{$vo.email}</td>
+																<td>{$vo.expectregion}</td>
+																<td>{$vo.wages}</td>
+																<td>{$vo.positiontype}</td>
+																<td>{$vo.selfevaluation}</td>
+																<td>{$vo.jointime}</td>
+																<td>{$vo.arrivaltime}</td>
+																<td>{$vo.status}</td>
+																<td>{$vo.uid}</td>
+																<td>{$vo.sex}</td>
+																<td>{$vo.intentposition}</td>
+																<td>{$vo.worknature}</td>
+																<td>{$vo.refreshtime}</td>
+																<td>{$vo.ispub}</td>
+																<td>{$vo.ethnic}</td>
+																<td>{$vo.attachurl}</td>
+																<td>{$vo.workexperience}</td>
+																<td>{$vo.auditstatus}</td>
+																<td>{$vo.isdel}</td>
+																<td>
+										<div class="tpl-table-black-operation">
+												<a  href="{:url('personal_resume/edit', ['id'=>$vo['id']])}">
+													<i class="am-icon-pencil"></i> 编辑
+												</a>
+												<a href="{:url('personal_resume/delete', ['id'=>$vo['id']])}" onclick='return confirm("确定删除吗？")' class="tpl-table-black-operation-del">
+													<i class="am-icon-trash"></i> 删除
+												</a>
+										</div>
+								</td>
+						</tr>
+						{/volist}
+						<!-- more data -->
+				</tbody>
+		</table>
+	</div>
+	<div class="am-u-lg-12 am-cf">
+
+			<div class="am-fr">
+					<ul class="am-pagination tpl-pagination">
+							{$personal_resumeList->render()}
+					</ul>
+			</div>
+	</div>
+</div>
+								</div>
+						</div>
+				</div>
+		</div>
+</div>
+{/block}

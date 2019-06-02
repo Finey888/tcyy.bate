@@ -1,0 +1,152 @@
+{extend name="layout" /}
+{block name="content"}
+<!-- 内容区域 -->
+<div class="tpl-content-wrapper">
+		<div class="row-content am-cf">
+		<div class="row">
+				<div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+						<div class="widget am-cf">
+								<div class="widget-head am-cf">
+										<div class="widget-title am-fl">编辑tcyy_personal_position</div>
+										<div class="widget-function am-fr">
+												<a href="javascript:;" class="am-icon-cog"></a>
+										</div>
+								</div>
+								<div class="widget-body am-fr">
+										<form class="am-form tpl-form-border-form" method="post">
+	 
+	<input type="hidden" name="id" value="{$personal_position.id}" />
+		<div class="am-form-group">
+			<label for="positiontype" class="am-u-sm-12 am-form-label am-text-left">positiontype					<span class="tpl-form-line-small-title">positiontype</span></label>
+			<div class="am-u-sm-12">
+					<input type="text" 
+	value="{if condition="isset($personal_position.positiontype)"}{$personal_position.positiontype}{/if}"
+	class="tpl-form-input am-margin-top-xs" id="positiontype" name="positiontype" 
+	placeholder="请输入positiontype">			</div>
+	</div>
+		<div class="am-form-group">
+			<label for="region" class="am-u-sm-12 am-form-label am-text-left">region					<span class="tpl-form-line-small-title">region</span></label>
+			<div class="am-u-sm-12">
+					<input type="text" 
+	value="{if condition="isset($personal_position.region)"}{$personal_position.region}{/if}"
+	class="tpl-form-input am-margin-top-xs" id="region" name="region" 
+	placeholder="请输入region">			</div>
+	</div>
+		<div class="am-form-group">
+			<label for="address" class="am-u-sm-12 am-form-label am-text-left">address					<span class="tpl-form-line-small-title">address</span></label>
+			<div class="am-u-sm-12">
+					<input type="text" 
+	value="{if condition="isset($personal_position.address)"}{$personal_position.address}{/if}"
+	class="tpl-form-input am-margin-top-xs" id="address" name="address" 
+	placeholder="请输入address">			</div>
+	</div>
+		<div class="am-form-group">
+			<label for="wages" class="am-u-sm-12 am-form-label am-text-left">wages					<span class="tpl-form-line-small-title">wages</span></label>
+			<div class="am-u-sm-12">
+					<input type="text" 
+	value="{if condition="isset($personal_position.wages)"}{$personal_position.wages}{/if}"
+	class="tpl-form-input am-margin-top-xs" id="wages" name="wages" 
+	placeholder="请输入wages">			</div>
+	</div>
+		<div class="am-form-group">
+			<label for="nums" class="am-u-sm-12 am-form-label am-text-left">nums					<span class="tpl-form-line-small-title">nums</span></label>
+			<div class="am-u-sm-12">
+					<input type="text" 
+	value="{if condition="isset($personal_position.nums)"}{$personal_position.nums}{/if}"
+	class="tpl-form-input am-margin-top-xs" id="nums" name="nums" 
+	placeholder="请输入nums">			</div>
+	</div>
+		<div class="am-form-group">
+			<label for="nature" class="am-u-sm-12 am-form-label am-text-left">nature					<span class="tpl-form-line-small-title">nature</span></label>
+			<div class="am-u-sm-12">
+					<input type="text" 
+	value="{if condition="isset($personal_position.nature)"}{$personal_position.nature}{/if}"
+	class="tpl-form-input am-margin-top-xs" id="nature" name="nature" 
+	placeholder="请输入nature">			</div>
+	</div>
+		<div class="am-form-group">
+			<label for="experience" class="am-u-sm-12 am-form-label am-text-left">experience					<span class="tpl-form-line-small-title">experience</span></label>
+			<div class="am-u-sm-12">
+					<input type="text" 
+	value="{if condition="isset($personal_position.experience)"}{$personal_position.experience}{/if}"
+	class="tpl-form-input am-margin-top-xs" id="experience" name="experience" 
+	placeholder="请输入experience">			</div>
+	</div>
+		<div class="am-form-group">
+			<label for="education" class="am-u-sm-12 am-form-label am-text-left">education					<span class="tpl-form-line-small-title">education</span></label>
+			<div class="am-u-sm-12">
+					<input type="text" 
+	value="{if condition="isset($personal_position.education)"}{$personal_position.education}{/if}"
+	class="tpl-form-input am-margin-top-xs" id="education" name="education" 
+	placeholder="请输入education">			</div>
+	</div>
+		<div class="am-form-group">
+			<label for="descriptions" class="am-u-sm-12 am-form-label am-text-left">descriptions					<span class="tpl-form-line-small-title">descriptions</span></label>
+			<div class="am-u-sm-12">
+					<input type="text" 
+	value="{if condition="isset($personal_position.descriptions)"}{$personal_position.descriptions}{/if}"
+	class="tpl-form-input am-margin-top-xs" id="descriptions" name="descriptions" 
+	placeholder="请输入descriptions">			</div>
+	</div>
+		<div class="am-form-group">
+			<label for="cid" class="am-u-sm-12 am-form-label am-text-left">cid					<span class="tpl-form-line-small-title">cid</span></label>
+			<div class="am-u-sm-12">
+					<input type="text" 
+	value="{if condition="isset($personal_position.cid)"}{$personal_position.cid}{/if}"
+	class="tpl-form-input am-margin-top-xs" id="cid" name="cid" 
+	placeholder="请输入cid">			</div>
+	</div>
+		<div class="am-form-group">
+			<label for="professional" class="am-u-sm-12 am-form-label am-text-left">professional					<span class="tpl-form-line-small-title">professional</span></label>
+			<div class="am-u-sm-12">
+					<input type="text" 
+	value="{if condition="isset($personal_position.professional)"}{$personal_position.professional}{/if}"
+	class="tpl-form-input am-margin-top-xs" id="professional" name="professional" 
+	placeholder="请输入professional">			</div>
+	</div>
+		<div class="am-form-group">
+			<label for="creatime" class="am-u-sm-12 am-form-label am-text-left">creatime					<span class="tpl-form-line-small-title">creatime</span></label>
+			<div class="am-u-sm-12">
+					<input type="text" 
+	value="{if condition="isset($personal_position.creatime)"}{$personal_position.creatime}{/if}"
+	class="tpl-form-input am-margin-top-xs" id="creatime" name="creatime" 
+	placeholder="请输入creatime">			</div>
+	</div>
+		<div class="am-form-group">
+			<label for="status" class="am-u-sm-12 am-form-label am-text-left">status					<span class="tpl-form-line-small-title">status</span></label>
+			<div class="am-u-sm-12">
+					<input type="text" 
+	value="{if condition="isset($personal_position.status)"}{$personal_position.status}{/if}"
+	class="tpl-form-input am-margin-top-xs" id="status" name="status" 
+	placeholder="请输入status">			</div>
+	</div>
+		<div class="am-form-group">
+			<label for="lasttime" class="am-u-sm-12 am-form-label am-text-left">lasttime					<span class="tpl-form-line-small-title">lasttime</span></label>
+			<div class="am-u-sm-12">
+					<input type="text" 
+	value="{if condition="isset($personal_position.lasttime)"}{$personal_position.lasttime}{/if}"
+	class="tpl-form-input am-margin-top-xs" id="lasttime" name="lasttime" 
+	placeholder="请输入lasttime">			</div>
+	</div>
+		<div class="am-form-group">
+			<label for="isdel" class="am-u-sm-12 am-form-label am-text-left">isdel					<span class="tpl-form-line-small-title">isdel</span></label>
+			<div class="am-u-sm-12">
+					<input type="text" 
+	value="{if condition="isset($personal_position.isdel)"}{$personal_position.isdel}{/if}"
+	class="tpl-form-input am-margin-top-xs" id="isdel" name="isdel" 
+	placeholder="请输入isdel">			</div>
+	</div>
+		<div class="am-form-group">
+			<div class="am-u-sm-12 am-u-sm-push-12">
+					<button type="submit" class="am-btn am-btn-primary tpl-btn-bg-color-success ">提交</button>
+			</div>
+	</div>
+</form>
+
+								</div>
+						</div>
+				</div>
+		</div>
+	</div>
+</div>
+{/block}
