@@ -46,4 +46,10 @@ class PersonalPosition extends Common {
         return $this->where(json_decode($condition))->paginate($itemNum);
     }
 
+    //分页数据
+    public function getPageData($page=1,$count=10,$where=['isdel'=>['neq',1]],$sort='id desc'){
+        $data = $this::Query('SELECT cm.name,cm.email,pt.address,pt.positiontype,pt.region,pt.professional,pt.status,pt.wages,pt.experience,pt.education FROM tcyy_personal_company cm,tcyy_personal_position pt on cm.id = pt.cid')->where($where)->page($page.','.$count)->order($sort)->select();
+        return $data;
+    }
+
 }	
