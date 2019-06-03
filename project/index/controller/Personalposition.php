@@ -15,10 +15,10 @@ class Personalposition extends Common {
     public function index(){
         $get = input('get.');
         $where = [];
-        $where['isdel'] = ['neq',1];
+        $where['pt.isdel'] = ['neq',1];
 
         if(!empty($get['companyName'])){
-            $where['name'] = ['like', '%'.$get['companyName'].'%'];
+            $where['cm.name'] = ['like', '%'.$get['companyName'].'%'];
         }
 
         $countPage = $this->model->getCount($where);
@@ -91,10 +91,10 @@ class Personalposition extends Common {
         $count = empty($get['count'])?10:$get['count'];
 
         $where=[];
-        $where['isdel']=['neq',1];
+        $where['pt.isdel']=['neq',1];
 
         if(!empty($get['companyName'])){
-            $where['name'] = ['like', '%'.$get['companyName'].'%'];
+            $where['cm.name'] = ['like', '%'.$get['companyName'].'%'];
         }
 
         $data = $this->model->getPageData($page,$count,$where);
