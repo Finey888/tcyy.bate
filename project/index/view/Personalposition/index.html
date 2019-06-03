@@ -1,101 +1,210 @@
-{extend name="layout" /}
-{block name="content"}
-<!-- 内容区域 -->
-<div class="tpl-content-wrapper">
-		<div class="row-content am-cf">
-				<div class="row">
-						<div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
-								<div class="widget am-cf">
-										<div class="widget-head am-cf">
-												<div class="widget-title  am-cf">管理personal_position</div>
-										</div>
-										<div class="widget-body  am-fr">
-	<div class="am-u-sm-12 am-u-md-6 am-u-lg-6">
-		<div class="am-form-group">
-			<div class="am-btn-toolbar">
-				<div class="am-btn-group am-btn-group-xs">
-					<a class="am-btn am-btn-default am-btn-success" href="{:url('personal_position/add')}">
-						<span class="am-icon-plus"></span> 新增
-					</a>
-					<!--
-					<button type="button" class="am-btn am-btn-default am-btn-secondary"><span class="am-icon-save"></span> 保存</button>
-					<button type="button" class="am-btn am-btn-default am-btn-warning"><span class="am-icon-archive"></span> 审核</button>
-					<button type="button" class="am-btn am-btn-default am-btn-danger"><span class="am-icon-trash-o"></span> 删除</button>
-					-->
-				</div>
+{layout name="Public/layout" /}
+<body class="childrenBody">
+<blockquote class="layui-elem-quote news_search">
+	<form id="searchForm" action="{:url('Personalposition/index')}" method="get">
+		<div class="layui-inline">
+			<div class="layui-input-inline">
+				<input type="text" id="companyName" name='companyName' placeholder="公司名称" class="layui-input search_input" value="{:input('param.companyName')}">
 			</div>
+			<a class="layui-btn search_btn" href="javascript:;" id="search">查询 </a>
 		</div>
-	</div>
-	<div class="am-u-sm-12">
-		<table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black " id="example-r">
-				<thead>
-					<tr>
-												<th>id</th>
-												<th>positiontype</th>
-												<th>region</th>
-												<th>address</th>
-												<th>wages</th>
-												<th>nums</th>
-												<th>nature</th>
-												<th>experience</th>
-												<th>education</th>
-												<th>descriptions</th>
-												<th>cid</th>
-												<th>professional</th>
-												<th>creatime</th>
-												<th>status</th>
-												<th>lasttime</th>
-												<th>isdel</th>
-												<th>操作</th>
-					</tr>
-				</thead>
-				<tbody>
-						{volist name="personal_positionList" id="vo"}
-						<tr class="gradeX">
-																<td>{$vo.id}</td>
-																<td>{$vo.positiontype}</td>
-																<td>{$vo.region}</td>
-																<td>{$vo.address}</td>
-																<td>{$vo.wages}</td>
-																<td>{$vo.nums}</td>
-																<td>{$vo.nature}</td>
-																<td>{$vo.experience}</td>
-																<td>{$vo.education}</td>
-																<td>{$vo.descriptions}</td>
-																<td>{$vo.cid}</td>
-																<td>{$vo.professional}</td>
-																<td>{$vo.creatime}</td>
-																<td>{$vo.status}</td>
-																<td>{$vo.lasttime}</td>
-																<td>{$vo.isdel}</td>
-																<td>
-										<div class="tpl-table-black-operation">
-												<a  href="{:url('personal_position/edit', ['id'=>$vo['id']])}">
-													<i class="am-icon-pencil"></i> 编辑
-												</a>
-												<a href="{:url('personal_position/delete', ['id'=>$vo['id']])}" onclick='return confirm("确定删除吗？")' class="tpl-table-black-operation-del">
-													<i class="am-icon-trash"></i> 删除
-												</a>
-										</div>
-								</td>
-						</tr>
-						{/volist}
-						<!-- more data -->
-				</tbody>
-		</table>
-	</div>
-	<div class="am-u-lg-12 am-cf">
+		<div class="layui-inline">
+			<!--			<a class="layui-btn layui-btn-normal newsAdd_btn">添加区域</a>-->
+		</div>
+		<div class="layui-inline">
+			<div class="layui-form-mid layui-word-aux">本页面刷新后除新添加的外所有操作无效，关闭页面所有数据重置</div>
+		</div>
+	</form>
+</blockquote>
+<div class="layui-form news_list">
+	<table class="layui-table">
+		<colgroup>
+			<col width="9%">
+			<col width="9%">
+			<col width="9%">
+			<col width="9%">
+			<col width="9%">
+			<col width="9%">
+			<col width="9%">
+			<col width="9%">
+			<col width="9%">
+			<col width="9%">
+			<col>
+		</colgroup>
+		<thead>
+		<tr>
+			<th>序号</th>
+			<th>公司名称</th>
+			<th>邮箱地址</th>
+			<th>职位类型</th>
+			<th>职位所在区域</th>
+			<th>职位所在地址</th>
+			<th>职位职称</th>
+			<th>薪水范围</th>
+			<th>职位经验</th>
+			<th>学历要求</th>
+			<th>操作</th>
+		</tr>
+		</thead>
+		<tbody class="news_content"></tbody>
+	</table>
+</div>
+<div id="page"></div>
+<script type="text/javascript">
+    var dataUrl = "{:url('Personalposition/getList')}";
+    layui.config({
+        base : "admin/js/"
+    }).use(['form','layer','jquery','laypage'],function(){
+        var form = layui.form(),
+            layer = parent.layer === undefined ? layui.layer : parent.layer,
+            laypage = layui.laypage,
+            $ = layui.jquery;
+        var nums = 10; //每页出现的数据量
+        var countPage = parseInt("{$countPage}");//总页数
+        var newsData = '';
+        //加载页面数据
+        newsList();
+        //添加文章
+//        改变窗口大小时，重置弹窗的高度，防止超出可视区域（如F12调出debug的操作）
+         $(window).one("resize",function(){
+//         	$(".newsAdd_btn").click(function(){
+//         		var add = layui.layer.open({
+//         			title : "添加账号",
+//         			type : 2,
+//         			maxmin :true,
+//         			area:  ['800px', '500px'],
+//         			content : "{:url('Area/add')}",
+//         			success : function(layero, index){
+//         				/*setTimeout(function(){
+//                                 layui.layer.tips('点击此处返回列表', '.layui-layer-setwin .layui-layer-close', {
+//                                         tips: 3
+//                                 });
+//                         },500)*/
+//         			}
+//         		})
+//         		//layui.layer.full(add);
+//         	})
+         	$("body").on("click",".news_views",function(){  //编辑
+         		var id = $(this).attr('data-id');
+         		var edit = layui.layer.open({
+         			title : "查看",
+         			type : 2,
+         			maxmin :true,
+         			area:  ['800px', '500px'],
+         			content : "{:url('Personalposition/details')}?id="+id,
+         			success : function(layero, index){
 
-			<div class="am-fr">
-					<ul class="am-pagination tpl-pagination">
-							{$personal_positionList->render()}
-					</ul>
-			</div>
-	</div>
-</div>
-								</div>
-						</div>
-				</div>
-		</div>
-</div>
-{/block}
+         			}
+         		})
+         	})
+
+         }).resize();
+
+        //删除
+        $("body").on("click",".news_del",function(){  //删除
+            var id = $(this).attr('data-id');
+            var _this = $(this);
+            layer.confirm('确定删除此信息？',{icon:3, title:'提示信息'},function(index){
+                $.ajax({
+                    type: "POST",
+                    url: "{:url('Personalposition/del')}",
+                    data: {id:id},
+                    dataType: "json",
+                    success: function(data){
+                        if(data.status == 1){
+                            _this.parents("tr").remove();
+                            layer.close(index);
+                            layer.msg(data.msg, {icon: 6});
+                        }else{
+                            layer.close(index);
+                            layer.msg(data.msg, {
+                                icon: 5
+                                ,btn: ['知道了']
+                            });
+                        }
+                    }
+                });
+
+            });
+       })
+
+
+        function newsList(that){
+            //渲染数据
+            function renderDate(data){
+                var dataHtml = '';
+                if(data.length != 0){
+                    var i=0;
+                    $.each(data,function(index,content){
+                        i+=1;
+                        var gt='-';
+                        // if(typeof(content.auth_group[0])!="undefined"){
+                        // 	gt=content.auth_group[0].title;
+                        // }
+                        dataHtml += '<tr>'
+                            +'<td>'+i+'</td>'
+							+'<td>'+content.name+'</td>'
+                            +'<td>'+content.email+'</td>'
+                            +'<td>'+content.positiontype+'</td>'
+                            +'<td>'+content.region+'</td>'
+                            +'<td>'+content.address+'</td>'
+                            +'<td>'+content.professional+'</td>'
+                            +'<td>'+content.wages+'</td>'
+                            +'<td>'+content.experience+'</td>'
+                            +'<td>'+content.education+'</td>'
+                            +'<td>'
+						 	+  '<a class="layui-btn layui-btn-mini news_views" data-id="'+content.id+'"><i class="iconfont icon-edit"></i> 查看</a>'
+                            // +  '<a class="layui-btn layui-btn-danger layui-btn-mini news_del" data-id="'+content.id+'"><i class="layui-icon">&#xe640;</i> 删除</a>'
+                            +'</td>'
+                            +'</tr>';
+                    });
+
+                }else{
+                    dataHtml = '<tr><td colspan="11" align="center">暂无数据</td></tr>';
+                }
+                return dataHtml;
+            }
+
+            if(that){
+                newsData = that;
+            }
+
+            page();
+            function page(){
+                laypage({
+                    cont : "page",
+                    pages : Math.ceil(countPage/nums),
+                    skip:true,
+                    jump : function(obj){
+                        var loadIndex = layer.load(2);
+                        $.ajax({
+                            type: "GET",
+                            url: dataUrl,
+                            data: {page:obj.curr,count:nums,companyName:$('#companyName').val()},
+                            dataType: "json",
+                            success: function(data){
+                                if(data.status == 1){
+                                    //正常加载信息
+                                    countPage = data.pagecount;
+                                    newsData = data.data;
+                                    $(".news_content").html(renderDate(newsData));
+                                    form.render();
+                                }else{
+                                    layer.msg(data.msg);
+                                }
+                                layer.close(loadIndex);
+                            }
+                        });
+                    }
+                })
+            }
+        }
+
+
+        $('#search').click(function(){
+            $('#searchForm').submit();
+        })
+    })
+</script>
+</body>
+</html>

@@ -1,8 +1,7 @@
 <?php
 namespace app\index\model;
 
-
-class PersonalPosition extends Common {
+class PersonalCompany extends Common {
 		    //新增
     public function add($request){
         $data = $request->param();
@@ -44,20 +43,4 @@ class PersonalPosition extends Common {
         return $this->where(json_decode($condition))->paginate($itemNum);
     }
 
-    //分页数据
-    public function getPageData($page=1,$count=10,$where=[],$sort='creatime desc'){
-        $data = $this :: with('personalCompanyInfo') -> field('id,cid,address,positiontype,region,professional,status,wages,experience,education')->where($where)->page($page.','.$count)->order($sort)->select();
-        return $data;
-    }
-
-    //获取总条数
-    public function getCount($where=[]){
-//        return $this->where($where)->count();
-        return $data = $this :: with('personalCompanyInfo') -> field('id,cid,address,positiontype,region,professional,status,wages,experience,education')->where($where)->count();
-    }
-
-    public function personalCompanyInfo()
-    {
-        return $this->belongsToMany('PersonalCompany')->field('id,name,email');
-    }
 }	

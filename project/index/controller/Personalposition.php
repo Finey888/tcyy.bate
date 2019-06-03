@@ -1,16 +1,29 @@
 <?php
 namespace app\index\controller;
+use think\Request;
 
 class Personalposition extends Common {
 	protected $model = null;
 
-	public function _initialize(){	//初始化
-		$this->model = new \app\index\model\PersonalPosition;
-	}
+    public function __construct(Request $request = null,$options = [])
+    {
+        parent::__construct($request);
+        $this->model = new \app\index\model\PersonalPosition;
+    }
 
 	    //默认入口
     public function index(){
-        $this->redirect('lists');
+        $get = input('get.');
+        $where = [];
+        $where['isdel'] = ['neq',1];
+
+        if(!empty($get['companyName'])){
+            $where['name'] = ['like', '%'.$get['companyName'].'%'];
+        }
+
+        $countPage = $this->model->getCount($where);
+        $this->assign('countPage',$countPage);
+        return view('Personalposition/index');
     }
 		//新增
 	public function add(){
@@ -70,4 +83,24 @@ class Personalposition extends Common {
 		$this->assign('personal_positionList', $personal_positionList);
 		return $this->fetch();
 	}
+
+    //获取列表
+    public function getList(){
+        $get = input('get.');
+        $page = empty($get['page'])?1:$get['page'];
+        $count = empty($get['count'])?10:$get['count'];
+
+        $where=[];
+        $where['isdel']=['neq',1];
+
+        if(!empty($get['companyName'])){
+            $where['name'] = ['like', '%'.$get['companyName'].'%'];
+        }
+
+        $data = $this->model->getPageData($page,$count,$where);
+
+        return json(['data'=>$data,'status'=>1,'msg'=>'获取数据成功']);
+    }
+
+
 }
