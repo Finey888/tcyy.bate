@@ -16,10 +16,6 @@ drop table if exists tccybate.tcyy_personal_resume;
 
 drop table if exists tccybate.tcyy_personal_resume_view_log;
 
-/*==============================================================*/
-/* User: tccybate                                               */
-/*==============================================================*/
-create user tccybate;
 
 /*==============================================================*/
 /* Table: tcyy_base_dict                                        */
