@@ -2,45 +2,20 @@
 namespace app\tcyy\model;
 
 class Area extends Common {
-		    //新增
-    public function add($request){
-        $data = $request->param();
-        foreach($data as $key=>$val){
-            if(is_array($val)){    //处理checkbox情况
-                $data[$key] = implode("#op#", $val);
-            }
-        }
-        return $this->data($data)->allowField(true)->save();
+
+    //自定义初始化
+    protected function initialize()
+    {
+        //需要调用`Model`的`initialize`方法
+        parent::initialize();
     }
-	    //修改
-    public function edit($request){
-        $data = $request->param();
-        foreach($data as $key=>$val){
-            if(is_array($val)){    //处理checkbox情况
-                $data[$key] = implode("#op#", $val);
-            }
-        }
-        return $this->allowField(true)->save($data, ['id' => $data['id']]);
-    }
-	    //删除
-    public function del($request){
-        $id = $request->param('id');
-        return $this->where('id',  $id)->delete();
-    }
-	    //批量删除
-    public function delList($request){
-        $condition = $request->request('condition');
-        return $this->destroy(json_decode($condition));
-    }
-	    //id单个查询
-    public function info($request){
-        $id = $request->param('id');		
-        return $this->where('id', $id)->find();
-    }
-	    //列表
-    public function lists($request, $itemNum = 12){	//每页显示12条数据
-        $condition = $request->param('condition');
-        return $this->where(json_decode($condition))->paginate($itemNum);
+
+	//列表
+    public function getListByParentId($param){
+        $where = [
+            'upid' => $param
+        ];
+        return $this::where($where) -> field('id,name') ->select();
     }
 
 }	

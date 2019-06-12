@@ -2,16 +2,23 @@
 namespace app\tcyy\model;
 
 class PersonalCompany extends Common {
-		    //新增
-    public function add($request){
-        $data = $request->param();
-        foreach($data as $key=>$val){
-            if(is_array($val)){    //处理checkbox情况
-                $data[$key] = implode("#op#", $val);
-            }
-        }
-        return $this->data($data)->allowField(true)->save();
+    public function addData($data,$where=[]){
+//        if(empty($where)){
+//            $saveType = 'Personalcompany.add';
+//        }else{
+//            $saveType = 'Personalcompany.edit';
+//        }
+
+        $return = $this::allowField(true)->save($data,$where);
+        $errors = $this::getError();
+        return empty( $errors)?['status'=>1,'data'=>$this->toArray()]:['status'=>2,'msg'=> $errors];
     }
+
+    public function getDataById($id){
+        $data = $this::where(['id'=>$id])->find();
+        return $data;
+    }
+
 	    //修改
     public function edit($request){
         $data = $request->param();
