@@ -1,7 +1,18 @@
 <?php
 namespace app\tcyy\model;
 
+use think\Db;
+
 class PersonalPosition extends Common {
+
+    protected $name = 'personal_position';
+
+    public function __construct($data = [])
+    {
+        parent::__construct($data);
+        $this->_collection = Db::name($this->name);
+    }
+
 		    //新增
     public function add($request){
         $data = $request->param();
@@ -41,6 +52,15 @@ class PersonalPosition extends Common {
     public function lists($request, $itemNum = 12){	//每页显示12条数据
         $condition = $request->param('condition');
         return $this->where(json_decode($condition))->paginate($itemNum);
+    }
+
+    public function getPageData($page=1,$count=10,$where=[],$sort='pt.lasttime desc'){
+        $data = $this ->_collection
+            ->alias('pt')
+            ->where($where)
+            ->join('tcyy_personal_company cm', ' cm.id = pt.cid', 'inner')
+            ->field('pt.id,cm.name,cm.email,pt.address,pt.positiontype,pt.region,pt.professional,pt.status,pt.wages,pt.experience,pt.education ')->page($page.','.$count)->order($sort)->select();
+        return $data;
     }
 
 }	
