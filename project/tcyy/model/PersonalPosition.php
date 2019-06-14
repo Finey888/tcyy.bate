@@ -13,47 +13,20 @@ class PersonalPosition extends Common {
         $this->_collection = Db::name($this->name);
     }
 
-		    //新增
-    public function add($request){
-        $data = $request->param();
-        foreach($data as $key=>$val){
-            if(is_array($val)){    //处理checkbox情况
-                $data[$key] = implode("#op#", $val);
-            }
-        }
-        return $this->data($data)->allowField(true)->save();
-    }
-	    //修改
-    public function edit($request){
-        $data = $request->param();
-        foreach($data as $key=>$val){
-            if(is_array($val)){    //处理checkbox情况
-                $data[$key] = implode("#op#", $val);
-            }
-        }
-        return $this->allowField(true)->save($data, ['id' => $data['id']]);
-    }
-	    //删除
-    public function del($request){
-        $id = $request->param('id');
-        return $this->where('id',  $id)->delete();
-    }
-	    //批量删除
-    public function delList($request){
-        $condition = $request->request('condition');
-        return $this->destroy(json_decode($condition));
-    }
-	    //id单个查询
-    public function info($request){
-        $id = $request->param('id');		
-        return $this->where('id', $id)->find();
-    }
-	    //列表
-    public function lists($request, $itemNum = 12){	//每页显示12条数据
-        $condition = $request->param('condition');
-        return $this->where(json_decode($condition))->paginate($itemNum);
+    //根据主键查询职位信息
+    public function getDataById($id){
+        $data = $this::where(['id'=>$id])->find();
+        return $data;
     }
 
+    //保存职位信息
+    public function saveData($data,$where=[]){
+        $return = $this::allowField(true)->save($data,$where);
+        $errors = $this::getError();
+        return empty( $errors)?['status'=>1,'data'=>$this->toArray()]:['status'=>2,'msg'=> $errors];
+    }
+
+    //分页查询职位信息
     public function getPageData($page=1,$count=10,$where=[],$sort='pt.lasttime desc'){
         $data = $this ->_collection
             ->alias('pt')
@@ -63,4 +36,9 @@ class PersonalPosition extends Common {
         return $data;
     }
 
+    //逻辑删除
+    public function  delPostionById($id){
+        $data = $this::where(['id' => $id])->update(['isdel' => 1]);
+        return $data;
+    }
 }	

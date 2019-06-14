@@ -11,53 +11,6 @@ class Personalposition extends Common {
         $this->model = new \app\tcyy\model\PersonalPosition;
     }
 
-		//新增
-	public function add(){
-		if($this->request->isPost()){
-			$flag = $this->model->add($this->request);
-			if($flag){
-				$this->success('添加成功', url('lists'));
-			}else{
-				$this->error('添加失败');
-			}
-		}else{
-			return $this->fetch();
-		}
-	}
-		//修改
-	public function edit(){
-		if($this->request->isPost()){
-			$flag = $this->model->edit($this->request);
-			if($flag){
-				$this->success('编辑成功', url('lists'));
-			}else{
-				$this->error('编辑失败');
-			}
-		}else{
-			$personal_position = $this->model->info($this->request);
-			$this->assign('personal_position', $personal_position);
-			return $this->fetch();
-		}
-	}
-		//删除
-	public function delete(){
-		$flag = $this->model->del($this->request);
-		if($flag){
-			$this->success('删除成功', url('lists'));
-		}else{
-			$this->error('删除失败');
-		}
-	}
-	    //批量删除
-    public function delList(){
-        $flag = $this->model->delList($this->request);
-        if($flag){
-			$this->success('删除成功', url('lists'));
-		}else{
-			$this->error('删除失败');
-		}
-    }
-
     //获取列表
     public function queryPositionByCondition(){
         $get = input('post.');
@@ -88,5 +41,67 @@ class Personalposition extends Common {
         returnAjax(['data'=>$data,'page'=>$page],'获取数据成功',1);exit();
     }
 
+    //保存会员公司职位信息
+    public function saveCompanyPositionByVIP(){
+        $get = input('post.');
+        if(empty($get['id'])){
+            $data['positiontype'] = empty($get['positiontype'])? returnAjax([],'缺少职位类型参数',2):$get['positiontype'];
+            $data['professional'] = empty($get['professional'])? returnAjax([],'缺少招聘知名名称参数',2):$get['professional'];
+            $data['region'] = empty($get['region'])? returnAjax([],'缺少区域参数',2):$get['region'];
+            $data['descriptions'] = empty($get['descriptions']) ? returnAjax([],'缺少职位描述参数',2):$get['descriptions'];
+            $data['nums'] = empty($get['nums'])? returnAjax([],'缺少招聘人数参数',2):$get['nums'];
+            $data['education'] = empty($get['education'])? returnAjax([],'缺少学历参数',2):$get['education'];
+            $data['nature'] = $get['nature'];       //职位属性：全职 兼职
+            $data['address'] = $get['address'];     //地址
+            $data['experience'] = $get['experience']; //工作经验
+            $data['lasttime'] = strtotime(date('Y-m-d',time()));
+            $data['creatime'] = strtotime(date('Y-m-d ',time()));
+            $data['cid'] = empty($get['cid'])? returnAjax([],'缺少公司编号参数',2):$get['cid'];
+            $return = $this->model->saveData($data);
+            if($return['status'] == 2){
+                returnAjax([], $return['msg'],2);
+            }
 
+            $rtd=[
+                'id'=>$return['data']['id'],
+                'professional'=>$return['data']['professional'],
+                'region'=>$return['data']['region']
+            ];
+
+            returnAjax($rtd, '增加成功',1);
+        }else{
+            $return = $this->model->saveData($get,['id'=>$get['id']]);
+            if($return['status'] == 2){
+                returnAjax([], $return['msg'],2);
+            }
+
+            $data = $this->model->getDataById($get['id']);
+
+            $rtd=[
+                'id'=>$data['id'],
+                'number'=>$data['name'],
+                'price'=>$data['region']
+            ];
+
+            returnAjax($rtd, '更新成功',1);
+        }
+    }
+
+    public function getPositionDetail(){
+        $get = input('post.');
+        if(empty($get['id'])){
+            returnAjax([],'无对应职位编号参数',2);
+        }
+        $data = $this->model->getDataById($get['id']);
+        returnAjax($data,"获取详情成功",1);
+    }
+
+    public function deletePosition(){
+        $get = input('post.');
+        if(empty($get['id'])){
+            returnAjax([],'无对应职位编号参数',2);
+        }
+        $data = $this->model->delPostionById($get['id']);
+        returnAjax([],'操作成功',1);
+    }
 }
