@@ -2,45 +2,45 @@
 namespace app\tcyy\model;
 
 class PersonalQualification extends Common {
-		    //新增
-    public function add($request){
-        $data = $request->param();
-        foreach($data as $key=>$val){
-            if(is_array($val)){    //处理checkbox情况
-                $data[$key] = implode("#op#", $val);
-            }
-        }
-        return $this->data($data)->allowField(true)->save();
-    }
-	    //修改
-    public function edit($request){
-        $data = $request->param();
-        foreach($data as $key=>$val){
-            if(is_array($val)){    //处理checkbox情况
-                $data[$key] = implode("#op#", $val);
-            }
-        }
-        return $this->allowField(true)->save($data, ['id' => $data['id']]);
-    }
-	    //删除
-    public function del($request){
-        $id = $request->param('id');
-        return $this->where('id',  $id)->delete();
-    }
-	    //批量删除
-    public function delList($request){
-        $condition = $request->request('condition');
-        return $this->destroy(json_decode($condition));
-    }
-	    //id单个查询
-    public function info($request){
-        $id = $request->param('id');		
-        return $this->where('id', $id)->find();
-    }
-	    //列表
-    public function lists($request, $itemNum = 12){	//每页显示12条数据
-        $condition = $request->param('condition');
-        return $this->where(json_decode($condition))->paginate($itemNum);
+
+    //自定义初始化
+    protected function initialize()
+    {
+        //需要调用`Model`的`initialize`方法
+        parent::initialize();
     }
 
-}	
+    /**
+     * 保存/更新证书信息
+     * @param $qualificationData
+     * @return false|int
+     */
+    public function add($qualificationData){
+        $return = $this->allowField(true)->saveAll($qualificationData);
+        $eror = $this::getError();
+        return empty($eror) ? ['status' => 1 ,'data' => $return] : ['status' => 2,'msg' => $eror];
+    }
+
+
+    /**
+     * 根据主键删除操作
+     * @param $id
+     * @return PersonalQualification
+     */
+    public function del($id){
+        return $this::where('id',  $id) -> update(['isdel' => 1]);
+    }
+
+    /**
+     * 根据条件查询返回列表
+     * @param $where
+     * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function getQualificationList($where){
+        $data = $this::where($where)->select();
+        return empty($data) ? [] : $data -> toArray();
+    }
+}

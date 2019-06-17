@@ -24,6 +24,14 @@ class PersonalResumeViewLog extends Model {
         return empty( $errors)?['status'=>1,'data'=>$this->toArray()]:['status'=>2,'msg'=> $errors];
     }
 
+    /**
+     * 根据条件查询查看简历历史记录
+     * @param $where
+     * @return array|false|\PDOStatement|string|Model
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function getViewLogByIds($where){
         return $this -> where($where) -> find();
     }

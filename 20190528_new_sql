@@ -129,7 +129,7 @@ create table tccybate.tcyy_personal_position
    cid                  int(11) not null comment '关联会员公司编号',
    professional         varchar(255) not null comment '职称',
    creatime             int(11) not null comment '创建时间',
-   status               tinyint(4) not null default 1 comment '1-上架 2-下架',
+   status               tinyint(4) not null default 0 comment '0-审核中 1-上架 2-下架',
    lasttime             int(11) not null comment '最后刷新招聘时间',
    isdel                tinyint(4) not null default 0 comment '0-否 1-是',
    primary key (id)
@@ -198,7 +198,7 @@ create table tccybate.tcyy_personal_resume_view_log
 (
    id                   int(11) not null auto_increment,
    rid                  int(11) not null comment '简历编号',
-   cid                  int(11) not null comment '企业编号',
+   uid                  int(11) not null comment '用户编号',
    viewtime             int(11) comment '查看时间',
    iscollect            tinyint(4) default 0 comment '是否收藏简历 0-否 1-是',
    primary key (id)
