@@ -2,13 +2,13 @@
 namespace app\tcyy\model;
 
 class PersonalResume extends Common {
-    //根据主键查询职位信息
+    //根据主键查询简历信息
     public function getDataById($id){
         $data = $this::where(['id'=>$id])->find();
         return $data;
     }
 
-    //保存职位信息
+    //保存简历信息
     public function saveData($data,$where=[]){
         $return = $this::allowField(true)->save($data,$where);
         $errors = $this::getError();
@@ -26,7 +26,7 @@ class PersonalResume extends Common {
     }
 
     //逻辑删除
-    public function  delPostionById($id){
+    public function  delResumeById($id){
         $data = $this::where(['id' => $id])->update(['isdel' => 1]);
         return $data;
     }

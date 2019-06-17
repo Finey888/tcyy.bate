@@ -1,7 +1,18 @@
 <?php
 namespace app\tcyy\model;
 
+use think\Db;
+
 class PersonalCompany extends Common {
+
+    protected $name = 'personal_company';
+
+    public function __construct($data = [])
+    {
+        parent::__construct($data);
+        $this->_collection = Db::name($this->name);
+    }
+
     public function addData($data,$where=[]){
 //        if(empty($where)){
 //            $saveType = 'Personalcompany.add';
@@ -19,35 +30,25 @@ class PersonalCompany extends Common {
         return $data;
     }
 
-	    //修改
-    public function edit($request){
-        $data = $request->param();
-        foreach($data as $key=>$val){
-            if(is_array($val)){    //处理checkbox情况
-                $data[$key] = implode("#op#", $val);
-            }
+	//原生sql查询,查询返回投递给公司发布的职位的简历列表数据
+    public function queryList($uid){
+        $querySql = 'SELECT a.personname,a.arrivaltime,a.telephone,a.address,a.delivertime,b.professional FROM (SELECT rsm.personname,rsm.arrivaltime,rsm.telephone,rsm.address,dl.delivertime,dl.jid  FROM tcyy_personal_deliver dl , tcyy_personal_resume rsm WHERE dl.rid = rsm.id)a' .
+            ' LEFT JOIN  (SELECT pt.id,pt.professional,company.uid FROM tcyy_personal_company company,tcyy_personal_position pt WHERE company.id = pt.cid )b ON a.jid = b.id WHERE b.uid = ?';
+        return $this -> query($querySql,[$uid]);
+
+    }
+
+    /**
+     * 根据登录vip用户查询浏览简历历史记录
+     * @param $uid
+     */
+    public function queryViewResumeLogs($uid,$collectSign){
+        $querySql = 'SELECT rsm.personname,rsm.birthday,rsm.expectregion,rsm.address,rsm.telephone,rsm.arrivaltime,rsm.sex,vl.rid,vl.viewtime FROM tcyy_personal_resume rsm,tcyy_personal_resume_view_log vl WHERE rsm.id = vl.rid and vl.uid = ?';
+        if(!empty($collectSign)){
+            $querySql .= ' and vl.iscollect = ?';
+            return $this -> query($querySql,[$uid,$collectSign]);
         }
-        return $this->allowField(true)->save($data, ['id' => $data['id']]);
-    }
-	    //删除
-    public function del($request){
-        $id = $request->param('id');
-        return $this->where('id',  $id)->delete();
-    }
-	    //批量删除
-    public function delList($request){
-        $condition = $request->request('condition');
-        return $this->destroy(json_decode($condition));
-    }
-	    //id单个查询
-    public function info($request){
-        $id = $request->param('id');		
-        return $this->where('id', $id)->find();
-    }
-	    //列表
-    public function lists($request, $itemNum = 12){	//每页显示12条数据
-        $condition = $request->param('condition');
-        return $this->where(json_decode($condition))->paginate($itemNum);
+        return $this -> query($querySql,[$uid]);
     }
 
 }	

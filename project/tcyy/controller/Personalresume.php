@@ -95,7 +95,7 @@ class Personalresume extends Common {
         returnAjax($data,"简历详情获取成功",1);
     }
 
-    public function deleteResume(){
+    public function deletePersonalResume(){
         $get = input('post.');
         if(empty($get['id'])){
             returnAjax([],'无对应简历编号参数',2);

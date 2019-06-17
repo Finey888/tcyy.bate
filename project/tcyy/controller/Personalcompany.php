@@ -74,4 +74,36 @@ class Personalcompany extends Common
         }
     }
 
+    /**
+     * 查询当前vip用户企业接收到的投递职位简历列表
+     */
+    public function viewDeliverResumes(){
+        $get = input('post.');
+        $uid= $this->userData->id;
+        $data = $this -> personalCompanymodel -> queryList($uid);
+
+        returnAjax($data,"查询列表获取成功",1);
+    }
+
+
+    /**
+     * 会员企业查询浏览简历历史
+     */
+    public function queryViewLogs(){
+        $get = input('post.');
+        $uid= $this->userData->id;
+        $data = $this -> personalCompanymodel -> queryViewResumeLogs($uid,'');
+        returnAjax($data,"查询成功",1);
+    }
+
+
+    /**
+     * 会员企业查询收藏简历记录
+     */
+    public function queryCollectResumeRecords(){
+        $get = input('post.');
+        $uid= $this->userData->id;
+        $data = $this -> personalCompanymodel -> queryViewResumeLogs($uid,1);
+        returnAjax($data,"查询成功",1);
+    }
 }
