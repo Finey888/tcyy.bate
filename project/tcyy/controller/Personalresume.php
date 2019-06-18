@@ -4,11 +4,17 @@ use think\Request;
 
 class Personalresume extends Common {
 	protected $model = null;
+	protected $eductionModel = null;
+	protected $experienceModel = null;
+	protected $qualificationModel = null;
 
     public function __construct(Request $request = null,$options = [])
     {
         parent::__construct($request);
-        $this->model = new \app\tcyy\model\PersonalResume();
+        $this-> model = new \app\tcyy\model\PersonalResume();
+        $this-> eductionModel = new \app\tcyy\model\PersonalEducation();
+        $this-> experienceModel = new \app\tcyy\model\PersonalExperience();
+        $this-> qualificationModel = new \app\tcyy\model\PersonalQualification();
     }
 
     //获取列表
@@ -31,7 +37,9 @@ class Personalresume extends Common {
         returnAjax(['data'=>$data,'page'=>$page],'获取数据成功',1);exit();
     }
 
-    //保存会员公司职位信息
+    /**
+     * 保存会员公司职位信息
+     */
     public function savePersonalResume(){
         $get = input('post.');
         if(empty($get['id'])){
@@ -69,7 +77,7 @@ class Personalresume extends Common {
 
             returnAjax($rtd, '增加成功',1);
         }else{
-            $return = $this->model->saveData($get,['id'=>$get['id']]);
+            $return = $this-> model->saveData($get,['id'=>$get['id']]);
             if($return['status'] == 2){
                 returnAjax([], $return['msg'],2);
             }
@@ -86,13 +94,49 @@ class Personalresume extends Common {
         }
     }
 
+    /**
+     * 获取简历详情
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function getResumeDetail(){
         $get = input('post.');
-        if(empty($get['id'])){
+        $rid = $get['id'];
+        if(empty($rid)){
             returnAjax([],'无对应简历编号参数',2);
         }
-        $data = $this->model->getDataById($get['id']);
-        returnAjax($data,"简历详情获取成功",1);
+        $data = $this->model->getDataById($rid);
+        $eduData = $this -> eductionModel -> queryEduList(['rid' => $rid]);
+        $expData = $this -> experienceModel -> queryWorkExperienceList(['rid' => $rid]);
+        $quaData = $this -> qualificationModel -> getQualificationList(['rid' => $rid]);
+
+
+        $returnData = [
+            'personname' => $data['personname'],
+            'birthday' => $data['birthday'],
+            'expectregion' =>  $data['expectregion'] ,
+            'telephone' =>  $data['telephone'] ,
+            'education' => $data['education'] ,
+            'email' => $data['email'] ,
+            'jobstatus' => $data['jobstatus'] ,
+            'marriage' => $data['marriage'],
+            'wages' => $data['wages'] ,
+            'positiontype' => $data['positiontype'] ,
+            'selfevaluation' => $data['selfevaluation'] ,
+            'jointime' => $data['jointime'],
+            'arrivaltime' => $data['arrivaltime'] ,
+            'intentposition' => $data['intentposition'] ,
+            'worknature' => $data['worknature'] ,       //工作性质：全职 兼职
+            'sex' => $data['sex'],
+            'ethnic' => $data['ethnic'],
+            'workexperience' => $data['workexperience'],
+            'address' => $data['address'],
+            'eduList' => $eduData,
+            'expList' => $expData,
+            'qualificationList' => $quaData
+        ];
+        returnAjax($returnData,'获取数据成功',1);exit();
     }
 
     public function deletePersonalResume(){

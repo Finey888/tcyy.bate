@@ -14,10 +14,10 @@ class PersonalExperience extends Common {
      * @param $qualificationData
      * @return false|int
      */
-    public function add($eduData){
-        $return = $this -> allowField(true) -> saveAll($eduData);
+    public function save($eduData,$where=[]){
+        $return = $this -> allowField(true) -> save($eduData,$where);
         $eror = $this::getError();
-        return empty($eror) ? ['status' => 1 ,'data' => $return] : ['status' => 2,'msg' => $eror];
+        return empty($eror) ? ['status' => 1 ,'data' => $this -> toArray()] : ['status' => 2,'msg' => $eror];
     }
 
     /**
@@ -42,4 +42,8 @@ class PersonalExperience extends Common {
         return empty($data)?[] :$data -> toArray();
     }
 
-}	
+    public function getById($id){
+        $data = $this -> where(['id' => $id]) -> find();
+        return empty($data)?[] :$data;
+    }
+}

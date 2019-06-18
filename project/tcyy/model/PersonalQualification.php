@@ -15,10 +15,10 @@ class PersonalQualification extends Common {
      * @param $qualificationData
      * @return false|int
      */
-    public function add($qualificationData){
-        $return = $this->allowField(true)->saveAll($qualificationData);
+    public function saveQualification($qualificationData,$where=[]){
+        $return = $this -> allowField(true) -> save($qualificationData,$where);
         $eror = $this::getError();
-        return empty($eror) ? ['status' => 1 ,'data' => $return] : ['status' => 2,'msg' => $eror];
+        return empty($eror) ? ['status' => 1 ,'data' => $this -> toArray()] : ['status' => 2,'msg' => $eror];
     }
 
 

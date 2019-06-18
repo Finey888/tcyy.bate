@@ -13,7 +13,7 @@ class Personalresumeviewlog extends Base {
 
 
     //保存浏览简历记录历史
-    public function savePersonalResume(){
+    public function savePersonalViewResumeLog(){
         $get = input('post.');
         $data['rid'] = empty($get['rid'])? returnAjax([],'缺少简历编号参数',2):$get['rid'];
         $data['viewtime'] = strtotime(date('Y-m-d',time()));
@@ -40,10 +40,7 @@ class Personalresumeviewlog extends Base {
             'region'=>$return['data']['region']
         ];
 
-        returnAjax($rtd, '增加成功',1);
-
-
-        returnAjax($rtd, '更新成功',1);
+        returnAjax($rtd, '保存成功',1);
     }
 
 

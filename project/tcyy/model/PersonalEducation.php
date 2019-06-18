@@ -14,8 +14,8 @@ class PersonalEducation extends Common {
      * @param $qualificationData
      * @return false|int
      */
-    public function add($eduData){
-        $return = $this -> allowField(true) -> saveAll($eduData);
+    public function saveData($eduData,$where=[]){
+        $return = $this -> allowField(true) -> save($eduData,$where);
         $eror = $this::getError();
         return empty($eror) ? ['status' => 1 ,'data' => $return] : ['status' => 2,'msg' => $eror];
     }
@@ -43,4 +43,16 @@ class PersonalEducation extends Common {
         return empty($data)?[] :$data -> toArray();
     }
 
+    /**
+     * 根据主键编号查询教育信息
+     * @param $id
+     * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function getById($id){
+        $data = $this -> where(['id' => $id]) -> find();
+        return empty($data)?[] :$data;
+    }
 }	

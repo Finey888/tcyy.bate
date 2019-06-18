@@ -86,7 +86,7 @@ create table tccybate.tcyy_personal_education
    profession           varchar(255) not null comment '专业课程',
    entrancedate         int(11) not null comment '入学时间',
    graduatedate         int(11) not null comment '毕业时间',
-   uid                  int(11) not null comment '关联用户编号',
+   rid                  int(11) not null comment '关联简历编号',
    status               tinyint(4) not null default 1 comment '1.显示 2.禁用 -1.删除',
    primary key (id)
 );
@@ -99,7 +99,7 @@ alter table tccybate.tcyy_personal_education comment '会员-个人教育经历'
 create table tccybate.tcyy_personal_experience
 (
    id                   int(11) not null auto_increment,
-   uid                  int(11) not null,
+   rid                  int(11) not null comment '关联简历编号',
    companyname          varchar(255) comment '公司名称',
    entrancedate         int(11) not null comment '入职时间',
    dimissiondate        int(11) not null comment '离职时间',
