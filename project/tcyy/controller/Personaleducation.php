@@ -19,8 +19,8 @@ class Personaleducation extends Base {
         if(empty($get['id'])){
             $data['rid'] = empty($get['rid'])? returnAjax([],'缺少简历编号参数',2):$get['rid'];
             $data['education'] = $get['education'];
-            $data['schoolname'] = empty($get['schoolname'])? returnAjax([],'缺少学校名称参数',2):$get['rid'];
-            $data['profession'] = empty($get['profession'])? returnAjax([],'缺少专业名称参数',2):$get['rid'];
+            $data['schoolname'] = empty($get['schoolname'])? returnAjax([],'缺少学校名称参数',2):$get['schoolname'];
+            $data['profession'] = empty($get['profession'])? returnAjax([],'缺少专业名称参数',2):$get['profession'];
             $data['entrancedate'] = empty($get['entrancedate'])? returnAjax([],'缺少入学日期参数',2):strtotime($get['entrancedate']);
             $data['graduatedate'] = empty($get['graduatedate'])? returnAjax([],'缺少毕业日期参数',2):strtotime($get['graduatedate']);
             $return = $this -> model -> saveData($data);

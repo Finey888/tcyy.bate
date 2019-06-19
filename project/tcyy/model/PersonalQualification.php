@@ -43,4 +43,9 @@ class PersonalQualification extends Common {
         $data = $this::where($where)->select();
         return empty($data) ? [] : $data -> toArray();
     }
+
+    public function getById($id){
+        $data = $this -> where(['id' => $id]) -> find();
+        return empty($data)?[] :$data;
+    }
 }

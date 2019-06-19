@@ -71,8 +71,8 @@ class Personalresume extends Common {
 
             $rtd=[
                 'id'=>$return['data']['id'],
-                'professional'=>$return['data']['professional'],
-                'region'=>$return['data']['region']
+                'intentposition'=>$return['data']['intentposition'],
+                'expectregion'=>$return['data']['expectregion']
             ];
 
             returnAjax($rtd, '增加成功',1);
@@ -85,9 +85,9 @@ class Personalresume extends Common {
             $data = $this->model->getDataById($get['id']);
 
             $rtd=[
-                'id'=>$data['id'],
-                'number'=>$data['name'],
-                'price'=>$data['region']
+                'id'=>$return['data']['id'],
+                'intentposition'=>$return['data']['intentposition'],
+                'expectregion'=>$return['data']['expectregion']
             ];
 
             returnAjax($rtd, '更新成功',1);
@@ -113,6 +113,7 @@ class Personalresume extends Common {
 
 
         $returnData = [
+            'id' => $data['id'],
             'personname' => $data['personname'],
             'birthday' => $data['birthday'],
             'expectregion' =>  $data['expectregion'] ,

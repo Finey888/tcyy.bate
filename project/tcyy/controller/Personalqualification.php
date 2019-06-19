@@ -30,8 +30,7 @@ class Personalqualification extends Base {
 
             $rtd=[
                 'id'=>$return['data']['id'],
-                'professional'=>$return['data']['professional'],
-                'region'=>$return['data']['region']
+                'qualifyname'=>$return['data']['qualifyname']
             ];
 
             returnAjax($rtd, '增加成功',1);
@@ -43,22 +42,17 @@ class Personalqualification extends Base {
 
             $rtd=[
                 'id' => $return['data']['id'],
-                'companyname' => $return['data']['companyname']
+                'qualifyname' => $return['data']['qualifyname']
             ];
             returnAjax($rtd, '更新成功',1);
         }
 
     }
 
-
-    public function collectPersonalResume(){
+    public function getPersonalQualificationDetail(){
         $get = input('post.');
-        if(empty($get['rid'])){
-            returnAjax([],'无对应收藏个人简历编号参数',2);
-        }
-        $data['rid'] = $get['rid'];
-        $data['uid'] =  $this -> userData -> id;
-        $this->model->collectResumeInfo($data);
-        returnAjax([],"收藏成功",1);
+        $id = empty($get['id']) ? returnAjax([],'缺少主键编号参数',2) : $get['id'];
+        $data = $this -> model -> getById($id);
+        returnAjax($data,'获取成功',1);
     }
 }

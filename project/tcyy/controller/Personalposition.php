@@ -79,8 +79,8 @@ class Personalposition extends Common {
 
             $rtd=[
                 'id'=>$data['id'],
-                'number'=>$data['name'],
-                'price'=>$data['region']
+                'professional'=>$data['professional'],
+                'region'=>$data['region']
             ];
 
             returnAjax($rtd, '更新成功',1);
