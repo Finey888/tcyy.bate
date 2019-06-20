@@ -20,14 +20,14 @@ class PersonalCompany extends Common {
 //            $saveType = 'Personalcompany.edit';
 //        }
 
-        $return = $this::allowField(true)->save($data,$where);
+        $return = $this :: allowField(true) -> save($data,$where);
         $errors = $this::getError();
-        return empty( $errors)?['status'=>1,'data'=>$this->toArray()]:['status'=>2,'msg'=> $errors];
+        return empty( $errors) ? ['status' => 1,'data' => $this->toArray()] : ['status' => 2,'msg' => $errors];
     }
 
     public function getDataById($id){
-        $data = $this::where(['id'=>$id])->find();
-        return $data;
+        $data = $this :: where(['id' => $id]) -> find();
+        return empty($data) ? [] : $data;
     }
 
 	//原生sql查询,查询返回投递给公司发布的职位的简历列表数据

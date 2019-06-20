@@ -106,4 +106,15 @@ class Personalcompany extends Common
         $data = $this -> personalCompanymodel -> queryViewResumeLogs($uid,1);
         returnAjax($data,"查询成功",1);
     }
+
+    //根据主键编号查询公司详情
+    public function queryCompanyDetail(){
+        $get = input('post.');
+        $id = $get['id'];
+        if(empty($id)){
+            returnAjax([], "非法参数",2);
+        }
+        $data = $this -> personalCompanymodel -> getDataById($id);
+        returnAjax($data,"查询成功",1);
+    }
 }
