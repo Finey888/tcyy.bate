@@ -1,46 +1,29 @@
 <?php
 namespace app\tcyy\model;
 
+use think\Model;
+
 class PersonalDeliver extends Common {
-		    //新增
-    public function add($request){
-        $data = $request->param();
-        foreach($data as $key=>$val){
-            if(is_array($val)){    //处理checkbox情况
-                $data[$key] = implode("#op#", $val);
-            }
-        }
-        return $this->data($data)->allowField(true)->save();
+    /**
+     * 保存简历投递职位数据
+     * @param $data
+     */
+    public function saveDeliverData($data,$where){
+        $this::allowField(true) -> save($data,$where);
+        $errors = $this::getError();
+        return empty( $errors) ? ['status' => 1,'data' => $this->toArray()] : ['status' => 2,'msg' => $errors];
     }
-	    //修改
-    public function edit($request){
-        $data = $request->param();
-        foreach($data as $key=>$val){
-            if(is_array($val)){    //处理checkbox情况
-                $data[$key] = implode("#op#", $val);
-            }
-        }
-        return $this->allowField(true)->save($data, ['id' => $data['id']]);
-    }
-	    //删除
-    public function del($request){
-        $id = $request->param('id');
-        return $this->where('id',  $id)->delete();
-    }
-	    //批量删除
-    public function delList($request){
-        $condition = $request->request('condition');
-        return $this->destroy(json_decode($condition));
-    }
-	    //id单个查询
-    public function info($request){
-        $id = $request->param('id');		
-        return $this->where('id', $id)->find();
-    }
-	    //列表
-    public function lists($request, $itemNum = 12){	//每页显示12条数据
-        $condition = $request->param('condition');
-        return $this->where(json_decode($condition))->paginate($itemNum);
+
+    /**
+     * 根据条件查询简历投递数据
+     * @param $where
+     * @return array|false|\PDOStatement|string|Model
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function getDeliverData($where){
+        return $this -> where($where) -> find();
     }
 
 }	

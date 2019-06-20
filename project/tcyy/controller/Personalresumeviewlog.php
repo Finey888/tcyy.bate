@@ -25,7 +25,7 @@ class Personalresumeviewlog extends Base {
         $haveSth = $this->model->getViewLogByIds($where);
         //有的话,更新,无的话增加
         if(empty($haveSth)) {
-            $return = $this -> model -> saveViewLog($data,'');
+            $return = $this -> model -> saveViewLog($data);
         }else{
             $return = $this -> model -> saveViewLog($data,$where);
         }
@@ -36,8 +36,7 @@ class Personalresumeviewlog extends Base {
 
         $rtd=[
             'id'=>$return['data']['id'],
-            'professional'=>$return['data']['professional'],
-            'region'=>$return['data']['region']
+            'rid'=>$return['data']['rid']
         ];
 
         returnAjax($rtd, '保存成功',1);
