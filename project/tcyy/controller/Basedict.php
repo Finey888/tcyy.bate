@@ -1,13 +1,18 @@
 <?php
 namespace app\tcyy\controller;
 
+use think\Request;
+
 class Basedict extends Base{
 	protected $model = null;
 
-	public function _initialize(){	//初始化
-		$this->model = new \app\tcyy\model\BaseDict;
-	}
+    protected $personalCompanymodel = null;
 
+    public function __construct(Request $request = null,$options = [])
+    {
+        parent::__construct($request);
+        $this->model = new \app\tcyy\model\BaseDict;
+    }
      //id单个查询
     public function info(){
         $base_dict = $this->model->info($this->request);
@@ -17,8 +22,8 @@ class Basedict extends Base{
 
 	//字典列表
 	public function lists(){
-		$base_dictList = $this->model->lists();
-        $result = $base_dictList->toArray();
+		$base_dictList = $this -> model -> lists();
+        $result = $base_dictList -> toArray();
         returnAjax($result,'获取数据成功',1);exit();
 	}
 }

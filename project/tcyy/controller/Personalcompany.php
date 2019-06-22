@@ -79,6 +79,8 @@ class Personalcompany extends Common
      */
     public function viewDeliverResumes(){
         $get = input('post.');
+        $page = empty($get['page'])?1:$get['page'];
+        $limit = empty($get['limit'])?10:$get['limit'];
         $uid= $this->userData->id;
         $data = $this -> personalCompanymodel -> queryList($uid);
 
@@ -91,8 +93,12 @@ class Personalcompany extends Common
      */
     public function queryViewLogs(){
         $get = input('post.');
+        $page = empty($get['page'])?1:$get['page'];
+        $limit = empty($get['limit'])?10:$get['limit'];
+        $pageStart = ($page - 1) * $limit;
+        $paginationStr = ' limit '.$pageStart.','.$limit;
         $uid= $this->userData->id;
-        $data = $this -> personalCompanymodel -> queryViewResumeLogs($uid,'');
+        $data = $this -> personalCompanymodel -> queryViewResumeLogs($uid,'',$paginationStr);
         returnAjax($data,"查询成功",1);
     }
 
@@ -102,8 +108,12 @@ class Personalcompany extends Common
      */
     public function queryCollectResumeRecords(){
         $get = input('post.');
+        $page = empty($get['page'])?1:$get['page'];
+        $limit = empty($get['limit'])?10:$get['limit'];
+        $pageStart = ($page - 1) * $limit;
+        $paginationStr = ' limit '.$pageStart.','.$limit;
         $uid= $this->userData->id;
-        $data = $this -> personalCompanymodel -> queryViewResumeLogs($uid,1);
+        $data = $this -> personalCompanymodel -> queryViewResumeLogs($uid,1,$paginationStr);
         returnAjax($data,"查询成功",1);
     }
 
