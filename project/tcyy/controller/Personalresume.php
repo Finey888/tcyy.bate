@@ -148,4 +148,17 @@ class Personalresume extends Common {
         $data = $this->model->delResumeById($get['id']);
         returnAjax([],"删除成功",1);
     }
+
+    //投递简历前验证是否完善简历
+    public function deliverResumerCheckBefore(){
+        $get = input('post.');
+
+        $uid= $this -> userData -> id;
+        $where = ['uid' => $uid];
+        $data = $this -> model -> getResumeByCondition($where);
+        if(empty($data)){
+            returnAjax([], "无简历信息",0);
+        }
+        returnAjax([],"有简历信息,可投递",1);
+    }
 }

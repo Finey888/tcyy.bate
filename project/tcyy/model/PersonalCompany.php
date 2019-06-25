@@ -51,4 +51,9 @@ class PersonalCompany extends Common {
         }
         return $this -> query($querySql.$paginationStr,[$uid]);
     }
+
+    public function getCompanyByCondition($where){
+        $data = $this :: where($where) -> find();
+        return empty($data) ? [] : $data;
+    }
 }	

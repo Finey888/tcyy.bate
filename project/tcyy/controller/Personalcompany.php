@@ -127,4 +127,16 @@ class Personalcompany extends Common
         $data = $this -> personalCompanymodel -> getDataById($id);
         returnAjax($data,"查询成功",1);
     }
+
+    //根据登录用户编号查询是否维护公司
+    public function checkCompanyExists(){
+        $get = input('post.');
+        $uid= $this -> userData -> id;
+        $where = ['uid' => $uid];
+        $data = $this -> personalCompanymodel -> getCompanyByCondition($where);
+        if(empty($data)){
+            returnAjax([], "无相应公司信息",0);
+        }
+        returnAjax([],"有公司信息",1);
+    }
 }

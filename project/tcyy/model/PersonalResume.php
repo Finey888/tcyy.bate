@@ -31,4 +31,8 @@ class PersonalResume extends Common {
         return $data;
     }
 
+    public function getResumeByCondition($where){
+        $data = $this::where($where)->find();
+        return $data;
+    }
 }	
