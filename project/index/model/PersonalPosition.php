@@ -58,13 +58,27 @@ class PersonalPosition extends Common {
     }
 
     //分页数据
-    public function getPageData($page=1,$count=10,$where=[],$sort='pt.creatime desc'){
+    public function getPageData($page=1,$count=10,$where,$sort='pt.creatime desc'){
 //        $data = $this :: with('personalCompanyInfo') -> field('id,cid,address,positiontype,region,professional,status,wages,experience,education')->where($where)->page($page.','.$count)->order($sort)->select();
-        $data = $this ->_collection
-            ->alias('pt')
-            ->where($where)
-            ->join('tcyy_personal_company cm', ' cm.id = pt.cid', 'inner')
-            ->field('pt.id,cm.name,cm.email,pt.address,pt.positiontype,pt.region,pt.professional,pt.status,pt.wages,pt.experience,pt.education ')->page($page.','.$count)->order($sort)->select();
+//        $st = ['pt.id','cm.name','cm.email','pt.address','pt.region','pt.professional','pt.status','pt.experience','pst.dict_name'=> 'positiontype','wg.dict_name'=>'wages','ed.dict_name' =>'education'];
+//        $data = $this ->_collection
+//            ->join('tcyy_personal_company cm', ' cm.id = pt.cid', 'inner')
+//            ->alias('pt')
+//            ->where($where)
+//            ->join('tcyy_base_dict pst', ' pst.dict_value = pt.positiontype  ' and 'pst.dict_code='.'\'positionType\'', 'left')
+//            ->join('tcyy_base_dict wg', ' wg.dict_value = pt.wages  ' and 'wg.dict_code='.'\'salaryRange\'', 'left')
+//            ->join('tcyy_base_dict ed', ' ed.dict_value = pt.education ' and 'ed.dict_code='.'\'education\'', 'left')
+//            ->field($st)
+//            ->distinct(true)
+//            ->page($page.','.$count)->order($sort)->select();
+        $page = ($page - 1) * $count;
+       $sql =  'SELECT DISTINCT pt.id,cm.name,cm.email,pt.address,pt.region,pt.professional,pt.status,pt.experience,pst.dict_name AS positiontype,wg.dict_name AS wages,ed.dict_name AS education'.
+        ' FROM tcyy_personal_company cm  , tcyy_personal_position pt '.
+        ' LEFT JOIN tcyy_base_dict pst ON pst.dict_value = pt.positiontype AND pst.dict_code=\'positionType\' '.
+        ' LEFT JOIN tcyy_base_dict wg  ON wg.dict_value = pt.wages AND wg.dict_code=\'salaryRange\' '.
+        ' LEFT JOIN tcyy_base_dict ed  ON  ed.dict_value = pt.education AND ed.dict_code=\'education\' '.
+        ' WHERE pt.cid = cm.id and '.$where .' order by '.$sort .' limit '. $page .','.$count;
+         $data = $this -> query($sql);
         return $data;
     }
 

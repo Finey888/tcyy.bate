@@ -90,11 +90,11 @@ class Personalposition extends Common {
         $page = empty($get['page'])?1:$get['page'];
         $count = empty($get['count'])?10:$get['count'];
 
-        $where=[];
-        $where['pt.isdel']=['neq',1];
+        $where = ' ';
+        $where .= 'pt.isdel = 0';
 
         if(!empty($get['companyName'])){
-            $where['cm.name'] = ['like', '%'.$get['companyName'].'%'];
+            $where.= ' and cm.name like \'%'.$get['companyName'].'%\'';
         }
 
         $data = $this->model->getPageData($page,$count,$where);

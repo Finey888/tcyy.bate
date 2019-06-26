@@ -1,16 +1,32 @@
 <?php
 namespace app\index\controller;
 
+use think\Request;
+
 class Personalresume extends Common {
 	protected $model = null;
 
-	public function _initialize(){	//初始化
-		$this->model = new \app\index\model\PersonalResume;
-	}
-	    //默认入口
-    public function index(){
-        $this->redirect('lists');
+    public function __construct(Request $request = null,$options = [])
+    {
+        parent::__construct($request);
+        $this->model = new \app\index\model\PersonalResume;
     }
+
+    //默认入口
+    public function index(){
+        $get = input('get.');
+        $where = [];
+        $where['pt.isdel'] = ['neq',1];
+
+        if(!empty($get['companyName'])){
+            $where['cm.name'] = ['like', '%'.$get['companyName'].'%'];
+        }
+
+        $countPage = $this->model->getCount($where);
+        $this->assign('countPage',$countPage);
+        return view('Personalposition/index');
+    }
+
 		//新增
 	public function add(){
 		if($this->request->isPost()){
