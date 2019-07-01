@@ -23,9 +23,9 @@
 			<col width="9%">
 			<col width="9%">
 			<col width="9%">
-			<col width="9%">
-			<col width="9%">
-			<col>
+<!--			<col width="9%">-->
+<!--			<col width="9%">-->
+<!--			<col>-->
 		</colgroup>
 		<thead>
 		<tr>
@@ -166,15 +166,15 @@
 								// +'<td>'+content.last_login_ip+'</td>'
 								// +'<td>'+content.last_login_time+'</td>'
 								+'<td>'+content.upid+'</td>'
-								+'<td>'
+								// +'<td>'
 								// +  '<a class="layui-btn layui-btn-mini news_edit" data-id="'+content.id+'"><i class="iconfont icon-edit"></i> 编辑</a>'
 								// +  '<a class="layui-btn layui-btn-danger layui-btn-mini news_del" data-id="'+content.id+'"><i class="layui-icon">&#xe640;</i> 删除</a>'
-								+'</td>'
+								// +'</td>'
 								+'</tr>';
 					});
 
 				}else{
-					dataHtml = '<tr><td colspan="9">暂无数据</td></tr>';
+					dataHtml = '<tr><td colspan="4">暂无数据</td></tr>';
 				}
 				return dataHtml;
 			}
