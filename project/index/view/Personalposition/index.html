@@ -43,6 +43,7 @@
 			<th>薪水范围</th>
 			<th>职位经验</th>
 			<th>学历要求</th>
+			<th>审核状态</th>
 			<th>操作</th>
 		</tr>
 		</thead>
@@ -100,19 +101,19 @@
 
          }).resize();
 
-        //删除
-        $("body").on("click",".news_del",function(){  //删除
+        //审核
+        $("body").on("click",".auditPosition",function(){  //审核
             var id = $(this).attr('data-id');
             var _this = $(this);
-            layer.confirm('确定删除此信息？',{icon:3, title:'提示信息'},function(index){
+            layer.confirm('是否审核此职位数据?',{icon:3, title:'提示信息'},function(index){
                 $.ajax({
                     type: "POST",
-                    url: "{:url('Personalposition/del')}",
+                    url: "{:url('Personalposition/auditPosition')}",
                     data: {id:id},
                     dataType: "json",
                     success: function(data){
                         if(data.status == 1){
-                            _this.parents("tr").remove();
+                            // _this.parents("tr").remove();
                             layer.close(index);
                             layer.msg(data.msg, {icon: 6});
                         }else{
@@ -137,10 +138,18 @@
                     var i=0;
                     $.each(data,function(index,content){
                         i+=1;
-                        var gt='-';
-                        // if(typeof(content.auth_group[0])!="undefined"){
-                        // 	gt=content.auth_group[0].title;
-                        // }
+                        var auditStr ='-';
+						if(content.status == '0'){
+							auditStr = '<a class="layui-btn layui-btn-mini auditPosition" data-id="'+content.id+'"><i class="iconfont icon-edit"></i> 审核</a>';
+						}
+						if(content.status == '0'){
+							content.status = '待审核';
+						}else if(content.status == '1'){
+							content.status = '上架';
+						}else{
+							content.status = '下架';
+						}
+
                         dataHtml += '<tr>'
                             +'<td>'+i+'</td>'
 							+'<td>'+content.name+'</td>'
@@ -152,8 +161,10 @@
                             +'<td>'+content.wages+'</td>'
                             +'<td>'+content.experience+'</td>'
                             +'<td>'+content.education+'</td>'
+                            +'<td>'+content.education+'</td>'
+                            +'<td>'+content.status+'</td>'
                             +'<td>'
-						 	+  '<a class="layui-btn layui-btn-mini news_views" data-id="'+content.id+'"><i class="iconfont icon-edit"></i> 查看</a>'
+						 	+ auditStr
                             // +  '<a class="layui-btn layui-btn-danger layui-btn-mini news_del" data-id="'+content.id+'"><i class="layui-icon">&#xe640;</i> 删除</a>'
                             +'</td>'
                             +'</tr>';

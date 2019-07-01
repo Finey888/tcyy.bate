@@ -102,5 +102,13 @@ class Personalposition extends Common {
         return json(['data'=>$data,'status'=>1,'msg'=>'获取数据成功']);
     }
 
+    public function auditPosition(){
+        if(request()->isPost()){ $id = input('post.id'); }else{ return json(['status'=>-1,'msg'=>'未知数据']); }
+
+        $return = $this->model->auditPositionById($id);
+
+        return $return ? ['status'=>1,'msg'=>'审核通过'] : ['status'=>-1,'msg'=>'审核失败'];
+    }
+
 
 }

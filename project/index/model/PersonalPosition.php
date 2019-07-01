@@ -93,8 +93,9 @@ class PersonalPosition extends Common {
             ->field('pt.id,cm.name,cm.email,pt.address,pt.positiontype,pt.region,pt.professional,pt.status,pt.wages,pt.experience,pt.education ') -> count();
     }
 
-//    public function personalCompanyInfo()
-//    {
-//        return $this->belongsTo('PersonalCompany')->field('id,name,email');
-//    }
+
+    //审核数据
+    public function  auditPositionById($id){
+        return $this::update(['id'=>$id,'status'=>1]);
+    }
 }	
