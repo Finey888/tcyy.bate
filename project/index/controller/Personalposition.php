@@ -53,36 +53,24 @@ class Personalposition extends Common {
 			return $this->fetch();
 		}
 	}
-		//删除
-	public function delete(){
-		$flag = $this->model->del($this->request);
-		if($flag){
-			$this->success('删除成功', url('lists'));
-		}else{
-			$this->error('删除失败');
-		}
-	}
-	    //批量删除
-    public function delList(){
-        $flag = $this->model->delList($this->request);
-        if($flag){
-			$this->success('删除成功', url('lists'));
-		}else{
-			$this->error('删除失败');
-		}
+
+
+	//查询详情
+    public function viewDetails(){
+        if(request()->isGet()){
+            $get = input('get.');
+        }else{
+            return json(['status'=>-1,'msg'=>'未知数据']);
+        }
+
+        if(empty($get['id'])){
+            return json(['status'=>-1,'msg'=>'未知数据']);
+        }
+
+        $data = $this-> model -> getDataById($get['id']);
+        $this->assign('data',$data);
+        return view('Personalposition/details');
     }
-	    //id单个查询
-    public function info(){
-        $personal_position = $this->model->info($this->request);
-        $this->assign('personal_position', $personal_position);
-        return $this->fetch();
-    }
-		//列表
-	public function lists(){
-		$personal_positionList = $this->model->lists($this->request, 12);	
-		$this->assign('personal_positionList', $personal_positionList);
-		return $this->fetch();
-	}
 
     //获取列表
     public function getList(){

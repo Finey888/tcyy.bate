@@ -82,14 +82,14 @@
 		//添加文章
 //        改变窗口大小时，重置弹窗的高度，防止超出可视区域（如F12调出debug的操作）
 		$(window).one("resize",function(){
-			$("body").on("click",".news_views",function(){  //编辑
+			$("body").on("click",".details",function(){  //详情
 				var id = $(this).attr('data-id');
 				var edit = layui.layer.open({
 					title : "查看",
 					type : 2,
 					maxmin :true,
 					area:  ['800px', '500px'],
-					content : "{:url('Personalresume/details')}?id="+id,
+					content : "{:url('Personalresume/viewDetails')}?id="+id,
 					success : function(layero, index){
 
 					}
@@ -170,6 +170,7 @@
 								+'<td>'+content.auditstatus+'</td>'
 								+'<td>'
 								+  st
+								+  '<a class="layui-btn layui-btn-mini layui-btn-normal details" data-id="'+content.id+'"><i class="iconfont icon-edit"></i> 查看详情</a>'
 								+'</td>'
 								+'</tr>';
 					});

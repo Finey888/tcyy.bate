@@ -1,0 +1,152 @@
+{layout name="Public/layout" /}
+<body class="childrenBody">
+	<div class="row">
+                <div class="col" style='width: 30%; float: left'>
+			<blockquote class="layui-elem-quote title">基本信息</blockquote>
+			<div class="layui-elem-quote layui-quote-nm">
+				<h3  style='text-align: center'><img style='-webkit-border-radius: 50%;-moz-border-radius: 50%;border: 4px solid #44576b;' src="{$data.userInfo.headurl}" width="100" height="100"/></h3>
+                                <br/>
+                                <table class="layui-table">
+				<colgroup>
+					<col width="150">
+					<col>
+				</colgroup>
+				<tbody>
+                                                <tr>
+                                                        <td>昵称</td>
+                                                        <td>{$data.userInfo.nickname}</td>
+                                                </tr>
+                                                <tr>
+                                                        <td>状态</td>
+                                                        <td>
+                                                            {eq name='data.status' value='1'}
+                                                            <i class="layui-icon" style="color:#5FB878;font-weight: bold">&#xe618;</i> 正常
+                                                            {else/}
+                                                            <i class="layui-icon" style="color:#FF5722;font-weight: bold">&#x1006;</i> 禁用
+                                                            {/eq}
+                                                        </td>
+                                                </tr>
+                                                <tr>
+                                                        <td>账号类型</td>
+                                                        <td>
+                                                            {eq name='data.type' value='1'}
+                                                            普通
+                                                            {else/}
+                                                            讲师
+                                                            {/eq}
+                                                        </td>
+                                                </tr>
+                                                <tr>
+                                                        <td>求职招聘</td>
+                                                        <td>
+                                                            {eq name='data.personnel' value='1'}
+                                                            求职者
+                                                            {else/}
+                                                            招聘者
+                                                            {/eq}
+                                                        </td>
+                                                </tr>
+                                                <tr>
+                                                        <td>登录方式</td>
+                                                        <td>
+                                                            {eq name='data.login_type' value='1'}手机{/eq}
+                                                            {eq name='data.login_type' value='2'}QQ{/eq}
+                                                            {eq name='data.login_type' value='3'}微信{/eq}
+                                                        </td>
+                                                </tr>
+                                                <tr>
+                                                        <td>是否VIP</td>
+                                                        <td>
+                                                            {php}if(strtotime($data['vip_end_date'])>time()){echo '<span class="layui-btn layui-btn-mini">vip</span>';
+                                                            }else{echo '<span class="layui-btn layui-btn-mini layui-btn-disabled" style="text-decoration:line-through ;"> vip </span>';}{/php}
+                                                             到期时间：{$data.vip_end_date}
+                                                        </td>
+                                                </tr>
+                                                <tr>
+                                                        <td>登录次数</td>
+                                                        <td>{$data.login_count}</td>
+                                                </tr>
+                                                <tr>
+                                                        <td>累计积分</td>
+                                                        <td>{$data.total_point}</td>
+                                                </tr>
+                                                <tr>
+                                                        <td>剩余积分</td>
+                                                        <td>{$data.point}</td>
+                                                </tr>
+                                                
+                                        </tbody>
+                                </table>
+			</div>
+		</div>
+		<div class="col" style='width: 70%;float: left'>
+			<blockquote class="layui-elem-quote title">其它资料</blockquote>
+			<table class="layui-table">
+				<colgroup>
+					<col width="150">
+					<col>
+				</colgroup>
+				<tbody>
+                                        <tr>
+                                                <td>真实姓名</td>
+                                                <td>{$data.userInfo.realname}</td>
+                                        </tr>
+                                        <tr>
+                                                <td>电话</td>
+                                                <td>{$data.userInfo.phone}</td>
+                                        </tr>
+                                        <tr>
+                                                <td>性别</td>
+                                                <td>{eq name='data.userInfo.sex' value='1'}男{else/}女{/eq}</td>
+                                        </tr>
+					<tr>
+                                                <td>公司</td>
+                                                <td>{$data.userInfo.company}</td>
+                                        </tr>
+                                        <tr>
+                                                <td>职位</td>
+                                                <td>{$data.userInfo.position}</td>
+                                        </tr>
+                                        <tr>
+                                                <td>位置</td>
+                                                <td>{$data.userInfo.province} {$data.userInfo.city} {$data.userInfo.area} {$data.userInfo.address}</td>
+                                        </tr>
+					<tr>
+						<td>最后一次登录时间</td>
+						<td>{$data.last_login_time}</td>
+					</tr>
+					<tr>
+						<td>最后一次登录IP</td>
+						<td>{$data.last_login_ip}</td>
+					</tr>
+					<tr>
+						<td>注册IP</td>
+						<td>{$data.reg_ip}</td>
+					</tr>
+                                        <tr>
+						<td>注册时间</td>
+						<td>{$data.regtime}</td>
+					</tr>
+                                        <tr>
+						<td>活跃等级</td>
+						<td>{$data.active_lv}</td>
+					</tr>
+                                        <tr>
+						<td>推广码</td>
+						<td>{$data.spread_code}</td>
+					</tr>
+                                        <tr>
+						<td>上级推广码</td>
+						<td>{$data.top_spread_code}</td>
+					</tr>
+                                        <tr>
+						<td>登录设备</td>
+						<td>{eq name='data.systype' value='1'}安卓设备{else/}苹果设备{/eq}</td>
+					</tr>
+                                        
+				</tbody>
+			</table>
+		</div>
+	</div>
+</body>
+</html>

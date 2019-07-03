@@ -1,0 +1,70 @@
+{layout name="Public/layout" /}
+<body class="childrenBody">
+	<div class="row">
+		<div class="col" style='width: 70%;float: left'>
+			<blockquote class="layui-elem-quote title">职位详情</blockquote>
+			<table class="layui-table">
+				<colgroup>
+					<col width="150">
+					<col>
+				</colgroup>
+				<tbody>
+                    <tr>
+                        <td>职位类型</td>
+                        <td>{$data[0]["positiontype"]}</td>
+                    </tr>
+                    <tr>
+                        <td>工作性质</td>
+                        <td>{$data[0]["nature"]}</td>
+                    </tr>
+                    <tr>
+                        <td>招聘人数</td>
+                        <td>{$data[0]["nums"]}</td>
+                    </tr>
+                    <tr>
+                        <td>招聘区域</td>
+                        <td>{$data[0]["region"]}</td>
+                    </tr>
+                    <tr>
+                        <td>工作地址</td>
+                        <td>{$data[0]["address"]}</td>
+                    </tr>
+                    <tr>
+                        <td>职称要求</td>
+                        <td>{$data[0]["professional"]}</td>
+                    </tr>
+                    <tr>
+                        <td>要求工作经验</td>
+                        <td>{$data[0]["experience"]}</td>
+                    </tr>
+                    <tr>
+                        <td>学历要求</td>
+                        <td>{$data[0]["education"]}</td>
+                    </tr>
+                    <tr>
+                        <td>工作范围</td>
+                        <td>{$data[0]["wages"]}</td>
+                    </tr>
+                    <tr>
+                        <td>创建时间</td>
+                        <td>{$data[0]["creatime"]}</td>
+                    </tr>
+                    <tr>
+                        <td>职位刷新时间</td>
+                        <td>{$data[0]["lasttime"]}</td>
+                    </tr>
+                    <tr>
+                        <td>审核状态</td>
+                        <td>{$data[0]["status"]}</td>
+                    </tr>
+                    <tr>
+						<td>职位描述</td>
+						<td>{$data[0]["descriptions"]}</td>
+					</tr>
+
+				</tbody>
+			</table>
+		</div>
+	</div>
+</body>
+</html>

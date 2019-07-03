@@ -70,31 +70,14 @@
         //添加文章
 //        改变窗口大小时，重置弹窗的高度，防止超出可视区域（如F12调出debug的操作）
          $(window).one("resize",function(){
-//         	$(".newsAdd_btn").click(function(){
-//         		var add = layui.layer.open({
-//         			title : "添加账号",
-//         			type : 2,
-//         			maxmin :true,
-//         			area:  ['800px', '500px'],
-//         			content : "{:url('Area/add')}",
-//         			success : function(layero, index){
-//         				/*setTimeout(function(){
-//                                 layui.layer.tips('点击此处返回列表', '.layui-layer-setwin .layui-layer-close', {
-//                                         tips: 3
-//                                 });
-//                         },500)*/
-//         			}
-//         		})
-//         		//layui.layer.full(add);
-//         	})
-         	$("body").on("click",".news_views",function(){  //编辑
+         	$("body").on("click",".details",function(){  //编辑
          		var id = $(this).attr('data-id');
          		var edit = layui.layer.open({
-         			title : "查看",
+         			title : "查看详情",
          			type : 2,
          			maxmin :true,
          			area:  ['800px', '500px'],
-         			content : "{:url('Personalposition/details')}?id="+id,
+         			content : "{:url('Personalposition/viewDetails')}?id="+id,
          			success : function(layero, index){
 
          			}
@@ -166,6 +149,7 @@
                             +'<td>'+content.status+'</td>'
                             +'<td>'
 						 	+ auditStr
+							+  '<a class="layui-btn layui-btn-mini layui-btn-normal details" data-id="'+content.id+'"><i class="iconfont icon-edit"></i> 查看详情</a>'
                             // +  '<a class="layui-btn layui-btn-danger layui-btn-mini news_del" data-id="'+content.id+'"><i class="layui-icon">&#xe640;</i> 删除</a>'
                             +'</td>'
                             +'</tr>';

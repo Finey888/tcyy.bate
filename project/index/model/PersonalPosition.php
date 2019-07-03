@@ -46,15 +46,15 @@ class PersonalPosition extends Common {
         $condition = $request->request('condition');
         return $this->destroy(json_decode($condition));
     }
-	    //id单个查询
-    public function info($request){
-        $id = $request->param('id');		
-        return $this->where('id', $id)->find();
-    }
-	    //列表
-    public function lists($request, $itemNum = 12){	//每页显示12条数据
-        $condition = $request->param('condition');
-        return $this->where(json_decode($condition))->paginate($itemNum);
+
+    //根据主键id查询职位详情
+    public function getDataById($id){
+        $sqlQuery = 'SELECT DISTINCT pt.address,pt.region,pt.nums,pt.professional,pt.descriptions,CASE pt.nature WHEN 1 THEN \'全职\'  ELSE \'兼职\' END AS nature ,'.
+                    'CASE pt.status WHEN 0 THEN \'待审核\' WHEN 1 THEN \'上架\' ELSE \'下架\' END AS status,pt.experience,pst.dict_name AS positiontype,wg.dict_name AS wages,ed.dict_name AS education,pt.lasttime,pt.creatime'.
+                    ' FROM tcyy_personal_position pt  LEFT JOIN tcyy_base_dict pst ON pst.dict_value = pt.positiontype AND pst.dict_code=\'positionType\' LEFT JOIN tcyy_base_dict wg  ON wg.dict_value = pt.wages AND wg.dict_code=\'salaryRange\' LEFT JOIN tcyy_base_dict ed'.
+                   ' ON  ed.dict_value = pt.education AND ed.dict_code=\'education\' WHERE pt.isdel= 0 AND pt.id = ?';
+        $data = $this -> query($sqlQuery,[$id]);
+        return $data;
     }
 
     //分页数据

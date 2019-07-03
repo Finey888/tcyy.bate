@@ -27,7 +27,7 @@
 				<div class="layui-input-inline">
 					<select name="gid" lay-filter="gid">
                                             {volist name='group' id='gdt'}
-                                                <option value="1" {eq name="data.gid" value="$gdt['id']"}selected{/eq}>{$gdt.title}</option>
+                                                <option value="{$gdt['id']}" {eq name="data.gid" value="$gdt['id']"}selected{/eq}>{$gdt.title}</option>
                                             {/volist}
                                         </select>
 				</div>
