@@ -5,11 +5,17 @@ use think\Request;
 
 class Personalresume extends Common {
 	protected $model = null;
+    protected $eductionModel = null;
+    protected $experienceModel = null;
+    protected $qualificationModel = null;
 
     public function __construct(Request $request = null,$options = [])
     {
         parent::__construct($request);
-        $this->model = new \app\index\model\PersonalResume;
+        $this -> model = new \app\index\model\PersonalResume;
+        $this-> eductionModel = new \app\index\model\PersonalEducation();
+        $this-> experienceModel = new \app\index\model\PersonalExperience();
+        $this-> qualificationModel = new \app\index\model\PersonalQualification();
     }
 
     //默认入口
@@ -67,5 +73,29 @@ class Personalresume extends Common {
         $return = $this->model->auditDataById($id);
 
         return $return ? ['status'=>1,'msg'=>'审核通过'] : ['status'=>-1,'msg'=>'审核失败'];
+    }
+
+    //查询详情
+    public function viewDetails(){
+        if(request()->isGet()){
+            $get = input('get.');
+        }else{
+            return json(['status'=>-1,'msg'=>'未知数据']);
+        }
+
+        if(empty($get['id'])){
+            return json(['status'=>-1,'msg'=>'未知数据']);
+        }
+        $rid = $get['id'];
+        $data = $this-> model -> getDataById($rid);
+        $eduData = $this -> eductionModel -> queryEduList(['rid' => $rid]);
+        $expData = $this -> experienceModel -> queryWorkExperienceList(['rid' => $rid]);
+        $quaData = $this -> qualificationModel -> getQualificationList(['rid' => $rid]);
+
+        $this->assign('data',$data);
+        $this->assign('eduData',$eduData);
+        $this->assign('expData',$expData);
+        $this->assign('quaData',$quaData);
+        return view('Personalresume/details');
     }
 }

@@ -116,9 +116,9 @@
                                                   var gtitle='';
                                                   if(!content.group && content.group !== 0 && content.group !== '') {　
                                                           gtitle='';
-                                                      }else{
-                                                          gtitle = content.group.title;
-                                                      }
+                                                  }else{
+                                                      gtitle = content.group.title;
+                                                  }
                                                 dataHtml +='<li><img class="img_list" src="'+ content.image +'"><div class="operate"><div class="check"><label name="belle" lay-filter="choose" lay-skin="primary" >'+content.title+'</label><label name="belle" lay-filter="choose" lay-skin="primary" style="color:'+gids[content.cid]+'" >【'+gtitle+'】</label></div><i class="layui-icon img_edit" data-id="'+content.id+'">&#xe642;</i><i class="layui-icon img_del" data-id="'+content.id+'" data-title="'+content.title+'">&#xe640;</i></div></li>';
                                             });
                            

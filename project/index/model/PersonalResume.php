@@ -18,4 +18,10 @@ class PersonalResume extends Common {
     public function  auditDataById($id){
         return $this::update(['id'=>$id,'auditstatus'=>2]);
     }
+
+    //根据主键查询简历信息
+    public function getDataById($id){
+        $data = $this::where(['id'=>$id])->find();
+        return $data;
+    }
 }	
