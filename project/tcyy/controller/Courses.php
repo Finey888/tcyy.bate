@@ -2,7 +2,7 @@
 namespace app\tcyy\controller;
 use think\Request;
 
-class Personalresumeviewlog extends Base {
+class Courses extends Base {
 	protected $model = null;
 
     public function __construct(Request $request = null,$options = [])
