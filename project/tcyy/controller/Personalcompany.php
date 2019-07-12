@@ -137,6 +137,6 @@ class Personalcompany extends Common
         if(empty($data)){
             returnAjax([], "无相应公司信息",0);
         }
-        returnAjax([],"有公司信息",1);
+        returnAjax($data,"有公司信息",1);
     }
 }

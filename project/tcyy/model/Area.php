@@ -18,4 +18,9 @@ class Area extends Common {
         return $this::where($where) -> field('id,name') ->select();
     }
 
+    //列表
+    public function getAreaList(){
+        return $this::field('id,name') ->select();
+    }
+
 }	
