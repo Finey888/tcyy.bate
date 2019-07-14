@@ -103,9 +103,12 @@ class Personalresume extends Common {
      */
     public function getResumeDetail(){
         $get = input('post.');
-        $rid = $get['id'];
+        $uid= $this -> userData -> id;
+        $where = ['uid' => $uid];
+        $data = $this->model->getResumeByCondition($where);
+        $rid = $data['id'];
         if(empty($rid)){
-            returnAjax([],'无对应简历编号参数',2);
+            returnAjax([],'无对应简历信息',2);
         }
         $data = $this->model->getDataById($rid);
         $eduData = $this -> eductionModel -> queryEduList(['rid' => $rid]);
