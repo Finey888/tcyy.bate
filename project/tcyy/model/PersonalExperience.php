@@ -1,6 +1,8 @@
 <?php
 namespace app\tcyy\model;
 
+use think\Model;
+
 class PersonalExperience extends Common {
     //自定义初始化
     protected function initialize()
@@ -8,14 +10,13 @@ class PersonalExperience extends Common {
         //需要调用`Model`的`initialize`方法
         parent::initialize();
     }
-
     /**
      * 保存/更新工作经历信息
      * @param $qualificationData
      * @return false|int
      */
-    public function save($eduData,$where=[]){
-        $return = $this -> allowField(true) -> save($eduData,$where);
+    public function saveData($eduData,$where=[]){
+        $return = $this ::allowField(true) -> save($eduData,$where);
         $eror = $this::getError();
         return empty($eror) ? ['status' => 1 ,'data' => $this -> toArray()] : ['status' => 2,'msg' => $eror];
     }
@@ -43,7 +44,7 @@ class PersonalExperience extends Common {
     }
 
     public function getById($id){
-        $data = $this -> where(['id' => $id]) -> find();
+        $data = $this:: where(['id' => $id]) -> find();
         return empty($data)?[] :$data;
     }
 }

@@ -21,4 +21,10 @@ class Courses extends Common {
         return $data?$this->id:false;
     }
 
+    //根据主键查看详情
+    public function getInfoById($id){
+        $data = $this :: where(['id' => $id]) -> find();
+        return $data;
+    }
+
 }	

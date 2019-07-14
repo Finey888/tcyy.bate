@@ -15,7 +15,12 @@ class PersonalPosition extends Common {
 
     //根据主键查询职位信息
     public function getDataById($id){
-        $data = $this::where(['id'=>$id])->find();
+//        $data = $this::where(['id'=>$id])->find();
+        $data = $this ->_collection
+            ->alias('pt')
+            ->where(['pt.id' => $id])
+            ->join('tcyy_personal_company cm', ' cm.id = pt.cid ', 'inner')
+            ->field('pt.id,cm.name,cm.email,pt.address,pt.positiontype,pt.region,pt.professional,pt.status,pt.wages,pt.experience,pt.education,cm.phone,cm.contacts,pt.descriptions,pt.nums,pt.nature ')->find();
         return $data;
     }
 
@@ -31,7 +36,7 @@ class PersonalPosition extends Common {
         $data = $this ->_collection
             ->alias('pt')
             ->where($where)
-            ->join('tcyy_personal_company cm', ' cm.id = pt.cid', 'inner')
+            ->join('tcyy_personal_company cm', ' cm.id = pt.cid ', 'inner')
             ->field('pt.id,cm.name,cm.email,pt.address,pt.positiontype,pt.region,pt.professional,pt.status,pt.wages,pt.experience,pt.education ')->page($page.','.$count)->order($sort)->select();
         return $data;
     }

@@ -1,30 +1,52 @@
 <?php
 namespace app\tcyy\model;
 
+use think\Db;
+
 class CoursesUser extends Common {
+
+    protected $name = 'courses_user';
 
     //自定义初始化
     protected function initialize()
     {
         //需要调用`Model`的`initialize`方法
         parent::initialize();
+        $this->_collection = Db::name($this->name);
     }
 
 	//获取当前用户购买列表
-    public function getBuyerHistoryListByCondition($param){
+    public function getBuyerHistoryListByCondition($page,$count,$param,$sort=[' btimes desc ']){
         $where = [
             'uid' => $param
         ];
-        return $this::where($where) -> field('id,btimes,multiinfo,amounts') ->select();
+        return $this::where($where) -> field('id,FROM_UNIXTIME(btimes) as btimes,multiinfo,amounts') -> page($page.','.$count)->order($sort)->select();
     }
 
     //用户售卖记录列表
-    public function getSellCourseListByCondition(){
-        return $this::where($where) -> field('uid,btimes,multiinfo,amounts') ->select();
+    public function getSellCourseListByCondition($page,$count,$uid,$sort=['cu.btimes desc']){
+        $where = ['c.uid' => $uid];
+        $data = $this ->_collection
+            ->alias('cu')
+            ->where($where)
+            ->join('tcyy_courses c', ' c.id = cu.cid ', 'left')
+            ->field('cu.id,cu.cid,cu.uid,FROM_UNIXTIME(cu.btimes) as btimes,cu.multiinfo,cu.amounts ')->page($page.','.$count)->order($sort)->select();
+        return $data;
+        return $this::where($where) -> field('') ->select();
     }
 
     //支付成功后保存购买课程视频记录
     public function saveCoureseByUserPaid($data){
-        return $this::save($data);
+        $rtn =$this::save($data);
+        $errors = $this::getError();
+        return empty( $errors) ? ['status' => 1,'data' => $rtn->id] : ['status' => 2,'msg' => $errors];
+    }
+
+    /**
+     * 根据课程查询购买的视频记录 行转列
+     * @param $cid
+     */
+    public function getBuyVideoIdsByCid($cid){
+        $this -> _collection -> field('GROUP_CONCAT(multiinfo) as multiinfo') -> where(['cid' => $cid]) -> find();
     }
 }

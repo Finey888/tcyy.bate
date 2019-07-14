@@ -205,3 +205,90 @@ create table tccybate.tcyy_personal_resume_view_log
 );
 
 alter table tccybate.tcyy_personal_resume_view_log comment '会员-企业查看个人简历记录录';
+
+
+
+-----------------------------------------------------------------------
+----------------------------课程相关脚本-------------------------------
+-----------------------------------------------------------------------
+
+
+drop table if exists tccybate.tcyy_courses;
+
+drop table if exists tccybate.tcyy_courses_user;
+
+drop table if exists tccybate.tcyy_courses_videos;
+
+drop table if exists tccybate.tcyy_courses_watch_log;
+
+/*==============================================================*/
+/* Table: tcyy_courses                                          */
+/*==============================================================*/
+create table tccybate.tcyy_courses
+(
+   id                   int(11) not null auto_increment,
+   gid                  int(11) not null comment '分类ID',
+   title                varchar(255) not null comment '课程标题',
+   contents             text not null comment '课程描述',
+   ctype                int(11) not null comment '1-单集 2-多集',
+   creattime            int(11) default 0 comment '创建时间',
+   price                decimal(8,2) default 0.00 comment '价格',
+   uid                  int(11) not null comment '课程发布者',
+   status               tinyint(4) default 1 comment '1.启用  2.禁用  -1.删除',
+   oneprice             decimal(8,2) default 0 comment '买断价',
+   remark               varchar(300) comment '备注字段',
+   primary key (id)
+);
+
+alter table tccybate.tcyy_courses comment '培训课程';
+
+
+/*==============================================================*/
+/* Table: tcyy_courses_user                                     */
+/*==============================================================*/
+create table tccybate.tcyy_courses_user
+(
+   id                   int(11) not null auto_increment,
+   uid                  int(11) not null comment '购买人',
+   cid                  int(11) not null comment '课程ID',
+   btimes               int(11) default 0 comment '购买时间',
+   multiinfo            varchar(500) comment '单集、多集(记录视频编号逗号隔开)、全部',
+   amounts              decimal(8,2) comment '支付价格',
+   primary key (id)
+);
+
+alter table tccybate.tcyy_courses_user comment '购买课程用户';
+
+/*==============================================================*/
+/* Table: tcyy_courses_videos                                   */
+/*==============================================================*/
+create table tccybate.tcyy_courses_videos
+(
+   id                   int(11) not null auto_increment,
+   cid                  int(11) comment '课程ID',
+   title                varchar(255) comment '视频标题',
+   prices               decimal(8,2) comment '售价(0为免费)',
+   contents             text comment '视频描述',
+   urls                 varchar(500) comment '视频URL',
+   views                int(11) default 0 comment '观看量',
+   status               tinyint(4) default 0 comment '0.待审核  1.审核通过  2.审核未通过',
+   episodes             int(11) comment '集数',
+   ctime                int(11) comment '创建时间',
+   primary key (id)
+);
+
+alter table tccybate.tcyy_courses_videos comment '课程-视频信息表';
+
+/*==============================================================*/
+/* Table: tcyy_courses_watch_log                                */
+/*==============================================================*/
+create table tccybate.tcyy_courses_watch_log
+(
+   id                   int(11) not null auto_increment,
+   uid                  int(11) not null comment '用户编号',
+   vid                  int(11) not null comment '课程视频编号',
+   vtime                int(11) not null comment '观看时间',
+   primary key (id)
+);
+
+alter table tccybate.tcyy_courses_watch_log comment '用户观看视频记录';

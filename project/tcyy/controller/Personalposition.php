@@ -20,6 +20,10 @@ class Personalposition extends Common {
         $begintime = empty($get['begintime'])? '':$get['begintime'];
         $endtime = empty($get['endtime'])? '':$get['endtime'];
         $region = empty($get['region'])? '':$get['region'];
+        $postiontype = empty($get['positiontype'])? '':$get['positiontype'];    //职位类型
+        $experience = empty($get['experience'])? '':$get['experience'];         //工作经验
+        $education = empty($get['education'])? '':$get['education'];            //学历
+        $nature = empty($get['nature'])? '':$get['nature'];                     //1-全职 2-兼职
 
         $where=[];
         $where['pt.status']=['eq',1];
@@ -30,6 +34,18 @@ class Personalposition extends Common {
         }
         if(!empty($region)){
             $where['pt.region'] = ['like', '%'.$region.'%'];
+        }
+        if(!empty($postiontype)){
+            $where['pt.positiontype'] = ['eq', $postiontype];
+        }
+        if(!empty($experience)){
+            $where['pt.experience'] = ['eq', $experience];
+        }
+        if(!empty($education)){
+            $where['pt.education'] = ['eq', $education];
+        }
+        if(!empty($nature)){
+            $where['pt.nature'] = ['eq', $nature];
         }
         if(!empty($begintime) && !empty($endtime)) {
             $beginDate = strtotime($begintime);
@@ -57,6 +73,7 @@ class Personalposition extends Common {
             $data['lasttime'] = strtotime(date('Y-m-d',time()));
             $data['creatime'] = strtotime(date('Y-m-d ',time()));
             $data['cid'] = empty($get['cid'])? returnAjax([],'缺少公司编号参数',2):$get['cid'];
+            $data['regionid'] = empty($get['regionid']);
             $return = $this->model->saveData($data);
             if($return['status'] == 2){
                 returnAjax([], $return['msg'],2);

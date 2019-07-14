@@ -44,7 +44,9 @@ class Personalcompany extends Common
             $data['registermoney'] = $get['registermoney'];
             $data['companyinfo'] = $get['companyinfo'];
             $data['offcialcurl'] = $get['offcialcurl'];
+            $data['phone'] = empty($get['phone'])? returnAjax([],'缺少公司电话参数',2):$get['phone'];
             $data['uid'] = $this->userData->id;
+            $data['regionid'] =  $get['regionid'];
             $return = $this->personalCompanymodel->addData($data);
             if($return['status'] == 2){
                 returnAjax([], $return['msg'],2);

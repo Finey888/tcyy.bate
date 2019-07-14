@@ -11,15 +11,24 @@ class CoursesWatchLog extends Common {
     }
 
 	//列表
-    public function queryWatchLogList($param){
+    public function queryWatchLogList($uid,$page,$count,$sort=['vtime desc']){
         $where = [
-            'uid' => $param
+            'uid' => $uid
         ];
-        return $this::where($where) -> field('id,vid,vtime') ->select();
+        return $this::where($where) -> field('id,vid,vtime') ->page($page.','.$count)->order($sort) ->select();
     }
 
     //保存观看日志信息
     public function saveWatchLog($data){
         return $this::allowField(true)->save($data);
+    }
+
+    /**
+     * 判断当前用户当日有无观看记录
+     * @param $where
+     * @return int|string
+     */
+    public function existViewByDate($where){
+        return $this::where($where) -> field('id,vid,vtime') ->count();
     }
 }	

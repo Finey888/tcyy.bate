@@ -64,6 +64,7 @@ class Personalresume extends Common {
             $data['address'] = $get['address'];     //地址
             $data['auditstatus'] = 0; //审核状态
             $data['uid'] =  $this->userData->id;
+            $data['regionid'] = $get['regionid'];
             $return = $this->model->saveData($data);
             if($return['status'] == 2){
                 returnAjax([], $return['msg'],2);
@@ -129,6 +130,7 @@ class Personalresume extends Common {
             'arrivaltime' => $data['arrivaltime'] ,
             'intentposition' => $data['intentposition'] ,
             'worknature' => $data['worknature'] ,       //工作性质：全职 兼职
+            'regionid' => $data['regionid'] ,       //工作性质：全职 兼职
             'sex' => $data['sex'],
             'ethnic' => $data['ethnic'],
             'workexperience' => $data['workexperience'],

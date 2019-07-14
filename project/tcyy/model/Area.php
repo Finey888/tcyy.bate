@@ -20,7 +20,7 @@ class Area extends Common {
 
     //列表
     public function getAreaList(){
-        return $this::field('id,name') ->select();
+        return $this::field('id,name,upid') ->select();
     }
 
 }	

@@ -1,5 +1,6 @@
 <?php
 namespace app\tcyy\model;
+use think\Model;
 
 class PersonalEducation extends Common {
     //自定义初始化

@@ -1,6 +1,8 @@
 <?php
 namespace app\tcyy\model;
 
+use think\Model;
+
 class PersonalQualification extends Common {
 
     //自定义初始化

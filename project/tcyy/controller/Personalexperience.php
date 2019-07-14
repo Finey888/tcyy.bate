@@ -24,7 +24,7 @@ class Personalexperience extends Base {
             $data['entrancedate'] = empty($get['entrancedate'])? returnAjax([],'缺少入职日期参数',2):strtotime($get['entrancedate']);
             $data['dimissiondate'] = empty($get['dimissiondate'])? returnAjax([],'缺少离职日期参数',2):strtotime($get['dimissiondate']);
             $data['workcontent'] = empty($get['workcontent'])? returnAjax([],'缺少工作描述参数',2):strtotime($get['workcontent']);
-            $return = $this -> model -> save($data);
+            $return = $this -> model -> saveData($data);
             if($return['status'] == 2){
                 returnAjax([], $return['msg'],2);
             }
@@ -34,7 +34,7 @@ class Personalexperience extends Base {
             ];
             returnAjax($rtd, '新增成功',1);
         }else{
-            $return = $this -> model -> save($get,['id'=>$get['id']]);
+            $return = $this -> model -> saveData($get,['id'=>$get['id']]);
             if($return['status'] == 2){
                 returnAjax([], $return['msg'],2);
             }

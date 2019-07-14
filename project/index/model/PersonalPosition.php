@@ -96,6 +96,6 @@ class PersonalPosition extends Common {
 
     //审核数据
     public function  auditPositionById($id){
-        return $this::update(['id'=>$id,'status'=>1]);
+        return $this -> _collection ->update(['id'=>$id,'status'=>1]);
     }
 }	
