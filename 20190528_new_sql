@@ -172,7 +172,7 @@ create table tccybate.tcyy_personal_resume
    wages                varchar(255) not null default '1' comment '期望工资0.面议',
    positiontype         int(11) not null default 1 comment '职位类型 1.口腔护士 2.全科医师 3.洽谈师 4.儿童牙科 5.口腔正畸 6.口腔种植 7.口腔内科',
    selfevaluation       text comment '自我评价',
-   jointime             int(11) comment '参加工作时间',
+   jointime             varchar(12) comment '参加工作时间',
    arrivaltime          varchar(255) comment '到岗时间',
    status               tinyint(4) not null default 1 comment '1.显示  2.隐藏  3.禁用',
    uid                  int(11) not null comment '关联用户表',

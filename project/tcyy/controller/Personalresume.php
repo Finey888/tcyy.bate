@@ -23,13 +23,21 @@ class Personalresume extends Common {
         $page = empty($get['page'])?1:$get['page'];
         $limit = empty($get['limit'])?10:$get['limit'];
         $region = empty($get['region'])? '':$get['region'];
+        $education = empty($get['education'])? '':$get['education'];
+        $positiontype = empty($get['positiontype'])? '':$get['positiontype'];
 
         $where=[];
-        $where['auditstatus']=['eq',1]; //审核通过=上架
+        $where['auditstatus']=['eq',2]; //审核通过=上架
         $where['isdel']=['eq',0];
 
         if(!empty($region)){
-            $where['region'] = ['like', '%'.$region.'%'];
+            $where['expectregion'] = ['like', '%'.$region.'%'];
+        }
+        if(!empty($education)){
+            $where['education'] = ['eq', $education];
+        }
+        if(!empty($positiontype)){
+            $where['intentposition'] = ['eq', $positiontype];
         }
 
         $data = $this->model->getPageData($page,$limit,$where);
@@ -62,7 +70,7 @@ class Personalresume extends Common {
             $data['ethnic'] = $get['ethnic'];
             $data['workexperience'] = $get['workexperience'];
             $data['address'] = $get['address'];     //地址
-            $data['auditstatus'] = 0; //审核状态
+            $data['auditstatus'] = 1; //审核状态
             $data['uid'] =  $this->userData->id;
             $data['regionid'] = $get['regionid'];
             $return = $this->model->saveData($data);
@@ -96,17 +104,14 @@ class Personalresume extends Common {
     }
 
     /**
-     * 获取简历详情
+     * 根据简历id查看简历详情
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
-    public function getResumeDetail(){
+    public function viewResumeDetail(){
         $get = input('post.');
-        $uid= $this -> userData -> id;
-        $where = ['uid' => $uid];
-        $data = $this->model->getResumeByCondition($where);
-        $rid = $data['id'];
+        $rid = $get['id'];
         if(empty($rid)){
             returnAjax([],'无对应简历信息',2);
         }
@@ -143,6 +148,17 @@ class Personalresume extends Common {
             'qualificationList' => $quaData
         ];
         returnAjax($returnData,'获取数据成功',1);exit();
+    }
+
+    /**
+     * 根据登录用户获取个人简历信息
+     */
+    public function getPersonalResumeDetail(){
+
+        $uid= $this -> userData -> id;
+        $where = ['uid' => $uid];
+        $data = $this->model->getResumeByCondition($where);
+        returnAjax($data,'获取数据成功',1);exit();
     }
 
     public function deletePersonalResume(){

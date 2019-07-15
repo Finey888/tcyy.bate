@@ -4,11 +4,13 @@ use think\Request;
 
 class Personalposition extends Common {
 	protected $model = null;
+	protected $companyModel = null;
 
     public function __construct(Request $request = null,$options = [])
     {
         parent::__construct($request);
-        $this->model = new \app\tcyy\model\PersonalPosition;
+        $this->model = new \app\tcyy\model\PersonalPosition();
+        $this->companyModel = new \app\tcyy\model\PersonalCompany();
     }
 
     //获取列表
@@ -72,7 +74,15 @@ class Personalposition extends Common {
             $data['experience'] = $get['experience']; //工作经验
             $data['lasttime'] = strtotime(date('Y-m-d',time()));
             $data['creatime'] = strtotime(date('Y-m-d ',time()));
-            $data['cid'] = empty($get['cid'])? returnAjax([],'缺少公司编号参数',2):$get['cid'];
+
+//            $data['cid'] = empty($get['cid'])? returnAjax([],'缺少公司编号参数',2):$get['cid'];
+            $uid =  $this->userData->id;
+            $comp = $this -> companyModel -> getCompanyByCondition(['uid' => $uid]);
+            $data['cid'] = $comp['id'];
+            if(empty($data['cid'])){
+                returnAjax([], '没有对应的公司信息',2);
+            }
+
             $data['regionid'] = empty($get['regionid']);
             $return = $this->model->saveData($data);
             if($return['status'] == 2){

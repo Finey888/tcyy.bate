@@ -19,7 +19,7 @@ class PersonalResume extends Common {
     public function getPageData($page=1,$count=10,$where=[]){
         $data = $this::where($where)
                 -> page($page.','.$count)
-                -> field('id,personname,birthday,education,jobstatus,expectregion,telephone,intentposition')
+                -> field('id,personname,birthday,education,jobstatus,expectregion,telephone,intentposition,workexperience')
                 -> order('refreshtime desc')
                 -> select();
         return $data -> toArray();

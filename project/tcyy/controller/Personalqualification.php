@@ -2,13 +2,15 @@
 namespace app\tcyy\controller;
 use think\Request;
 
-class Personalqualification extends Base {
+class Personalqualification extends Common {
 	protected $model = null;
+	protected $resumeModel = null;
 
     public function __construct(Request $request = null,$options = [])
     {
         parent::__construct($request);
         $this->model = new \app\tcyy\model\PersonalQualification();
+        $this->resumeModel = new \app\tcyy\model\PersonalResume();
     }
 
 
@@ -16,7 +18,14 @@ class Personalqualification extends Base {
     public function savePersonalQualification(){
         $get = input('post.');
         if(empty($get['id'])){
-            $data['rid'] = empty($get['rid'])? returnAjax([],'缺少简历编号参数',2):$get['rid'];
+            $uid= $this -> userData -> id;
+            $where = ['uid' => $uid];
+            $rtnResume = $this->resumeModel->getResumeByCondition($where);
+            if(empty($rtnResume['id'])){
+                returnAjax([], '没有对应简历信息',2);
+            }
+            $data['rid'] = $rtnResume['id'];
+//            $data['rid'] = empty($get['rid'])? returnAjax([],'缺少简历编号参数',2):$get['rid'];
             $data['qualifyname'] = empty($get['qualifyname'])? returnAjax([],'缺少证书名称参数',2):$get['qualifyname'];
             $data['qualifyurl'] = empty($get['qualifyurl'])? returnAjax([],'缺少证书URL参数',2):$get['qualifyurl'];
             $data['qualify_time'] = empty($get['qualify_time'])? returnAjax([],'缺少简历编号参数',2):strtotime(date('Y-m-d',$get['qualify_time']));

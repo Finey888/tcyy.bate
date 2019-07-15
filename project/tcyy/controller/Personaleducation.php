@@ -2,13 +2,15 @@
 namespace app\tcyy\controller;
 use think\Request;
 
-class Personaleducation extends Base {
+class Personaleducation extends Common {
 	protected $model = null;
+	protected $resumeModel = null;
 
     public function __construct(Request $request = null,$options = [])
     {
         parent::__construct($request);
         $this->model = new \app\tcyy\model\PersonalEducation();
+        $this->resumeModel = new \app\tcyy\model\PersonalResume();
     }
 
     /**
@@ -17,7 +19,14 @@ class Personaleducation extends Base {
     public function savePersonEducationExp(){
         $get = input('post.');
         if(empty($get['id'])){
-            $data['rid'] = empty($get['rid'])? returnAjax([],'缺少简历编号参数',2):$get['rid'];
+            $uid= $this -> userData -> id;
+            $where = ['uid' => $uid];
+            $rtnResume = $this->resumeModel->getResumeByCondition($where);
+            if(empty($rtnResume['id'])){
+                returnAjax([], '没有对应简历信息',2);
+            }
+            $data['rid'] = $rtnResume['id'];
+//            $data['rid'] = empty($get['rid'])? returnAjax([],'缺少简历编号参数',2):$get['rid'];
             $data['education'] = $get['education'];
             $data['schoolname'] = empty($get['schoolname'])? returnAjax([],'缺少学校名称参数',2):$get['schoolname'];
             $data['profession'] = empty($get['profession'])? returnAjax([],'缺少专业名称参数',2):$get['profession'];

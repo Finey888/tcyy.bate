@@ -42,10 +42,16 @@ class Personalcompany extends Common
             $data['address'] = $get['address'];
             $data['authurl'] = $get['authurl'];
             $data['registermoney'] = $get['registermoney'];
-            $data['companyinfo'] = $get['companyinfo'];
-            $data['offcialcurl'] = $get['offcialcurl'];
+            $data['companyinfo'] =  empty($get['companyinfo'])?'':$get['companyinfo'];
+            $data['offcialcurl'] = empty($get['offcialcurl'])?'':$get['offcialcurl'];
             $data['phone'] = empty($get['phone'])? returnAjax([],'缺少公司电话参数',2):$get['phone'];
             $data['uid'] = $this->userData->id;
+
+            $rtComp = $this -> personalCompanymodel -> getCompanyByCondition(["uid" => $data['uid']]);
+            if(!empty($rtComp)){
+                returnAjax([], '该用户已有对应的公司信息',2);
+            }
+
             $data['regionid'] =  $get['regionid'];
             $return = $this->personalCompanymodel->addData($data);
             if($return['status'] == 2){
