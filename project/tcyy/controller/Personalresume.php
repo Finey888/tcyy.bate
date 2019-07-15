@@ -7,6 +7,7 @@ class Personalresume extends Common {
 	protected $eductionModel = null;
 	protected $experienceModel = null;
 	protected $qualificationModel = null;
+	protected $companyModel = null;
 
     public function __construct(Request $request = null,$options = [])
     {
@@ -15,6 +16,7 @@ class Personalresume extends Common {
         $this-> eductionModel = new \app\tcyy\model\PersonalEducation();
         $this-> experienceModel = new \app\tcyy\model\PersonalExperience();
         $this-> qualificationModel = new \app\tcyy\model\PersonalQualification();
+        $this-> companyModel = new \app\tcyy\model\PersonalCompany();
     }
 
     //获取列表
@@ -154,10 +156,12 @@ class Personalresume extends Common {
      * 根据登录用户获取个人简历信息
      */
     public function getPersonalResumeDetail(){
-
         $uid= $this -> userData -> id;
         $where = ['uid' => $uid];
         $data = $this->model->getResumeByCondition($where);
+        if(empty($data)){
+            returnAjax([],'无对应简历信息',2);
+        }
         returnAjax($data,'获取数据成功',1);exit();
     }
 
@@ -181,5 +185,45 @@ class Personalresume extends Common {
             returnAjax([], "无简历信息",0);
         }
         returnAjax([],"有简历信息,可投递",1);
+    }
+
+    //获取个人投递职位得列表信息
+    public function getCurrentUserDeliverHistory(){
+        $get = input('post.');
+        $page = empty($get['page'])?1:$get['page'];
+        $limit = empty($get['limit'])?10:$get['limit'];
+
+        $uid= $this -> userData -> id;
+        $where = ['uid' => $uid];
+        $data = $this -> model -> getResumeByCondition($where);
+        if(empty($data)){
+            returnAjax([], "无简历信息",0);
+        }
+        $dataArrays = $this -> companyModel -> queryCurrentUserDevlierPositions($data['id'],$page,$limit);
+        returnAjax($dataArrays,"获取数据成功",1);
+    }
+
+    //删除教育经历
+    public function delEducation(){
+        $get = input('post.');
+        $eid= empty($get['id'])? returnAjax([],'缺少教育经历编号参数',2):$get['id'];
+        $this -> eductionModel -> deleteById($eid);
+        returnAjax([],"删除成功",1);
+    }
+
+    //删除工作经历
+    public function delWorkExperience(){
+        $get = input('post.');
+        $weid= empty($get['id'])? returnAjax([],'缺少工作经历编号参数',2):$get['id'];
+        $this -> experienceModel -> deleteById($weid);
+        returnAjax([],"删除成功",1);
+    }
+
+    //删除资格证书信息
+    public function delQualification(){
+        $get = input('post.');
+        $qid= empty($get['id'])? returnAjax([],'缺少资格编号参数',2):$get['id'];
+        $this -> qualificationModel -> delById($qid);
+        returnAjax([],"删除成功",1);
     }
 }

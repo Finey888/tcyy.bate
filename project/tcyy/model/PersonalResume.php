@@ -2,6 +2,7 @@
 namespace app\tcyy\model;
 
 class PersonalResume extends Common {
+
     //根据主键查询简历信息
     public function getDataById($id){
         $data = $this::where(['id'=>$id])->find();
@@ -35,4 +36,5 @@ class PersonalResume extends Common {
         $data = $this::where($where)->find();
         return $data;
     }
+
 }	

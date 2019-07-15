@@ -28,7 +28,7 @@ class Personalqualification extends Common {
 //            $data['rid'] = empty($get['rid'])? returnAjax([],'缺少简历编号参数',2):$get['rid'];
             $data['qualifyname'] = empty($get['qualifyname'])? returnAjax([],'缺少证书名称参数',2):$get['qualifyname'];
             $data['qualifyurl'] = empty($get['qualifyurl'])? returnAjax([],'缺少证书URL参数',2):$get['qualifyurl'];
-            $data['qualify_time'] = empty($get['qualify_time'])? returnAjax([],'缺少简历编号参数',2):strtotime(date('Y-m-d',$get['qualify_time']));
+            $data['qualify_time'] = empty($get['qualify_time'])? returnAjax([],'缺少证书获取时间参数',2):strtotime(date('Y-m-d',$get['qualify_time']));
             $data['createtime'] = strtotime(date('Y-m-d',time()));
 
             $return = $this -> model -> saveQualification($data);

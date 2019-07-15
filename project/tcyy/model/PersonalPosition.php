@@ -46,4 +46,14 @@ class PersonalPosition extends Common {
         $data = $this::where(['id' => $id])->update(['isdel' => 1]);
         return $data;
     }
+
+    //根据用户编号和职位编号查询返回是否用户本身发布得职位
+    public function getPositionCountByUid($where){
+        $data = $this ->_collection
+            ->alias('pt')
+            ->where($where)
+            ->join('tcyy_personal_company cm', ' cm.id = pt.cid ', 'inner')
+            ->field('pt.id,cm.name ')->count();
+        return $data;
+    }
 }	

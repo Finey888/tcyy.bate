@@ -35,7 +35,7 @@ class Personalcompany extends Common
         if(empty($get['id'])){
             $data['name'] = empty($get['name'])? returnAjax([],'缺少公司名称参数',2):$get['name'];
             $data['region'] = empty($get['region'])? returnAjax([],'缺少区域参数',2):$get['region'];
-            $data['createrdate'] = empty($get['createrdate']) ? returnAjax([],'缺少公司成立日期参数',2):strtotime(date('Y-m-d',strtotime($get['createrdate'])));
+            $data['createrdate'] = empty($get['createrdate']) ? returnAjax([],'缺少公司成立日期参数',2):$get['createrdate'];
             $data['contacts'] = empty($get['contacts'])? returnAjax([],'缺少联系人参数',2):$get['contacts'];
             $data['email'] = empty($get['email'])? returnAjax([],'缺少邮件地址参数',2):$get['email'];
             $data['people'] = $get['people'];
@@ -89,8 +89,8 @@ class Personalcompany extends Common
         $get = input('post.');
         $page = empty($get['page'])?1:$get['page'];
         $limit = empty($get['limit'])?10:$get['limit'];
-        $uid= $this->userData->id;
-        $data = $this -> personalCompanymodel -> queryList($uid);
+        $uid =  $this->userData->id;
+        $data = $this -> personalCompanymodel -> queryList($uid,$page,$limit);
 
         returnAjax($data,"查询列表获取成功",1);
     }

@@ -29,7 +29,7 @@ class PersonalQualification extends Common {
      * @param $id
      * @return PersonalQualification
      */
-    public function del($id){
+    public function delById($id){
         return $this::where('id',  $id) -> update(['isdel' => 1]);
     }
 

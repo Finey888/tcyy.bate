@@ -59,6 +59,21 @@ class PersonalCompany extends Common {
         return $this -> query($querySql.$paginationStr,[$uid]);
     }
 
+    /**
+     * 根据当前用户简历编号查询投递职位列表信息
+     * @param $rid
+     * @param $page
+     * @param $limit
+     * @return mixed
+     * @throws \think\db\exception\BindParamException
+     * @throws \think\exception\PDOException
+     */
+    public function queryCurrentUserDevlierPositions($rid,$page,$limit){
+        $page = ($page - 1) * $limit;
+        $querySql = 'SELECT dl.jid,pt.professional,pt.positiontype,pt.wages,pt.nature,FROM_UNIXTIME(dl.delivertime) AS delivertime FROM tcyy_personal_deliver dl , tcyy_personal_position pt WHERE dl.jid = pt.id AND dl.rid = ? LIMIT '.$page.','.$limit;
+        return $this -> query($querySql.[$rid]);
+    }
+
     public function getCompanyByCondition($where){
         $data = $this :: where($where) -> find();
         return empty($data) ? [] : $data;

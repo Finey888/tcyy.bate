@@ -44,7 +44,7 @@ create table tccybate.tcyy_personal_company
    logo                 varchar(255) not null comment 'logoUrl地址',
    people               tinyint(4) not null comment '人数规模',
    region               varchar(255) not null comment '所在区域(省市区县)',
-   createrdate          int(11) comment '成立日期',
+   createrdate          varchar(12) comment '成立日期',
    registermoney        int(11) comment '注册资金 单位万',
    contacts             varchar(255) comment '联系人',
    email                varchar(255) comment '邮件地址',
