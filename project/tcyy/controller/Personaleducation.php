@@ -19,7 +19,7 @@ class Personaleducation extends Common {
     public function savePersonEducationExp(){
         $get = input('post.');
         if(empty($get['id'])){
-            $uid= $this -> userData -> id;
+            $uid = $this -> userData -> id;
             $where = ['uid' => $uid];
             $rtnResume = $this->resumeModel->getResumeByCondition($where);
             if(empty($rtnResume['id'])){
@@ -27,11 +27,11 @@ class Personaleducation extends Common {
             }
             $data['rid'] = $rtnResume['id'];
 //            $data['rid'] = empty($get['rid'])? returnAjax([],'缺少简历编号参数',2):$get['rid'];
-            $data['education'] = $get['education'];
+//            $data['education'] = $get['education'];
             $data['schoolname'] = empty($get['schoolname'])? returnAjax([],'缺少学校名称参数',2):$get['schoolname'];
             $data['profession'] = empty($get['profession'])? returnAjax([],'缺少专业名称参数',2):$get['profession'];
-            $data['entrancedate'] = empty($get['entrancedate'])? returnAjax([],'缺少入学日期参数',2):strtotime($get['entrancedate']);
-            $data['graduatedate'] = empty($get['graduatedate'])? returnAjax([],'缺少毕业日期参数',2):strtotime($get['graduatedate']);
+            $data['entrancedate'] = empty($get['entrancedate'])? returnAjax([],'缺少入学日期参数',2):$get['entrancedate'];
+            $data['graduatedate'] = empty($get['graduatedate'])? returnAjax([],'缺少毕业日期参数',2):$get['graduatedate'];
             $return = $this -> model -> saveData($data);
             if($return['status'] == 2){
                 returnAjax([], $return['msg'],2);

@@ -47,11 +47,11 @@
                     </tr>
                     <tr>
                         <td>创建时间</td>
-                        <td>{$data[0]["creatime"]}</td>
+                        <td>{php}echo date('Y-m-d',$data[0]["creatime"]);{/php}</td>
                     </tr>
                     <tr>
                         <td>职位刷新时间</td>
-                        <td>{$data[0]["lasttime"]}</td>
+                        <td>{php}echo date('Y-m-d',$data[0]["lasttime"]);{/php}</td>
                     </tr>
                     <tr>
                         <td>审核状态</td>

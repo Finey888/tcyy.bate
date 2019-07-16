@@ -29,10 +29,10 @@ class Personalexperience extends Common {
             }
             $data['rid'] = $rtnResume['id'];
             $data['companyname'] = empty($get['companyname'])? returnAjax([],'缺少公司名称参数',2):$get['companyname'];
-            $data['positions'] = empty($get['positions'])? returnAjax([],'缺少职位参数',2):$get['positions'];
-            $data['entrancedate'] = empty($get['entrancedate'])? returnAjax([],'缺少入职日期参数',2):strtotime($get['entrancedate']);
-            $data['dimissiondate'] = empty($get['dimissiondate'])? returnAjax([],'缺少离职日期参数',2):strtotime($get['dimissiondate']);
-            $data['workcontent'] = empty($get['workcontent'])? returnAjax([],'缺少工作描述参数',2):strtotime($get['workcontent']);
+            $data['positions'] = empty($get['positions'])? '':$get['positions'];
+            $data['entrancedate'] = empty($get['entrancedate'])? returnAjax([],'缺少入职日期参数',2):$get['entrancedate'];//strtotime($get['entrancedate']);
+            $data['dimissiondate'] = empty($get['dimissiondate'])? returnAjax([],'缺少离职日期参数',2):$get['dimissiondate'];//strtotime($get['dimissiondate']);
+            $data['workcontent'] = empty($get['workcontent'])? '':$get['workcontent'];
             $return = $this -> model -> saveData($data);
             if($return['status'] == 2){
                 returnAjax([], $return['msg'],2);

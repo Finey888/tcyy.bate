@@ -81,11 +81,11 @@ alter table tccybate.tcyy_personal_deliver comment '会员-个人投递职位记
 create table tccybate.tcyy_personal_education
 (
    id                   int(11) not null auto_increment,
-   education            tinyint(4) not null comment '1.应届毕业生 2.大专 3.本科 4.硕士 5.博士',
-   name                 varchar(255) not null comment '学校名称',
+--   education            tinyint(4) not null comment '1.应届毕业生 2.大专 3.本科 4.硕士 5.博士',
+   schoolname           varchar(255) not null comment '学校名称',
    profession           varchar(255) not null comment '专业课程',
-   entrancedate         int(11) not null comment '入学时间',
-   graduatedate         int(11) not null comment '毕业时间',
+   entrancedate         varchar(12) not null comment '入学时间',
+   graduatedate         varchar(12) not null comment '毕业时间',
    rid                  int(11) not null comment '关联简历编号',
    status               tinyint(4) not null default 1 comment '1.显示 2.禁用 -1.删除',
    primary key (id)
@@ -101,8 +101,8 @@ create table tccybate.tcyy_personal_experience
    id                   int(11) not null auto_increment,
    rid                  int(11) not null comment '关联简历编号',
    companyname          varchar(255) comment '公司名称',
-   entrancedate         int(11) not null comment '入职时间',
-   dimissiondate        int(11) not null comment '离职时间',
+   entrancedate         varchar(12) not null comment '入职时间',
+   dimissiondate        varchar(12) not null comment '离职时间',
    positions            varchar(255) not null comment '所在职位',
    workcontent          text not null comment '工作内容',
    status               tinyint(4) not null default 1 comment '1.显示 2.禁用 -1.删除',
@@ -146,7 +146,7 @@ create table tccybate.tcyy_personal_qualification
    rid                  int(11) not null comment '简历编号',
    qualifyname          varchar(200) not null comment '资格证书名称',
    qualifyurl           varchar(255) not null comment '资格证书URL',
-   qualify_time         int(11) comment '证书获取时间',
+   qualify_time         varchar(12) comment '证书获取时间',
    createtime           int(11) comment '创建时间',
    isdel                tinyint(4) not null default 0 comment '0-否 1-是',
    primary key (id)
