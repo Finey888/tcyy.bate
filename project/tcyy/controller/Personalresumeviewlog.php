@@ -18,7 +18,7 @@ class Personalresumeviewlog extends Common {
     public function savePersonalViewResumeLog(){
         $get = input('post.');
         $data['rid'] = empty($get['rid'])? returnAjax([],'缺少简历编号参数',2):$get['rid'];
-        $data['viewtime'] = strtotime(date('Y-m-d',time()));
+        $data['viewtime'] = strtotime(date('Y-m-d 00:00:00',time()));
         $data['uid'] =  $this->userData->id;
 
         $where = ['rid'=>$get['rid'],'uid'=>$data['uid']];

@@ -8,6 +8,7 @@ class Personalresume extends Common {
 	protected $experienceModel = null;
 	protected $qualificationModel = null;
 	protected $companyModel = null;
+	protected $viewLogModel = null;
 
     public function __construct(Request $request = null,$options = [])
     {
@@ -17,6 +18,7 @@ class Personalresume extends Common {
         $this-> experienceModel = new \app\tcyy\model\PersonalExperience();
         $this-> qualificationModel = new \app\tcyy\model\PersonalQualification();
         $this-> companyModel = new \app\tcyy\model\PersonalCompany();
+        $this -> viewLogModel = new \app\tcyy\model\PersonalResumeViewLog();
     }
 
     //获取列表
@@ -59,19 +61,19 @@ class Personalresume extends Common {
             $data['telephone'] = empty($get['telephone'])? returnAjax([],'缺少联系电话参数',2):$get['telephone'];
             $data['education'] = empty($get['education'])? returnAjax([],'缺少学历参数',2):$get['education'];
             $data['email'] = empty($get['email'])? returnAjax([],'缺少邮箱地址参数',2):$get['email'];
-            $data['jobstatus'] = $get['jobstatus'];
-            $data['marriage'] = $get['marriage'];
-            $data['wages'] = $get['wages'];
-            $data['positiontype'] = $get['positiontype'];
-            $data['selfevaluation'] = $get['selfevaluation'];
+            $data['jobstatus'] = empty($get['jobstatus'])?'':$get['jobstatus'];
+            $data['marriage'] = empty($get['marriage'])?'':$get['marriage'];
+            $data['wages'] = empty($get['wages'])?'':$get['wages'];
+//            $data['positiontype'] = empty($get['positiontype'])? returnAjax([],'缺少职位类型参数',2):$get['positiontype'];$get[''];
+            $data['selfevaluation'] = empty($get['selfevaluation'])?'':$get['selfevaluation'];
             $data['jointime'] = $get['jointime'];
-            $data['arrivaltime'] = $get['arrivaltime'];
+            $data['arrivaltime'] = empty($get['arrivaltime'])?'':$get['arrivaltime'];
             $data['intentposition'] = $get['intentposition'];
-            $data['worknature'] = $get['worknature'];       //工作性质：全职 兼职
+            $data['worknature'] = empty($get['worknature'])?'':$get['worknature'];       //工作性质：全职 兼职
             $data['sex'] = $get['sex'];
-            $data['ethnic'] = $get['ethnic'];
+            $data['ethnic'] = empty($get['ethnic'])?'':$get['ethnic'];
             $data['workexperience'] = $get['workexperience'];
-            $data['address'] = $get['address'];     //地址
+            $data['address'] = empty($get['address'])?'':$get['address'];     //地址
             $data['auditstatus'] = 1; //审核状态
             $data['uid'] =  $this->userData->id;
             $data['regionid'] = $get['regionid'];
@@ -122,6 +124,24 @@ class Personalresume extends Common {
         $expData = $this -> experienceModel -> queryWorkExperienceList(['rid' => $rid]);
         $quaData = $this -> qualificationModel -> getQualificationList(['rid' => $rid]);
 
+        $uid = $this -> userData -> id;
+        $rt = $this -> model -> getResumeByCondition(['uid'=>$uid,'id' => $rid]);
+        //不保存自己浏览自己简历的历史
+        if(empty($rt)){
+            $where = ['rid'=>$rid,'uid'=>$uid];
+            $viewLog['uid'] = $uid;
+            $viewLog['rid'] = $rid;
+            $viewLog['viewtime'] = strtotime(date('Y-m-d 00:00:00',time()));
+
+            //先判断有无数据
+            $haveSth = $this->viewLogModel->getViewLogByIds($where);
+            //有的话,更新,无的话增加
+            if(empty($haveSth)) {
+                $this -> viewLogModel -> saveViewLog($viewLog);
+            }else{
+                $this -> viewLogModel -> saveViewLog($viewLog,$where);
+            }
+        }
 
         $returnData = [
             'id' => $data['id'],
@@ -182,9 +202,11 @@ class Personalresume extends Common {
         $where = ['uid' => $uid];
         $data = $this -> model -> getResumeByCondition($where);
         if(empty($data)){
-            returnAjax([], "无简历信息",0);
+            returnAjax(1, "无简历信息",1);
+        }else if($data['status'] != '2'){
+            returnAjax(2,'简历未审核通过',1);
         }
-        returnAjax([],"有简历信息,可投递",1);
+        returnAjax(3,"有简历信息,可投递",1);
     }
 
     //获取个人投递职位得列表信息
