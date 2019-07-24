@@ -97,6 +97,11 @@ class Personalposition extends Common {
 
             returnAjax($rtd, '增加成功',1);
         }else{
+            $checkStatu = $this-> model->getPositionById($get['id']);
+            //如果为审核不通过
+            if($checkStatu['status'] == 2) {
+                $get['auditstatus'] = 0;
+            }
             $return = $this->model->saveData($get,['id'=>$get['id']]);
             if($return['status'] == 2){
                 returnAjax([], $return['msg'],2);
@@ -130,5 +135,19 @@ class Personalposition extends Common {
         }
         $data = $this->model->delPostionById($get['id']);
         returnAjax([],'操作成功',1);
+    }
+
+    //查询当前用户发布的职位列表
+    public function getPositionsByCurrentUser(){
+        $get = input('post.');
+        $page = empty($get['page'])?1:$get['page'];
+        $limit = empty($get['limit'])?10:$get['limit'];
+        $uid =  $this->userData->id;$where=[];
+        $where['pt.isdel'] = ['eq',0];
+        $where['cm.uid'] =['eq',$uid];
+
+        $data = $this->model->getPageData($page,$limit,$where);
+
+        returnAjax(['data'=>$data,'page'=>$page],'获取数据成功',1);exit();
     }
 }

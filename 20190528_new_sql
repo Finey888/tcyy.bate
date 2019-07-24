@@ -129,7 +129,7 @@ create table tccybate.tcyy_personal_position
    cid                  int(11) not null comment '关联会员公司编号',
    professional         varchar(255) not null comment '职称',
    creatime             int(11) not null comment '创建时间',
-   status               tinyint(4) not null default 0 comment '0-审核中 1-上架 2-下架',
+   status               tinyint(4) not null default 0 comment '0-审核中 1-审核通过上架 2-审核不通过下架',
    lasttime             int(11) not null comment '最后刷新招聘时间',
    isdel                tinyint(4) not null default 0 comment '0-否 1-是',
    primary key (id)
@@ -184,7 +184,7 @@ create table tccybate.tcyy_personal_resume
    ethnic               varchar(255) comment '民族',
    attachurl            varchar(255) comment '简历附件',
    workexperience       varchar(255) comment '工作经验',
-   auditstatus          tinyint(4) comment '审核状态:1-待审核 2-审核通过',
+   auditstatus          tinyint(4) comment '审核状态:1-待审核 2-审核通过,3-审核不通过',
    isdel                tinyint(4) not null default 0 comment '0-否 1-是',
    primary key (id)
 );

@@ -74,7 +74,7 @@ class Personalresume extends Common {
             $data['ethnic'] = empty($get['ethnic'])?'':$get['ethnic'];
             $data['workexperience'] = $get['workexperience'];
             $data['address'] = empty($get['address'])?'':$get['address'];     //地址
-            $data['auditstatus'] = 1; //审核状态
+            $data['auditstatus'] = 1; //审核状态:1-待审核 2-审核通过 3-审核不通过
             $data['uid'] =  $this->userData->id;
             $data['regionid'] = $get['regionid'];
             $return = $this->model->saveData($data);
@@ -90,6 +90,11 @@ class Personalresume extends Common {
 
             returnAjax($rtd, '增加成功',1);
         }else{
+            $checkStatu = $this-> model->getDataById($get['id']);
+            //如果为审核不通过
+            if($checkStatu['auditstatus'] == 2) {
+                $get['auditstatus'] = 1;
+            }
             $return = $this-> model->saveData($get,['id'=>$get['id']]);
             if($return['status'] == 2){
                 returnAjax([], $return['msg'],2);
@@ -120,9 +125,9 @@ class Personalresume extends Common {
             returnAjax([],'无对应简历信息',2);
         }
         $data = $this->model->getDataById($rid);
-        $eduData = $this -> eductionModel -> queryEduList(['rid' => $rid]);
-        $expData = $this -> experienceModel -> queryWorkExperienceList(['rid' => $rid]);
-        $quaData = $this -> qualificationModel -> getQualificationList(['rid' => $rid]);
+        $eduData = $this -> eductionModel -> queryEduList(['rid' => $rid,'status' => 1]);
+        $expData = $this -> experienceModel -> queryWorkExperienceList(['rid' => $rid,'status' => 1]);
+        $quaData = $this -> qualificationModel -> getQualificationList(['rid' => $rid,'isdel' => 0]);
 
         $uid = $this -> userData -> id;
         $rt = $this -> model -> getResumeByCondition(['uid'=>$uid,'id' => $rid]);

@@ -56,4 +56,10 @@ class PersonalPosition extends Common {
             ->field('pt.id,cm.name ')->count();
         return $data;
     }
+
+    //根据主键编号查询职位信息
+    public function getPositionById($id){
+        $data = $this::where(['id' => $id])->find();
+        return $data;
+    }
 }	
