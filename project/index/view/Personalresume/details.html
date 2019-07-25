@@ -91,8 +91,8 @@
                 {volist name="expData" id="exps"}
                   <tr>
                       <td>{$exps.companyname}</td>
-                      <td>{php}echo date('Y-m-d',$exps['entrancedate']);{/php}</td>
-                      <td>{php}echo date('Y-m-d',$exps['dimissiondate']);{/php}</td>
+                      <td>{$exps.entrancedate}</td>
+                      <td>{$exps.dimissiondate}</td>
                       <td>{$exps.positions}</td>
                       <td>{$exps.workcontent}</td>
                   </tr>
@@ -111,29 +111,22 @@
                 <tr>
                     <td>学校</td>
                     <td>专业</td>
-                    <td>学历</td>
                     <td>入学时间</td>
                     <td>毕业时间</td>
                 </tr>
                 {volist name="eduData" id="edu"}
                 <tr>
-                    <td>{$edu.name}</td>
+                    <td>{$edu.schoolname}</td>
                     <td>{$edu.profession}</td>
-                    <td>{eq name='edu.education' value='1'}应届毕业生{/eq}
-                        {eq name='edu.education' value='2'}大专{/eq}
-                        {eq name='edu.education' value='3'}本科{/eq}
-                        {eq name='edu.education' value='4'}硕士{/eq}
-                        {eq name='edu.education' value='5'}博士{/eq}
-                    </td>
-                    <td>{php}echo date('Y-m-d',$edu['entrancedate']);{/php}</td>
-                    <td>{php}echo date('Y-m-d',$edu['graduatedate']);{/php}</td>
+                    <td>{$edu.entrancedate}</td>
+                    <td>{$edu.graduatedate}</td>
                 </tr>
                 {/volist}
                 </tbody>
             </table>
         </div>
         <div class="col" style='width: 70%;float: left'>
-            <blockquote class="layui-elem-quote title">教育经历</blockquote>
+            <blockquote class="layui-elem-quote title">证书信息</blockquote>
             <table class="layui-table">
                 <colgroup>
                     <col width="150">
@@ -147,7 +140,7 @@
                 {volist name="quaData" id="qua"}
                 <tr>
                     <td>{$qua.qualifyname}</td>
-                    <td>{php}echo date('Y-m-d',$qua['qualify_time']);{/php}</td>
+                    <td>{$qua.qualify_time}</td>
                 </tr>
                 {/volist}
                 </tbody>

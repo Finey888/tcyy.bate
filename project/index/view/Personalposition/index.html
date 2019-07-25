@@ -134,6 +134,15 @@
 						}else{
 							content.status = '下架';
 						}
+						if(content.experience == 1){
+							content.experience = '1年以下';
+						}else if(content.experience == 2){
+							content.experience = '1-3年';
+						}else if(content.experience == 3){
+							content.experience = '3-5年';
+						}else{
+							content.experience = '5年以上';
+						}
 
                         dataHtml += '<tr>'
                             +'<td>'+i+'</td>'
