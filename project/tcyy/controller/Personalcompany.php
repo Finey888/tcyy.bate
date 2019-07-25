@@ -6,11 +6,13 @@ use think\Request;
 class Personalcompany extends Common
 {
     protected $personalCompanymodel = null;
+    protected $viewLogModel = null;
 
     public function __construct(Request $request = null,$options = [])
     {
         parent::__construct($request);
         $this->personalCompanymodel = new \app\tcyy\model\PersonalCompany();
+        $this->viewLogModel = new \app\tcyy\model\PersonalResumeViewLog();
     }
 
     /**
@@ -92,7 +94,7 @@ class Personalcompany extends Common
         $uid =  $this->userData->id;
         $data = $this -> personalCompanymodel -> queryList($uid,$page,$limit);
 
-        returnAjax($data,"查询列表获取成功",1);
+        returnAjax(['data'=>$data,'page'=>$page],"查询列表获取成功",1);
     }
 
 
@@ -103,11 +105,11 @@ class Personalcompany extends Common
         $get = input('post.');
         $page = empty($get['page'])?1:$get['page'];
         $limit = empty($get['limit'])?10:$get['limit'];
-        $pageStart = ($page - 1) * $limit;
-        $paginationStr = ' limit '.$pageStart.','.$limit;
+
         $uid= $this->userData->id;
-        $data = $this -> personalCompanymodel -> queryViewResumeLogs($uid,'',$paginationStr);
-        returnAjax($data,"查询成功",1);
+        $where = ['vl.uid'=>$uid];
+        $data = $this -> viewLogModel -> queryViewResumeLogs('',$page,$limit,$where);
+        returnAjax(['data'=>$data,'page'=>$page],"查询成功",1);
     }
 
 
@@ -118,11 +120,10 @@ class Personalcompany extends Common
         $get = input('post.');
         $page = empty($get['page'])?1:$get['page'];
         $limit = empty($get['limit'])?10:$get['limit'];
-        $pageStart = ($page - 1) * $limit;
-        $paginationStr = ' limit '.$pageStart.','.$limit;
         $uid= $this->userData->id;
-        $data = $this -> personalCompanymodel -> queryViewResumeLogs($uid,1,$paginationStr);
-        returnAjax($data,"查询成功",1);
+        $where = ['vl.uid'=>$uid];
+        $data = $this -> viewLogModel -> queryViewResumeLogs(1,$page,$limit,$where);
+        returnAjax(['data'=>$data,'page'=>$page],"查询成功",1);
     }
 
     //根据主键编号查询公司详情

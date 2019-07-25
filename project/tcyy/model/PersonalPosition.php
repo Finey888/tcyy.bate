@@ -20,7 +20,7 @@ class PersonalPosition extends Common {
             ->alias('pt')
             ->where(['pt.id' => $id])
             ->join('tcyy_personal_company cm', ' cm.id = pt.cid ', 'inner')
-            ->field('pt.id,cm.name,cm.email,pt.address,pt.positiontype,pt.region,pt.professional,pt.status,pt.wages,pt.experience,pt.education,cm.phone,cm.contacts,pt.descriptions,pt.nums,pt.nature ')->find();
+            ->field('pt.id,cm.name,cm.email,pt.address,pt.positiontype,pt.region,pt.professional,pt.status,pt.wages,pt.experience,pt.education,cm.phone,cm.contacts,pt.descriptions,pt.nums,pt.nature,pt.regionid ')->find();
         return $data;
     }
 
@@ -37,7 +37,7 @@ class PersonalPosition extends Common {
             ->alias('pt')
             ->where($where)
             ->join('tcyy_personal_company cm', ' cm.id = pt.cid ', 'inner')
-            ->field('pt.id,cm.name,cm.email,pt.address,pt.positiontype,pt.region,pt.professional,pt.status,pt.wages,pt.experience,pt.education ')->page($page.','.$count)->order($sort)->select();
+            ->field('pt.id,cm.name,cm.email,pt.address,pt.positiontype,pt.region,pt.professional,pt.status,pt.wages,pt.experience,pt.education,DATE_FORMAT(FROM_UNIXTIME(pt.lasttime),\'%Y-%m-%d\') as lasttime ')->page($page.','.$count)->order($sort)->select();
         return $data;
     }
 
@@ -61,5 +61,27 @@ class PersonalPosition extends Common {
     public function getPositionById($id){
         $data = $this::where(['id' => $id])->find();
         return $data;
+    }
+
+    /**
+     * 根据当前用户简历编号查询投递职位列表信息
+     * @param $rid
+     * @param $page
+     * @param $limit
+     * @return mixed
+     * @throws \think\db\exception\BindParamException
+     * @throws \think\exception\PDOException
+     */
+    public function queryCurrentUserDevlierPositions($page=1,$count=10,$where=[]){
+//        $page = ($page - 1) * $limit;
+//        $querySql = 'SELECT dl.jid,pt.professional,pt.positiontype,pt.wages,pt.nature,FROM_UNIXTIME(dl.delivertime) AS delivertime FROM tcyy_personal_deliver dl , tcyy_personal_position pt WHERE dl.jid = pt.id AND dl.rid = ? LIMIT '.$page.','.$limit;
+//        return $this -> query($querySql,[$rid]);
+        $data = $this ->_collection
+            ->alias('pt')
+            ->where($where)
+            ->join('tcyy_personal_deliver dl', ' dl.jid = pt.id', 'inner')
+            ->field('dl.jid,pt.id,pt.professional,pt.positiontype,pt.wages,pt.nature,DATE_FORMAT(FROM_UNIXTIME(dl.delivertime),\'%Y-%m-%d\') as delivertime ')->page($page.','.$count)->order('dl.delivertime desc')->select();
+        return $data;
+
     }
 }	

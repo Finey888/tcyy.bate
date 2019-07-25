@@ -120,7 +120,7 @@ create table tccybate.tcyy_personal_position
    positiontype         tinyint(4) not null comment '职位类型 1.口腔护士 2.全科医师 3.洽谈师 4.儿童牙科 5.口腔正畸 6.口腔种植 7.口腔内科',
    region               varchar(300) comment '职位区域(省市区县)',
    address              varchar(255) not null comment '工作地点',
-   wages                tinyint(4) not null default 0 comment '工资范围  0.面议',
+   wages                tinyint(4) not null default 99 comment '工资范围  99.面议',
    nums                 int(11) not null comment '招聘人数',
    nature               tinyint(4) not null default 1 comment '1.全职 2.兼职',
    experience           varchar(150) not null comment '工作经验',

@@ -40,13 +40,14 @@ class Personaldeliver extends Common {
             returnAjax([], '不能投递自己发布的职位',2);
         }
 
-        $where = ['rid'=>$get['rid'],'jid'=>$data['jid']];
+        $where = ['rid'=>$data['rid'],'jid'=>$data['jid']];
         //先判断有无投递历史数据
         $haveSth = $this -> deliverModel -> getDeliverData($where);
         //有的话,更新,无的话增加
         if(empty($haveSth)) {
             $return = $this -> deliverModel -> saveDeliverData($data);
         }else{
+            $where = ['id'=>$data['id']];
             $return = $this -> deliverModel -> saveDeliverData($data,$where);
         }
 

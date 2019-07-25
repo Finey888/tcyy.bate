@@ -68,6 +68,7 @@ class Personalposition extends Common {
             $data['region'] = empty($get['region'])? returnAjax([],'缺少区域参数',2):$get['region'];
             $data['descriptions'] = empty($get['descriptions']) ? returnAjax([],'缺少职位描述参数',2):$get['descriptions'];
             $data['nums'] = empty($get['nums'])? returnAjax([],'缺少招聘人数参数',2):$get['nums'];
+            $data['wages'] = empty($get['wages'])? returnAjax([],'缺少薪资范畴参数',2):$get['wages'];
             $data['education'] = empty($get['education'])? returnAjax([],'缺少学历参数',2):$get['education'];
             $data['nature'] = $get['nature'];       //职位属性：全职 兼职
             $data['address'] = $get['address'];     //地址
@@ -83,7 +84,7 @@ class Personalposition extends Common {
                 returnAjax([], '没有对应的公司信息',2);
             }
 
-            $data['regionid'] = empty($get['regionid']);
+            $data['regionid'] = empty($get['regionid'])? returnAjax([],'缺少区域编号参数',2):$get['regionid'];
             $return = $this->model->saveData($data);
             if($return['status'] == 2){
                 returnAjax([], $return['msg'],2);
@@ -100,7 +101,7 @@ class Personalposition extends Common {
             $checkStatu = $this-> model->getPositionById($get['id']);
             //如果为审核不通过
             if($checkStatu['status'] == 2) {
-                $get['auditstatus'] = 0;
+                $get['status'] = 0;
             }
             $return = $this->model->saveData($get,['id'=>$get['id']]);
             if($return['status'] == 2){

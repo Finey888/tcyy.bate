@@ -9,6 +9,7 @@ class Personalresume extends Common {
 	protected $qualificationModel = null;
 	protected $companyModel = null;
 	protected $viewLogModel = null;
+	protected $positionLogModel = null;
 
     public function __construct(Request $request = null,$options = [])
     {
@@ -19,6 +20,7 @@ class Personalresume extends Common {
         $this-> qualificationModel = new \app\tcyy\model\PersonalQualification();
         $this-> companyModel = new \app\tcyy\model\PersonalCompany();
         $this -> viewLogModel = new \app\tcyy\model\PersonalResumeViewLog();
+        $this -> positionLogModel = new \app\tcyy\model\PersonalPosition();
     }
 
     //获取列表
@@ -92,7 +94,7 @@ class Personalresume extends Common {
         }else{
             $checkStatu = $this-> model->getDataById($get['id']);
             //如果为审核不通过
-            if($checkStatu['auditstatus'] == 2) {
+            if($checkStatu['auditstatus'] == 3) {
                 $get['auditstatus'] = 1;
             }
             $return = $this-> model->saveData($get,['id'=>$get['id']]);
@@ -208,7 +210,7 @@ class Personalresume extends Common {
         $data = $this -> model -> getResumeByCondition($where);
         if(empty($data)){
             returnAjax(1, "无简历信息",1);
-        }else if($data['status'] != '2'){
+        }else if($data['auditstatus'] != '2'){
             returnAjax(2,'简历未审核通过',1);
         }
         returnAjax(3,"有简历信息,可投递",1);
@@ -226,8 +228,10 @@ class Personalresume extends Common {
         if(empty($data)){
             returnAjax([], "无简历信息",0);
         }
-        $dataArrays = $this -> companyModel -> queryCurrentUserDevlierPositions($data['id'],$page,$limit);
-        returnAjax($dataArrays,"获取数据成功",1);
+        $whe = ['dl.rid' => $data['id']];
+        $dataArrays = $this -> positionLogModel -> queryCurrentUserDevlierPositions($page,$limit,$whe);
+
+        returnAjax(['data'=>$dataArrays,'page'=>$page],"获取数据成功",1);
     }
 
     //删除教育经历

@@ -14,8 +14,10 @@
 			</div>
 			<div class="layui-inline layui-form">
 				 <select lay-filter="browseLook" id="auditstatus" name='auditstatus'>
+					<option value="">全部</option>
 					<option value="1" {eq name=":input('param.auditstatus')" value='1'}selected = "selected"{/eq}>待审核</option>
 					<option value="2" {eq name=":input('param.auditstatus')" value='2'}selected = "selected"{/eq}>审核通过</option>
+					<option value="2" {eq name=":input('param.auditstatus')" value='3'}selected = "selected"{/eq}>审核不通过</option>
 				 </select>
 			</div>
 			<a class="layui-btn search_btn" href="javascript:;" id="search">查询 </a>
