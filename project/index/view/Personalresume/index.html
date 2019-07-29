@@ -9,9 +9,9 @@
 			<div class="layui-input-inline">
 				 <input type="text" id="telephone" name='telephone' placeholder="电话号码" class="layui-input search_input" value="{:input('param.telephone')}">
 			</div>
-			<div class="layui-input-inline">
-				 <input type="text" id="email" name='email' placeholder="邮箱地址" class="layui-input search_input" value="{:input('param.email')}">
-			</div>
+<!--			<div class="layui-input-inline">-->
+<!--				 <input type="text" id="email" name='email' placeholder="邮箱地址" class="layui-input search_input" value="{:input('param.email')}">-->
+<!--			</div>-->
 			<div class="layui-inline layui-form">
 				 <select lay-filter="browseLook" id="auditstatus" name='auditstatus'>
 					<option value="">全部</option>
@@ -100,21 +100,49 @@
 
 		}).resize();
 
-		//审核
+		//审核通过
 		$("body").on("click",".auditData",function(){  //审核
 			var id = $(this).attr('data-id');
 			var _this = $(this);
-			layer.confirm('是否审核通过?',{icon:3, title:'提示信息'},function(index){
+			layer.confirm('确定审核通过?',{icon:3, title:'提示信息'},function(index){
 				$.ajax({
 					type: "POST",
 					url: "{:url('Personalresume/auditData')}",
-					data: {id:id},
+					data: {id:id,auditStatus:2},
 					dataType: "json",
 					success: function(data){
 						if(data.status == 1){
 							// _this.parents("tr").remove();
 							layer.close(index);
-							layer.msg(data.msg, {icon: 6});
+							layer.msg(data.msg, {icon: 6});newsList();
+						}else{
+							layer.close(index);
+							layer.msg(data.msg, {
+								icon: 5
+								,btn: ['知道了']
+							});
+						}
+					}
+				});
+
+			});
+		})
+
+		//审核不通过
+		$("body").on("click",".passAwayData",function(){  //审核不通过
+			var id = $(this).attr('data-id');
+			var _this = $(this);
+			layer.confirm('确定审核不通过?',{icon:3, title:'提示信息'},function(index){
+				$.ajax({
+					type: "POST",
+					url: "{:url('Personalresume/auditData')}",
+					data: {id:id,auditStatus:3},
+					dataType: "json",
+					success: function(data){
+						if(data.status == 1){
+							// _this.parents("tr").remove();
+							layer.close(index);
+							layer.msg(data.msg, {icon: 6});newsList();
 						}else{
 							layer.close(index);
 							layer.msg(data.msg, {
@@ -147,9 +175,11 @@
 						var st = '-';
 						if(content.auditstatus == '1'){
 							content.auditstatus = '待审核';
-							st = '<a class="layui-btn layui-btn-mini auditData" data-id="'+content.id+'"><i class="iconfont icon-edit"></i>审核</a>';
+							st = '<a class="layui-btn layui-btn-mini auditData" data-id="'+content.id+'"><i class="iconfont icon-edit"></i>通过</a><a class="layui-btn layui-btn-mini passAwayData" data-id="'+content.id+'"><i class="iconfont icon-edit"></i>不通过</a>';
+						}else if(content.auditstatus == '2'){
+							content.auditstatus = '审核通过';
 						}else{
-							content.auditstatus = '已审核';
+							content.auditstatus = '审核不通过';
 						}
 
 						if(content.jobstatus == '1'){

@@ -69,10 +69,10 @@ class Personalresume extends Common {
 
     public function auditData(){
         if(request()->isPost()){ $id = input('post.id'); }else{ return json(['status'=>-1,'msg'=>'未知数据']); }
+        $auditStatus = input('post.auditStatus');
+        $return = $this->model->auditDataById($id,$auditStatus);
 
-        $return = $this->model->auditDataById($id);
-
-        return $return ? ['status'=>1,'msg'=>'审核通过'] : ['status'=>-1,'msg'=>'审核失败'];
+        return $return ? ['status'=>1,'msg'=>'审核完成'] : ['status'=>-1,'msg'=>'审核失败'];
     }
 
     //查询详情

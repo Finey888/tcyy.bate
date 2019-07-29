@@ -15,8 +15,8 @@ class PersonalResume extends Common {
     }
 
     //审核数据
-    public function  auditDataById($id){
-        return $this::update(['id'=>$id,'auditstatus'=>2]);
+    public function  auditDataById($id,$auditStatus){
+        return $this::update(['id'=>$id,'auditstatus'=>$auditStatus]);
     }
 
     //根据主键查询简历信息

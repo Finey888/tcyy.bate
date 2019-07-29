@@ -16,9 +16,17 @@ class PersonalResume extends Common {
         return empty( $errors)?['status'=>1,'data'=>$this->toArray()]:['status'=>2,'msg'=> $errors];
     }
 
+    public function UserInfo()
+    {
+        return $this->hasOne('UserInfo','uid');
+    }
+
     //分页查询简历信息
     public function getPageData($page=1,$count=10,$where=[]){
-        $data = $this::where($where)
+        $data = $this::with([
+            'UserInfo' => function ($query){
+                $query->field('uid,headurl');
+            }]) ->where($where)
                 -> page($page.','.$count)
                 -> field('id,personname,birthday,education,jobstatus,expectregion,telephone,intentposition,workexperience')
                 -> order('refreshtime desc')

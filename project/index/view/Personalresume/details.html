@@ -136,11 +136,13 @@
                 <tr>
                     <td>资格证书名称</td>
                     <td>证书获取时间</td>
+                    <td>证书图片</td>
                 </tr>
                 {volist name="quaData" id="qua"}
                 <tr>
                     <td>{$qua.qualifyname}</td>
                     <td>{$qua.qualify_time}</td>
+                    <td><img class="img_list" src="{$qua.qualifyurl}" width="50" height="50"></td>
                 </tr>
                 {/volist}
                 </tbody>
@@ -148,5 +150,32 @@
         </div>
 
 	</div>
+<script type="text/javascript">
+    layui.config({
+        base : "admin/js/"
+    }).use(['form','layer','jquery','laypage'],function() {
+        $ = layui.jquery;
+        $(window).one("resize", function () {
+            $("body").on("click", ".img_list", function () {
+                var src = $(this).attr('src');
+                var img = new Image();
+                img.src = src;
+                var w = img.width;
+                var h = img.height;
+                layer.open({
+                    type: 1,
+                    title: false,
+                    closeBtn: 1,
+                    area: w + 'px',
+                    skin: 'layui-layer-nobg', //没有背景色
+                    shadeClose: true,
+                    content: '<div id="tong" class="hide layui-layer-wrap" style="display: block;text-align: center;">' +
+                        '<img src="' + src + '">' +
+                        '</div>'
+                });
+            })
+        }).resize();
+    })
+</script>
 </body>
 </html>

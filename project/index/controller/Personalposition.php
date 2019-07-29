@@ -92,10 +92,10 @@ class Personalposition extends Common {
 
     public function auditPosition(){
         if(request()->isPost()){ $id = input('post.id'); }else{ return json(['status'=>-1,'msg'=>'未知数据']); }
+        $stats = input('post.stats');
+        $return = $this->model->auditPositionById($id,$stats);
 
-        $return = $this->model->auditPositionById($id);
-
-        return $return ? ['status'=>1,'msg'=>'审核通过'] : ['status'=>-1,'msg'=>'审核失败'];
+        return $return ? ['status'=>1,'msg'=>'审核完成'] : ['status'=>-1,'msg'=>'审核失败'];
     }
 
 

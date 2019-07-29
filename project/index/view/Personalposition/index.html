@@ -86,21 +86,49 @@
 
          }).resize();
 
-        //审核
-        $("body").on("click",".auditPosition",function(){  //审核
+        //审核通过
+        $("body").on("click",".auditPosition",function(){  //审核通过
             var id = $(this).attr('data-id');
             var _this = $(this);
-            layer.confirm('是否审核此职位数据?',{icon:3, title:'提示信息'},function(index){
+            layer.confirm('审核通过此职位数据?',{icon:3, title:'提示信息'},function(index){
                 $.ajax({
                     type: "POST",
                     url: "{:url('Personalposition/auditPosition')}",
-                    data: {id:id},
+                    data: {id:id,stats:1},
                     dataType: "json",
                     success: function(data){
                         if(data.status == 1){
                             // _this.parents("tr").remove();
                             layer.close(index);
-                            layer.msg(data.msg, {icon: 6});
+                            layer.msg(data.msg, {icon: 6});newsList();
+                        }else{
+                            layer.close(index);
+                            layer.msg(data.msg, {
+                                icon: 5
+                                ,btn: ['知道了']
+                            });
+                        }
+                    }
+                });
+
+            });
+       })
+
+		//审核不通过
+        $("body").on("click",".auditPosition",function(){  //审核不通过
+            var id = $(this).attr('data-id');
+            var _this = $(this);
+            layer.confirm('审核不通过此职位数据?',{icon:3, title:'提示信息'},function(index){
+                $.ajax({
+                    type: "POST",
+                    url: "{:url('Personalposition/auditPosition')}",
+                    data: {id:id,stats:2},
+                    dataType: "json",
+                    success: function(data){
+                        if(data.status == 1){
+                            // _this.parents("tr").remove();
+                            layer.close(index);
+                            layer.msg(data.msg, {icon: 6});newsList();
                         }else{
                             layer.close(index);
                             layer.msg(data.msg, {
@@ -125,14 +153,14 @@
                         i+=1;
                         var auditStr ='-';
 						if(content.status == '0'){
-							auditStr = '<a class="layui-btn layui-btn-mini auditPosition" data-id="'+content.id+'"><i class="iconfont icon-edit"></i> 审核</a>';
+							auditStr = '<a class="layui-btn layui-btn-mini auditPosition" data-id="'+content.id+'"><i class="iconfont icon-edit"></i>通过</a><a class="layui-btn layui-btn-mini passAwayPosition" data-id="'+content.id+'"><i class="iconfont icon-edit"></i>不通过</a>';
 						}
 						if(content.status == '0'){
 							content.status = '待审核';
 						}else if(content.status == '1'){
-							content.status = '上架';
+							content.status = '审核通过';
 						}else{
-							content.status = '下架';
+							content.status = '审核不通过';
 						}
 						if(content.experience == 1){
 							content.experience = '1年以下';
