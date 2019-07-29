@@ -47,7 +47,7 @@ class Personaldeliver extends Common {
         if(empty($haveSth)) {
             $return = $this -> deliverModel -> saveDeliverData($data);
         }else{
-            $where = ['id'=>$data['id']];
+            $where = ['id'=>$haveSth['id']];
             $return = $this -> deliverModel -> saveDeliverData($data,$where);
         }
 

@@ -16,9 +16,9 @@ class PersonalDeliver extends Common {
      * @param $data
      */
     public function saveDeliverData($data,$where=[]){
-        $this::allowField(true) -> save($data,$where);
+        $data = $this::allowField(true) -> save($data,$where);
         $errors = $this::getError();
-        return empty( $errors) ? ['status' => 1,'data' => $this->toArray()] : ['status' => 2,'msg' => $errors];
+        return empty( $errors) ? ['status' => 1,'data' => $data] : ['status' => 2,'msg' => $errors];
     }
 
     /**
