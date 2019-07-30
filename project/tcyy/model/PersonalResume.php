@@ -5,10 +5,7 @@ class PersonalResume extends Common {
 
     //根据主键查询简历信息
     public function getDataById($id){
-        $data = $this :: with([
-            'UserInfo' => function ($query){
-                $query->field('uid,headurl');
-            }]) -> where(['id'=>$id])->find();
+        $data = $this :: join('tcyy_user_info u', ' u.uid = tcyy_personal_resume.uid ', 'left') -> where(['tcyy_personal_resume.id'=>$id])->find();
         return $data;
     }
 
@@ -26,12 +23,9 @@ class PersonalResume extends Common {
 
     //分页查询简历信息
     public function getPageData($page=1,$count=10,$where=[]){
-        $data = $this::with([
-                'UserInfo' => function ($query){
-                    $query->field('uid,headurl');
-                }]) ->where($where)
+        $data = $this::join('tcyy_user_info u', ' u.uid = tcyy_personal_resume.uid ', 'left') ->where($where)
                 -> page($page.','.$count)
-                -> field('id,personname,birthday,education,jobstatus,expectregion,telephone,intentposition,workexperience')
+                -> field('tcyy_personal_resume.id,personname,birthday,education,jobstatus,expectregion,telephone,intentposition,workexperience,u.headurl')
                 -> order('refreshtime desc')
                 -> select();
         return $data -> toArray();

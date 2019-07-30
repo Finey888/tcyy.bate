@@ -64,7 +64,7 @@ class PersonalResumeViewLog extends Common {
             -> alias('vl')
             -> where($where)
             -> join('tcyy_personal_resume rsm', ' rsm.id = vl.rid ', 'inner')
-            -> join('tcyy_user_info u', ' u.uid = vl.uid ', 'inner')
+            -> join('tcyy_user_info u', ' u.uid = rsm.uid ', 'inner')
             -> field('rsm.id,rsm.personname,rsm.intentposition,rsm.education,rsm.workexperience,rsm.telephone,rsm.arrivaltime,rsm.sex,vl.rid,DATE_FORMAT(FROM_UNIXTIME(vl.viewtime),\'%Y-%m-%d\') as viewtime,u.headurl ')->page($page.','.$count)->order('vl.viewtime desc')->select();
         return $data;
 
