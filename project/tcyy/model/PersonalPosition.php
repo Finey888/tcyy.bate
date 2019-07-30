@@ -20,7 +20,7 @@ class PersonalPosition extends Common {
             ->alias('pt')
             ->where(['pt.id' => $id])
             ->join('tcyy_personal_company cm', ' cm.id = pt.cid ', 'inner')
-            ->field('pt.id,cm.name,cm.email,pt.address,pt.positiontype,pt.region,pt.professional,pt.status,pt.wages,pt.experience,pt.education,cm.phone,cm.contacts,pt.descriptions,pt.nums,pt.nature,pt.regionid ')->find();
+            ->field('pt.id,pt.cid,cm.name,cm.email,pt.address,pt.positiontype,pt.region,pt.professional,pt.status,pt.wages,pt.experience,pt.education,cm.phone,cm.contacts,pt.descriptions,pt.nums,pt.nature,pt.regionid ')->find();
         return $data;
     }
 
@@ -37,7 +37,7 @@ class PersonalPosition extends Common {
             ->alias('pt')
             ->where($where)
             ->join('tcyy_personal_company cm', ' cm.id = pt.cid ', 'inner')
-            ->field('pt.id,cm.name,cm.email,pt.address,pt.positiontype,pt.region,pt.professional,pt.status,pt.wages,pt.experience,pt.education,DATE_FORMAT(FROM_UNIXTIME(pt.lasttime),\'%Y-%m-%d\') as lasttime ')->page($page.','.$count)->order($sort)->select();
+            ->field('pt.id,pt.cid,cm.name,cm.email,pt.address,pt.positiontype,pt.region,pt.professional,pt.status,pt.wages,pt.experience,pt.education,DATE_FORMAT(FROM_UNIXTIME(pt.lasttime),\'%Y-%m-%d\') as lasttime ')->page($page.','.$count)->order($sort)->select();
         return $data;
     }
 

@@ -50,7 +50,7 @@ class PersonalPosition extends Common {
     //根据主键id查询职位详情
     public function getDataById($id){
         $sqlQuery = 'SELECT DISTINCT pt.address,pt.region,pt.nums,pt.professional,pt.descriptions,CASE pt.nature WHEN 1 THEN \'全职\'  ELSE \'兼职\' END AS nature ,'.
-                    'CASE pt.status WHEN 0 THEN \'待审核\' WHEN 1 THEN \'上架\' ELSE \'下架\' END AS status,CASE pt.experience when 1 then \'1年以下\' when 2 then \'1-3年\' when 3 then \'3-5年\' else \'5年以上\' end as experience,pst.dict_name AS positiontype,wg.dict_name AS wages,ed.dict_name AS education,pt.lasttime,pt.creatime'.
+                    'CASE pt.status WHEN 0 THEN \'待审核\' WHEN 1 THEN \'审核通过\' ELSE \'审核不通过\' END AS status,CASE pt.experience when 1 then \'1年以下\' when 2 then \'1-3年\' when 3 then \'3-5年\' else \'5年以上\' end as experience,pst.dict_name AS positiontype,wg.dict_name AS wages,ed.dict_name AS education,pt.lasttime,pt.creatime'.
                     ' FROM tcyy_personal_position pt  LEFT JOIN tcyy_base_dict pst ON pst.dict_value = pt.positiontype AND pst.dict_code=\'positionType\' LEFT JOIN tcyy_base_dict wg  ON wg.dict_value = pt.wages AND wg.dict_code=\'salaryRange\' LEFT JOIN tcyy_base_dict ed'.
                    ' ON  ed.dict_value = pt.education AND ed.dict_code=\'education\' WHERE pt.isdel= 0 AND pt.id = ?';
         $data = $this -> query($sqlQuery,[$id]);

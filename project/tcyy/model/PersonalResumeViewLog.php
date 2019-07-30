@@ -60,11 +60,12 @@ class PersonalResumeViewLog extends Common {
         if(!empty($collectSign)) {
             $where = ['vl.iscollect' => $collectSign];
         }
-        $data = $this ->_collection
-            ->alias('vl')
-            ->where($where)
-            ->join('tcyy_personal_resume rsm', ' rsm.id = vl.rid ', 'inner')
-            ->field('rsm.id,rsm.personname,rsm.intentposition,rsm.education,rsm.workexperience,rsm.telephone,rsm.arrivaltime,rsm.sex,vl.rid,DATE_FORMAT(FROM_UNIXTIME(vl.viewtime),\'%Y-%m-%d\') as viewtime ')->page($page.','.$count)->order('vl.viewtime desc')->select();
+        $data = $this -> _collection
+            -> alias('vl')
+            -> where($where)
+            -> join('tcyy_personal_resume rsm', ' rsm.id = vl.rid ', 'inner')
+            -> join('tcyy_user_info u', ' u.uid = vl.uid ', 'inner')
+            -> field('rsm.id,rsm.personname,rsm.intentposition,rsm.education,rsm.workexperience,rsm.telephone,rsm.arrivaltime,rsm.sex,vl.rid,DATE_FORMAT(FROM_UNIXTIME(vl.viewtime),\'%Y-%m-%d\') as viewtime,u.headurl ')->page($page.','.$count)->order('vl.viewtime desc')->select();
         return $data;
 
 //        $querySql = 'SELECT  FROM ,tcyy_personal_resume_view_log vl WHERE  and vl.uid = ? ';

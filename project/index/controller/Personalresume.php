@@ -58,7 +58,7 @@ class Personalresume extends Common {
         if(!empty($get['email'])){
             $where['email'] = ['like', '%'.$get['email'].'%'];
         }
-        if(!empty($get['auditstatus'])){
+        if(!empty($get['auditstatus']) && !$get['auditstatus'] == 0){
             $where['auditstatus'] = ['eq',$get['auditstatus']];
         }
 

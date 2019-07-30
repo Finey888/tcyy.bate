@@ -20,6 +20,9 @@ class Personalposition extends Common {
         if(!empty($get['companyName'])){
             $where['cm.name'] = ['like', '%'.$get['companyName'].'%'];
         }
+        if(!empty($get['stats']) && $get['stats'] != '-'){
+            $where['pt.status'] = ['eq', $get['stats']];
+        }
 
         $countPage = $this->model->getCount($where);
         $this->assign('countPage',$countPage);
@@ -83,6 +86,9 @@ class Personalposition extends Common {
 
         if(!empty($get['companyName'])){
             $where.= ' and cm.name like \'%'.$get['companyName'].'%\'';
+        }
+        if($get['stats'] != '-'){
+            $where.= ' and pt.status = '.$get['stats'];
         }
 
         $data = $this->model->getPageData($page,$count,$where);

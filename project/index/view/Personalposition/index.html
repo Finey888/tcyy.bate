@@ -6,6 +6,14 @@
 			<div class="layui-input-inline">
 				<input type="text" id="companyName" name='companyName' placeholder="公司名称" class="layui-input search_input" value="{:input('param.companyName')}">
 			</div>
+			<div class="layui-input-inline layui-form">
+				<select lay-filter="browseLook" id="stats" name='stats'>
+					<option value="-" {eq name=":input('param.stats')" value=''}selected = "selected"{/eq}>全部</option>
+					<option value="0" {eq name=":input('param.stats')" value='0'}selected = "selected"{/eq}>待审核</option>
+					<option value="1" {eq name=":input('param.stats')" value='1'}selected = "selected"{/eq}>审核通过</option>
+					<option value="2" {eq name=":input('param.stats')" value='2'}selected = "selected"{/eq}>审核不通过</option>
+				</select>
+			</div>
 			<a class="layui-btn search_btn" href="javascript:;" id="search">查询 </a>
 		</div>
 		<div class="layui-inline">
@@ -115,7 +123,7 @@
        })
 
 		//审核不通过
-        $("body").on("click",".auditPosition",function(){  //审核不通过
+        $("body").on("click",".passAwayPosition",function(){  //审核不通过
             var id = $(this).attr('data-id');
             var _this = $(this);
             layer.confirm('审核不通过此职位数据?',{icon:3, title:'提示信息'},function(index){
@@ -213,7 +221,7 @@
                         $.ajax({
                             type: "GET",
                             url: dataUrl,
-                            data: {page:obj.curr,count:nums,companyName:$('#companyName').val()},
+                            data: {page:obj.curr,count:nums,companyName:$('#companyName').val(),stats:$('#stats').val()},
                             dataType: "json",
                             success: function(data){
                                 if(data.status == 1){
