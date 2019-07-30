@@ -72,7 +72,7 @@ class Personalcompany extends Common
                 returnAjax([], $return['msg'],2);
             }
 
-            $data = $this->personalCompanymodel->getDataById($get['id']);
+            $data = $return['data'];//$this->personalCompanymodel->getDataById($get['id']);
 
             $rtd=[
                 'id'=>$data['id'],

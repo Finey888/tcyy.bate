@@ -29,7 +29,7 @@ class PersonalCompany extends Common {
 
         $return = $this :: allowField(true) -> save($data,$where);
         $errors = $this::getError();
-        return empty( $errors) ? ['status' => 1,'data' => $this->toArray()] : ['status' => 2,'msg' => $errors];
+        return empty( $errors) ? ['status' => 1,'data' => $return] : ['status' => 2,'msg' => $errors];
     }
 
     public function getDataById($id){

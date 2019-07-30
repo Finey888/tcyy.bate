@@ -172,6 +172,7 @@ class Personalresume extends Common {
             'ethnic' => $data['ethnic'],
             'workexperience' => $data['workexperience'],
             'address' => $data['address'],
+            'headurl' => $data['user_info']['headurl'],
             'eduList' => $eduData,
             'expList' => $expData,
             'qualificationList' => $quaData
