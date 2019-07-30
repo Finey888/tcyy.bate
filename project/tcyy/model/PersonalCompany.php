@@ -40,8 +40,8 @@ class PersonalCompany extends Common {
 	//原生sql查询,查询返回投递给公司发布的职位的简历列表数据
     public function queryList($uid,$page,$limit){
         $page = ($page - 1) * $limit;
-        $querySql = 'SELECT a.jid,a.rid,a.personname,DATE_FORMAT(FROM_UNIXTIME(a.arrivaltime),\'%Y-%m-%d\') as arrivaltime,a.telephone,a.intentposition,a.education,a.workexperience,DATE_FORMAT(FROM_UNIXTIME(a.delivertime),\'%Y-%m-%d\') as delivertime,b.professional,u.headurl FROM (SELECT rsm.personname,rsm.arrivaltime,rsm.telephone,rsm.intentposition,rsm.education,rsm.workexperience,rsm.address,dl.delivertime,dl.jid,dl.rid  FROM tcyy_personal_deliver dl , tcyy_personal_resume rsm WHERE dl.rid = rsm.id)a' .
-            ' LEFT JOIN  (SELECT pt.id,pt.professional,company.uid FROM tcyy_personal_company company,tcyy_personal_position pt WHERE company.id = pt.cid )b ON a.jid = b.id LEFT JOIN tcyy_user_info u ON u.uid = b.uid WHERE b.uid = ? limit '.$page.','.$limit;
+        $querySql = 'SELECT a.jid,a.rid,a.personname,DATE_FORMAT(FROM_UNIXTIME(a.arrivaltime),\'%Y-%m-%d\') as arrivaltime,a.telephone,a.intentposition,a.education,a.workexperience,DATE_FORMAT(FROM_UNIXTIME(a.delivertime),\'%Y-%m-%d\') as delivertime,b.professional,u.headurl FROM (SELECT rsm.personname,rsm.arrivaltime,rsm.telephone,rsm.intentposition,rsm.education,rsm.workexperience,rsm.address,dl.delivertime,dl.jid,dl.rid,rsm.uid  FROM tcyy_personal_deliver dl , tcyy_personal_resume rsm WHERE dl.rid = rsm.id)a' .
+            ' LEFT JOIN  (SELECT pt.id,pt.professional,company.uid FROM tcyy_personal_company company,tcyy_personal_position pt WHERE company.id = pt.cid )b ON a.jid = b.id LEFT JOIN tcyy_user_info u ON u.uid = a.uid WHERE b.uid = ? limit '.$page.','.$limit;
         return $this -> query($querySql,[$uid]);
     }
 
