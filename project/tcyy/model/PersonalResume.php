@@ -44,8 +44,11 @@ class PersonalResume extends Common {
 
 
     public function queryCompanyAndResumeInfo($uid){
-        $data = $this -> alias("rsm") -> join('tcyy_personal_company cmp',' rsm.uid = cmp.uid ','left') -> field('rsm.regionid AS rregionid,rsm.expectregion,rsm.address AS raddress,cmp.regionid AS cregionid,cmp.region,cmp.address AS caddress')
-            ->where(["rsm.uid" => $uid]) -> find();
+//        $data = $this -> alias("rsm") -> join('tcyy_personal_company cmp',' rsm.uid = cmp.uid ','left') -> field('rsm.regionid AS rregionid,rsm.expectregion,rsm.address AS raddress,cmp.regionid AS cregionid,cmp.region,cmp.address AS caddress')
+//            ->where(["rsm.uid" => $uid]) -> find();
+        $querySql = 'SELECT u.uid,rsm.regionid AS rregionid,rsm.expectregion,rsm.address AS raddress,cmp.regionid AS cregionid,cmp.region,cmp.address AS caddress FROM tcyy_user_info u LEFT JOIN tcyy_personal_resume rsm ON u.uid = rsm.uid '.
+                    'LEFT JOIN tcyy_personal_company cmp ON u.uid = cmp.uid WHERE u.uid = ?';
+        $data = $this -> query($querySql,[$uid]);
         return $data;
     }
 }	
