@@ -258,4 +258,10 @@ class Personalresume extends Common {
         $this -> qualificationModel -> delById($qid);
         returnAjax([],"删除成功",1);
     }
+
+    public function queryCompanyAndResumeInfo(){
+        $uid= $this -> userData -> id;
+        $data = $this->model -> queryCompanyAndResumeInfo($uid);
+        returnAjax(['data' =>$data],"获取数据成功",1);
+    }
 }

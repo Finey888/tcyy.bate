@@ -42,4 +42,10 @@ class PersonalResume extends Common {
         return $data;
     }
 
+
+    public function queryCompanyAndResumeInfo($uid){
+        $data = $this -> alias("rsm") -> join('tcyy_personal_company cmp',' rsm.uid = cmp.uid ','left') -> field('rsm.regionid AS rregionid,rsm.expectregion,rsm.address AS raddress,cmp.regionid AS cregionid,cmp.region,cmp.address AS caddress')
+            ->where(["rsm.uid" => $uid]) -> find();
+        return $data;
+    }
 }	
