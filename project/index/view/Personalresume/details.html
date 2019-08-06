@@ -158,19 +158,19 @@
         $(window).one("resize", function () {
             $("body").on("click", ".img_list", function () {
                 var src = $(this).attr('src');
-                var img = new Image();
-                img.src = src;
-                var w = img.width;
-                var h = img.height;
+//                var img = new Image();
+//                img.src = src;
+//                var w = img.width;
+//                var h = img.height;
                 layer.open({
                     type: 1,
                     title: false,
                     closeBtn: 1,
-                    area: w + 'px',
+                    area: ['80%', '80%'],
                     skin: 'layui-layer-nobg', //没有背景色
                     shadeClose: true,
                     content: '<div id="tong" class="hide layui-layer-wrap" style="display: block;text-align: center;">' +
-                        '<img src="' + src + '">' +
+                        '<img style="max-width: 100%;max-height: 100%" src="' + src + '">' +
                         '</div>'
                 });
             })

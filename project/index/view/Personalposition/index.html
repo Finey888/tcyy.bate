@@ -83,13 +83,12 @@
          		var edit = layui.layer.open({
          			title : "查看详情",
          			type : 2,
-         			maxmin :true,
-         			area:  ['800px', '500px'],
          			content : "{:url('Personalposition/viewDetails')}?id="+id,
          			success : function(layero, index){
 
          			}
          		})
+                layui.layer.full(edit);
          	})
 
          }).resize();
