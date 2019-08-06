@@ -261,7 +261,7 @@ class Personalresume extends Common {
 
     public function queryCompanyAndResumeInfo(){
         $uid= $this -> userData -> id;
-        $data = $this->model -> queryCompanyAndResumeInfo($uid);
-        returnAjax(['data' =>$data],"获取数据成功",1);
+        $data = $this-> model -> queryCompanyAndResumeInfo($uid);
+        returnAjax($data,"获取数据成功",1);
     }
 }
