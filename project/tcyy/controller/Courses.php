@@ -35,7 +35,7 @@ class Courses extends Common {
      */
     public function saveCourseAndVideos(){
         $get = input('post.');
-        $data['cid'] = empty($get['cid']);  //选择了课程下拉
+        $data['cid'] = $get['cid'];  //选择了课程下拉
         if(empty($get['cid'])){ //如果未选择课程,添加当前课程信息
             $data['gid'] = empty($get['gid'])? returnAjax([],'缺少课程分类参数',2):$get['gid'];
             $data['creattime'] = strtotime(date('Y-m-d 00:00:00',time()));
@@ -54,11 +54,11 @@ class Courses extends Common {
 
         $videoData['cid'] = $data['cid'];
         $videoData['title'] = empty($get['vtitle'])? returnAjax([],'缺少视频标题参数',2):$get['vtitle'];
-        $videoData['contents'] = $data['vcontents'];
-        $videoData['urls'] = $data['urls'];
-        $videoData['episodes'] = $data['episodes'];
+        $videoData['contents'] = $get['vcontents'];
+        $videoData['urls'] = $get['urls'];
+        $videoData['episodes'] = $get['episodes'];
         $videoData['ctime'] = strtotime(date('Y-m-d 00:00:00',time()));
-        $result = $this -> videoModel->saveCourseVideoInfo($data);
+        $result = $this -> videoModel->saveCourseVideoInfo($videoData);
         if($result['status'] == 2){
             returnAjax([], '发布视频失败!!!',2);
         }
