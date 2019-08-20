@@ -70,7 +70,7 @@ class Courses extends Common {
      */
     public function coursesDetails(){
         $get = input('post.');
-        $cid = empty($get['cid']);
+        $cid = $get['cid'];
         if(empty($cid)){
             returnAjax([],'缺少课程编号参数',2);
         }
