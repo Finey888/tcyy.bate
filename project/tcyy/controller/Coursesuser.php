@@ -20,7 +20,7 @@ class Coursesuser extends Common {
        $limit = empty($get['limit'])?10:$get['limit'];
        $uid = $this->userData->id;
        $rtData =  $this -> model -> getSellCourseListByCondition($page,$limit,$uid);
-       returnAjax($rtData -> toArray(),'获取成功',1);
+       returnAjax($rtData,'获取成功',1);
    }
 
     /**
@@ -32,7 +32,7 @@ class Coursesuser extends Common {
         $limit = empty($get['limit'])?10:$get['limit'];
         $uid = $this->userData->id;
         $rtData =  $this -> model -> getBuyerHistoryListByCondition($page,$limit,$uid);
-        returnAjax($rtData -> toArray(),'获取成功',1);
+        returnAjax($rtData,'获取成功',1);
     }
 
     /**

@@ -2,6 +2,7 @@
 namespace app\tcyy\model;
 
 use think\Db;
+use think\Model;
 
 class CoursesUser extends Model {
 
@@ -27,7 +28,7 @@ class CoursesUser extends Model {
         ];
 
         $data = $this::where($where) -> field('id,FROM_UNIXTIME(btimes) as btimes,multiinfo,amounts') -> page($page.','.$count)->order($sort)->select();
-        return $data;
+        return empty($data)?[]:$data->toArray();
     }
 
     //用户售卖记录列表
@@ -38,7 +39,7 @@ class CoursesUser extends Model {
             ->where($where)
             ->join('tcyy_courses c', ' c.id = cu.cid ', 'left')
             ->field('cu.id,cu.cid,cu.uid,FROM_UNIXTIME(cu.btimes) as btimes,cu.multiinfo,cu.amounts ')->page($page.','.$count)->order($sort)->select();
-        return $data;
+        return empty($data)?[]:$data->toArray();
 //        return $this::where($where) -> field('') ->select();
     }
 
