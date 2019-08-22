@@ -1,0 +1,102 @@
+{layout name="Public/layout" /}
+<body class="childrenBody">
+	<div class="row">
+        <div class="col" style='width: 20%; float: left'>
+            <blockquote class="layui-elem-quote title">基础信息</blockquote>
+            <div class="layui-elem-quote layui-quote-nm">
+                <table class="layui-table">
+                    <colgroup>
+                        <col width="150">
+                        <col>
+                    </colgroup>
+                    <tbody>
+                        <tr>
+                            <td>发布人</td>
+                            <td>{$data.user_info.nickname}</td>
+                        </tr>
+                        <tr>
+                            <td>发布时间</td>
+                            <td>{$data['creatime']}</td>
+                        </tr>
+                        <tr>
+                            <td>阅读数</td>
+                            <td>{$data['read']}</td>
+                        </tr>
+                        <tr>
+                            <td>评论数</td>
+                            <td>{$data['comments']}</td>
+                        </tr>
+                        <tr>
+                            <td>点赞数</td>
+                            <td>{$data['thing']}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col" style='width: 40%; float: left'>
+			<blockquote class="layui-elem-quote title">内容</blockquote>
+			<div class="layui-elem-quote layui-quote-nm">
+                <table class="layui-table">
+                    <colgroup>
+                        <col width="150">
+                        <col>
+                    </colgroup>
+                    <tbody>
+                            <tr>
+                                    <td>
+                                        <?php
+                                            echo htmlspecialchars_decode($data['contents']);
+                                        ?>
+                                    </td>
+                            </tr>
+
+                    </tbody>
+            </table>
+			</div>
+		</div>
+		<div class="col" style='width: 40%;float: left'>
+			<blockquote class="layui-elem-quote title">图片列表</blockquote>
+			<table class="layui-table">
+				<colgroup>
+					<col width="150">
+				</colgroup>
+				<tbody>
+                <tr class="success">
+                    <td>
+                        <?php foreach ($data['cases_image'] as $key => $value){ ?><img class="img_list" src="{$value['image']}" width="50" height="50" style="margin: 0 10px 10px 0;"/><?php } ?> 
+                    </td>
+                </tr> 
+				</tbody>
+			</table>
+		</div>
+	</div>
+    <script type="text/javascript">
+        layui.config({
+            base : "admin/js/"
+        }).use(['form','layer','jquery','laypage'],function() {
+            $ = layui.jquery;
+            $(window).one("resize", function () {
+                $("body").on("click", ".img_list", function () {
+                    var src = $(this).attr('src');
+//                var img = new Image();
+//                img.src = src;
+//                var w = img.width;
+//                var h = img.height;
+                    layer.open({
+                        type: 1,
+                        title: false,
+                        closeBtn: 1,
+                        area: ['80%', '80%'],
+                        skin: 'layui-layer-nobg', //没有背景色
+                        shadeClose: true,
+                        content: '<div id="tong" class="hide layui-layer-wrap" style="display: block;text-align: center;">' +
+                        '<img style="max-width: 100%;max-height: 100%" src="' + src + '">' +
+                        '</div>'
+                    });
+                })
+            }).resize();
+        })
+    </script>
+</body>
+</html>
