@@ -35,12 +35,12 @@ class Cases extends Common {
         $get = input('get.');
 
         $data = $this->caseModel->getCasesDetails($get['id']);
-        $return['contents'] = $data['contents'];
+        $return['contents'] = empty($data['contents'])?"":$data['contents'];
         $return['user_info'] = $data['user_info'];
         $return['thing'] = $data['thing'];
         $return['read'] = $data['read'];
         $return['comments'] = $data['comments'];
-        $return['creatime']= date('Y-m-d',$data['creatime']);
+        $return['creatime']= $data['creatime'];
         if(empty($data['cases_image'])){
             $return['cases_image']=[];
         }else{
@@ -52,13 +52,12 @@ class Cases extends Common {
 
     public function getList(){
         $get = input('get.');
-        $where ='';
+        $where = ['status'=>1];
         if(isset($get['group_id']) && $get['group_id'] != 0){
             $where = ['group_id'=>$get['group_id']];
         }
         $page = empty($get['page'])?1:$get['page'];
         $limit = empty($get['limit'])?10:$get['limit'];
-
         $data = $this->caseModel->getDataByPage($where,$page,$limit);
 
         return json(['data'=>$data,'status'=>1,'msg'=>'获取数据成功']);
