@@ -1,0 +1,251 @@
+{layout name="Public/layout" /}
+<body class="childrenBody">
+<blockquote class="layui-elem-quote news_search">
+	<form id="searchForm" action="{:url('Courses/index')}" method="get">
+		<div class="layui-inline">
+			<div class="layui-inline layui-form">
+				<select lay-filter="browseLook" id="group_id" name='group_id'>
+					<option value="0" {eq name=":input('param.group_id')" value='0'}selected = "selected"{/eq}>选择分类</option>
+					{volist name='group' id='gdt'}
+					<option value="{$gdt.id}" {eq name=":input('param.group_id')" value='$gdt["id"]'}selected = "selected"{/eq}>{$gdt.title}</option>
+					{/volist}
+				</select>
+			</div>
+			<div class="layui-input-inline">
+				 <input type="text" id="c_title" name='c_title' placeholder="课程名称" class="layui-input search_input" value="{:input('param.c_title')}">
+			</div>
+			<!--<div class="layui-inline layui-form">-->
+				 <!--<select lay-filter="browseLook" id="auditstatus" name='auditstatus'>-->
+					<!--<option value="0" {eq name=":input('param.auditstatus')" value=''}selected = "selected"{/eq}>全部</option>-->
+					<!--<option value="1" {eq name=":input('param.auditstatus')" value='1'}selected = "selected"{/eq}>待审核</option>-->
+					<!--<option value="2" {eq name=":input('param.auditstatus')" value='2'}selected = "selected"{/eq}>审核通过</option>-->
+					<!--<option value="3" {eq name=":input('param.auditstatus')" value='3'}selected = "selected"{/eq}>审核不通过</option>-->
+				 <!--</select>-->
+			<!--</div>-->
+			<a class="layui-btn search_btn" href="javascript:;" id="search">查询 </a>
+		</div>
+		<div class="layui-inline">
+			<!--			<a class="layui-btn layui-btn-normal newsAdd_btn">添加区域</a>-->
+		</div>
+		<div class="layui-inline">
+			<div class="layui-form-mid layui-word-aux">本页面刷新后除新添加的外所有操作无效，关闭页面所有数据重置</div>
+		</div>
+	</form>
+</blockquote>
+<div class="layui-form news_list">
+	<table class="layui-table">
+		<colgroup>
+			<col width="5%">
+			<col width="9%">
+			<col width="8%">
+			<col width="8%">
+			<col width="6%">
+			<col width="9%">
+			<col width="9%">
+			<col width="9%">
+			<!--<col width="9%">-->
+			<col width="9%">
+			<col>
+		</colgroup>
+		<thead>
+		<tr>
+			<th>序号</th>
+			<th>课程名称</th>
+			<th>课程描述</th>
+			<th>课程类型</th>
+			<th>单价</th>
+			<th>发布者</th>
+			<th>创建时间</th>
+			<th>所属分类</th>
+			<!--<th>审核状态</th>-->
+			<th>操作</th>
+		</tr>
+		</thead>
+		<tbody class="news_content"></tbody>
+	</table>
+</div>
+<div id="page"></div>
+<script type="text/javascript">
+	var dataUrl = "{:url('Courses/getList')}";
+	layui.config({
+		base : "admin/js/"
+	}).use(['form','layer','jquery','laypage'],function(){
+		var form = layui.form(),
+				layer = parent.layer === undefined ? layui.layer : parent.layer,
+				laypage = layui.laypage,
+				$ = layui.jquery;
+		var nums = 10; //每页出现的数据量
+		var countPage = parseInt("{$countPage}");//总页数
+		var newsData = '';
+		//加载页面数据
+		newsList();
+		//添加文章
+//        改变窗口大小时，重置弹窗的高度，防止超出可视区域（如F12调出debug的操作）
+		$(window).one("resize",function(){
+			$("body").on("click",".details",function(){  //详情
+				var id = $(this).attr('data-id');
+				var views = layui.layer.open({
+					title : "查看",
+					type : 2,
+					content : "{:url('Personalresume/viewDetails')}?id="+id,
+					success : function(layero, index){
+
+					}
+				});
+                layui.layer.full(views);
+			})
+
+		}).resize();
+
+		//审核通过
+		$("body").on("click",".auditData",function(){  //审核
+			var id = $(this).attr('data-id');
+			var _this = $(this);
+			layer.confirm('确定审核通过?',{icon:3, title:'提示信息'},function(index){
+				$.ajax({
+					type: "POST",
+					url: "{:url('Personalresume/auditData')}",
+					data: {id:id,auditStatus:2},
+					dataType: "json",
+					success: function(data){
+						if(data.status == 1){
+							// _this.parents("tr").remove();
+							layer.close(index);
+							layer.msg(data.msg, {icon: 6});newsList();
+						}else{
+							layer.close(index);
+							layer.msg(data.msg, {
+								icon: 5
+								,btn: ['知道了']
+							});
+						}
+					}
+				});
+
+			});
+		})
+
+		//审核不通过
+		$("body").on("click",".passAwayData",function(){  //审核不通过
+			var id = $(this).attr('data-id');
+			var _this = $(this);
+			layer.confirm('确定审核不通过?',{icon:3, title:'提示信息'},function(index){
+				$.ajax({
+					type: "POST",
+					url: "{:url('Personalresume/auditData')}",
+					data: {id:id,auditStatus:3},
+					dataType: "json",
+					success: function(data){
+						if(data.status == 1){
+							// _this.parents("tr").remove();
+							layer.close(index);
+							layer.msg(data.msg, {icon: 6});newsList();
+						}else{
+							layer.close(index);
+							layer.msg(data.msg, {
+								icon: 5
+								,btn: ['知道了']
+							});
+						}
+					}
+				});
+
+			});
+		})
+
+
+		function newsList(that){
+			//渲染数据
+			function renderDate(data){
+				var dataHtml = '';
+				if(data.length != 0){
+					var i=0;
+					$.each(data,function(index,content){
+						i += 1;
+						if(content.creattime == '1970-01-01 08:00:00'){
+							content.creattime = '-';
+						}
+
+//						if(content.jointime == '0'){
+//							content.jointime = '-';
+//						}
+//						var st = '-';
+//						if(content.auditstatus == '1'){
+//							content.auditstatus = '待审核';
+//							st = '<a class="layui-btn layui-btn-mini auditData" data-id="'+content.id+'"><i class="iconfont icon-edit"></i>通过</a><a class="layui-btn layui-btn-mini passAwayData" data-id="'+content.id+'"><i class="iconfont icon-edit"></i>不通过</a>';
+//						}else if(content.auditstatus == '2'){
+//							content.auditstatus = '审核通过';
+//						}else{
+//							content.auditstatus = '审核不通过';
+//						}
+//
+						if(content.ctype == '1'){
+							content.ctype = '单集';
+						}else{
+							content.ctype = '多集';
+						}
+
+						dataHtml += '<tr>'
+								+'<td>'+i+'</td>'
+								+'<td>'+content.title+'</td>'
+								+'<td>'+content.contents+'</td>'
+								+'<td>'+content.ctype+'</td>'
+								+'<td>'+content.price+'</td>'
+                            	+'<td>'+content.nickname+'</td>'
+								+'<td>'+content.creattime+'</td>'
+								+'<td>'+content.gtitle+'</td>'
+								+'<td>'
+//								+  st
+								+  '<a class="layui-btn layui-btn-mini layui-btn-normal details" data-id="'+content.id+'"><i class="iconfont icon-edit"></i> 查看详情</a>'
+								+'</td>'
+								+'</tr>';
+					});
+				}else{
+					dataHtml = '<tr><td colspan="12" align="center">暂无数据</td></tr>';
+				}
+				return dataHtml;
+			}
+
+			if(that){
+				newsData = that;
+			}
+
+			page();
+			function page(){
+				laypage({
+					cont : "page",
+					pages : Math.ceil(countPage/nums),
+					skip:true,
+					jump : function(obj){
+						var loadIndex = layer.load(2);
+						$.ajax({
+							type: "GET",
+							url: dataUrl,
+							data: {page:obj.curr,count:nums,group_id:$('#group_id').val(),c_title:$('#c_title').val()},
+							dataType: "json",
+							success: function(data){
+								if(data.status == 1){
+									//正常加载信息
+									countPage = data.pagecount;
+									newsData = data.data;
+									$(".news_content").html(renderDate(newsData));
+									form.render();
+								}else{
+									layer.msg(data.msg);
+								}
+								layer.close(loadIndex);
+							}
+						});
+					}
+				})
+			}
+		}
+
+
+		$('#search').click(function(){
+			$('#searchForm').submit();
+		})
+	})
+</script>
+</body>
+</html>
