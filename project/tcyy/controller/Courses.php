@@ -16,7 +16,7 @@ class Courses extends Common {
     }
 
 
-    //获取登录用户发布的课程列表
+    //获取登录用户发布的课程下来列表
     public function getCoursesList(){
         $get = input('post.');
         $uid =  $this->userData->id;
@@ -25,6 +25,19 @@ class Courses extends Common {
         $rtd = $this -> model -> getCourseListByCondition($where);
 
         returnAjax($rtd, '查询成功',1);
+    }
+
+    //获取登录用户发布的课程下来列表
+    public function getCoursesListByCurrentUser(){
+        $get = input('post.');
+        $page = empty($get['page'])?1:$get['page'];
+        $limit = empty($get['limit'])?10:$get['limit'];
+        $uid =  $this->userData->id;
+        $where = ['uid' => $uid ];
+        $sort = 'creattime desc';
+        $rtd = $this -> model -> queryCourseListByUser($page,$limit,$where,$sort);
+
+        returnAjax(['data'=>$rtd,'page'=>$page], '查询成功',1);
     }
 
 
@@ -37,7 +50,7 @@ class Courses extends Common {
         $get = input('post.');
         if(empty($get['cid'])){ //如果未选择课程,添加当前课程信息
             $data['gid'] = empty($get['gid'])? returnAjax([],'缺少课程分类参数',2):$get['gid'];
-            $data['creattime'] = strtotime(date('Y-m-d 00:00:00',time()));
+            $data['creattime'] = strtotime(date('Y-m-d H:i:s',time()));
             $data['title'] = empty($get['ctitle'])? returnAjax([],'缺少课程标题参数',2):$get['ctitle'];
             $data['contents'] = empty($get['ccontents'])? returnAjax([],'缺少课程描述参数',2):$get['ccontents'];
             $data['ctype'] = $get['ctype'];
@@ -58,7 +71,7 @@ class Courses extends Common {
         $videoData['contents'] = empty($get['vcontents'])?'':$get['vcontents'];
         $videoData['urls'] = $get['urls'];
         $videoData['episodes'] = $get['episodes'];
-        $videoData['ctime'] = strtotime(date('Y-m-d 00:00:00',time()));
+        $videoData['ctime'] = strtotime(date('Y-m-d H:i:s',time()));
         $result = $this -> videoModel->saveCourseVideoInfo($videoData);
         if($result['status'] == 2){
             returnAjax([], '发布视频失败!!!',2);
@@ -90,36 +103,38 @@ class Courses extends Common {
         $get = input('post.');
         $page = empty($get['page'])?1:$get['page'];
         $limit = empty($get['limit'])?10:$get['limit'];
-        $gid = empty($get['gid']);
-        $ctime = empty($get['ctime']);
-        $prices = empty($get['prices']);
+        $gid = empty($get['gid'])?'':$get['gid'];
+        $ctime = empty($get['ctime'])?'':$get['ctime'];
+        $prices = empty($get['prices'])?'':$get['prices'];
         $where = [];
         if(!empty($gid)){
-            $where['c.gid'] = ['eq',$gid];
+            $where['gid'] = ['eq',$gid];
         }
         $sort = '' ;
         if(!empty($ctime)){
             if($ctime == 'desc'){
-                $sort = 'v.ctime desc';
+                $sort = 'ctime desc';
             }else{
-                $sort= 'v.ctime asc';
+                $sort= 'ctime asc';
             }
         }
         if(!empty($prices)){
             if($prices == 'desc'){
                 if($sort != '')
-                    $sort = $sort.',v.prices desc';
+                    $sort = $sort.',prices desc';
                 else
-                    $sort = 'v.prices desc';
+                    $sort = 'prices desc';
             }else{
                 if($sort != '')
-                    $sort = $sort.',v.prices asc';
+                    $sort = $sort.',prices asc';
                 else
-                    $sort = 'v.prices asc';
+                    $sort = 'prices asc';
             }
         }
 
-        $data = $this -> videoModel -> getVieosPageByCondition($page,$limit,$where,$sort);
-        returnAjax($data,'获取成功',1);
+//        $data = $this -> videoModel -> getVieosPageByCondition($page,$limit,$where,$sort);
+        $data = $this -> model -> getVideosPageByCondition($page,$limit,$where,$sort);
+
+        returnAjax(['data'=>$data,'page'=>$page],'获取成功',1);
     }
 }

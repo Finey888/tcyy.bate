@@ -11,7 +11,6 @@ class CoursesVideos extends Common {
     protected function initialize()
     {
         parent::initialize();
-        $this->_collection = Db::name($this->name);
     }
 
 	//获取视频列表
@@ -36,14 +35,14 @@ class CoursesVideos extends Common {
         return $this :: where(['id'=>$id])->update(['views = views + 1']);
     }
 
-
     public function getVieosPageByCondition($page=1,$count=10,$where=[],$sort='v.ctime desc'){
-        $data = $this ->_collection
+        $data = $this
             ->alias('v')
             ->where($where)
             ->join('tcyy_courses c', ' c.id = v.cid ', 'left')
-            ->field('c.id AS cid,c.title AS ctitle,c.gid,v.id AS vid,v.title AS vtitle,v.prices,FROM_UNIXTIME(v.ctime) AS ctime,v.views ')->page($page.','.$count)->order($sort)->select();
-        return $data;
+            ->join('tcyy_user_info u', ' u.id = c.uid ', 'left')
+            ->field('c.id AS cid,c.title AS ctitle,c.price,c.gid,v.id AS vid,v.title AS vtitle,v.urls,FROM_UNIXTIME(v.ctime) AS ctime,v.views,u.nickname ')->page($page.','.$count)->order($sort)->select();
+        return empty($data)?[]:$data;
     }
 
 

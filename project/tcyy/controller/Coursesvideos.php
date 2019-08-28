@@ -45,6 +45,6 @@ class Coursesvideos extends Common {
         $limit = empty($get['limit'])?10:$get['limit'];
         $uid = $this -> userData -> id;
         $data = $this ->logModel->queryWatchLogList($uid,$page,$limit);
-        returnAjax($data -> toArray(),'获取成功',1);
+        returnAjax(['data'=>$data,'page'=>$page],'获取成功',1);
     }
 }
