@@ -1,7 +1,6 @@
 <?php
 namespace app\index\controller;
 
-use think\Controller;
 use think\Request;
 
 class Courses extends Common {
@@ -14,7 +13,7 @@ class Courses extends Common {
         $this-> groupModel = new \app\index\model\Group();
     }
 
-    //默认入口
+    //默认课程首页入口
     public function index(){
         $get = input('get.');
         $where = ['status' => 1];
@@ -36,7 +35,7 @@ class Courses extends Common {
         return view('Courses/index');
     }
 
-    //获取列表
+    //获取课程列表
     public function getList(){
         $get = input('get.');
         $page = empty($get['page'])?1:$get['page'];
@@ -58,15 +57,7 @@ class Courses extends Common {
         return json(['data'=>$data,'status'=>1,'msg'=>'获取数据成功']);
     }
 
-    public function auditData(){
-        if(request()->isPost()){ $id = input('post.id'); }else{ return json(['status'=>-1,'msg'=>'未知数据']); }
-        $auditStatus = input('post.auditStatus');
-//        $return = $this->model->auditDataById($id,$auditStatus);
-
-        return $return ? ['status'=>1,'msg'=>'审核完成'] : ['status'=>-1,'msg'=>'审核失败'];
-    }
-
-    //查询详情
+    //查询课程对应视频列表详情
     public function viewDetails(){
         if(request()->isGet()){
             $get = input('get.');
@@ -77,16 +68,12 @@ class Courses extends Common {
         if(empty($get['id'])){
             return json(['status'=>-1,'msg'=>'未知数据']);
         }
-        $rid = $get['id'];
-        $data = $this-> model -> getDataById($rid);
-//        $eduData = $this -> eductionModel -> queryEduList(['rid' => $rid]);
-//        $expData = $this -> experienceModel -> queryWorkExperienceList(['rid' => $rid]);
-//        $quaData = $this -> qualificationModel -> getQualificationList(['rid' => $rid]);
+        $id = $get['id'];
 
-//        $this->assign('data',$data);
-//        $this->assign('eduData',$eduData);
-//        $this->assign('expData',$expData);
-//        $this->assign('quaData',$quaData);
-        return view('Personalresume/details');
+        $data = $this -> courses ->getCourseInfoById($id);
+        $vData = $this-> courseVideos -> getVideoListByCid($id);
+        $this->assign('data',$data);
+        $this->assign('vData',$vData);
+        return view('Courses/details');
     }
 }

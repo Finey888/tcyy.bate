@@ -41,10 +41,8 @@ class CoursesVideos extends Common {
             ->where($where)
             ->join('tcyy_courses c', ' c.id = v.cid ', 'left')
             ->join('tcyy_user_info u', ' u.id = c.uid ', 'left')
-            ->field('c.id AS cid,c.title AS ctitle,c.price,c.gid,v.id AS vid,v.title AS vtitle,v.urls,FROM_UNIXTIME(v.ctime) AS ctime,v.views,u.nickname ')->page($page.','.$count)->order($sort)->select();
+            ->field('c.id AS cid,c.title AS ctitle,c.price,c.gid,v.id AS vid,v.title AS vtitle,v.urls,DATE_FORMAT(FROM_UNIXTIME(v.ctime),\'%Y-%m-%d\') AS ctime,v.views,u.nickname ')->page($page.','.$count)->order($sort)->select();
         return empty($data)?[]:$data;
     }
-
-
 
 }	

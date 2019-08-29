@@ -30,4 +30,8 @@ class Courses extends Common {
         return $this -> where($where) -> count();
     }
 
+    //获取课程详情
+    public function getCourseInfoById($id){
+        return $this->where(['id'=>$id])->find();
+    }
 }	

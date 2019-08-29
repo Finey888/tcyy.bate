@@ -70,6 +70,7 @@ class Courses extends Common {
         $videoData['title'] = empty($get['vtitle'])? returnAjax([],'缺少视频标题参数',2):$get['vtitle'];
         $videoData['contents'] = empty($get['vcontents'])?'':$get['vcontents'];
         $videoData['urls'] = $get['urls'];
+        $videoData['prices'] = $get['price'];
         $videoData['episodes'] = $get['episodes'];
         $videoData['ctime'] = strtotime(date('Y-m-d H:i:s',time()));
         $result = $this -> videoModel->saveCourseVideoInfo($videoData);
@@ -106,34 +107,42 @@ class Courses extends Common {
         $gid = empty($get['gid'])?'':$get['gid'];
         $ctime = empty($get['ctime'])?'':$get['ctime'];
         $prices = empty($get['prices'])?'':$get['prices'];
+        $isFree = empty($get['isFree'])?'':$get['isFree'];
+        $keywords = empty($get['keywords'])?'':$get['keywords'];
         $where = [];
         if(!empty($gid)){
-            $where['gid'] = ['eq',$gid];
+            $where['c.gid'] = ['eq',$gid];
         }
         $sort = '' ;
         if(!empty($ctime)){
             if($ctime == 'desc'){
-                $sort = 'ctime desc';
+                $sort = 'v.ctime desc';
             }else{
-                $sort= 'ctime asc';
+                $sort= 'v.ctime asc';
             }
         }
         if(!empty($prices)){
             if($prices == 'desc'){
                 if($sort != '')
-                    $sort = $sort.',prices desc';
+                    $sort = $sort.',v.prices desc';
                 else
-                    $sort = 'prices desc';
+                    $sort = 'v.prices desc';
             }else{
                 if($sort != '')
-                    $sort = $sort.',prices asc';
+                    $sort = $sort.',v.price asc';
                 else
-                    $sort = 'prices asc';
+                    $sort = 'v.prices asc';
             }
         }
+        if(!empty($isFree)){
+            $where['c.price']=['eq',0];
+        }
+        if(!empty($keywords)){
+             $where['c.title|v.title'] = ['like', '%'.$keywords.'%'];
+        }
 
-//        $data = $this -> videoModel -> getVieosPageByCondition($page,$limit,$where,$sort);
-        $data = $this -> model -> getVideosPageByCondition($page,$limit,$where,$sort);
+        $data = $this -> videoModel -> getVieosPageByCondition($page,$limit,$where,$sort);
+//        $data = $this -> model -> getVideosPageByCondition($page,$limit,$where,$sort);
 
         returnAjax(['data'=>$data,'page'=>$page],'获取成功',1);
     }

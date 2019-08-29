@@ -50,21 +50,13 @@ class Courses extends Common {
     }
 
 
-
-    public function getVideosPageByCondition($page=1,$count=10,$where=[],$sort='ctime desc'){
+    public function getVideosPageByCondition($page=1,$count=10,$where=[],$sort){
         $data = $this::with(['UserInfo' => function($query){
                         $query -> field('id,uid,nickname,headurl');
                         },'CoursesVideos' => function($query){
-                            $query -> field('cid,urls,views,status');
+                            $query -> field('cid,urls,views,status,ctime');
                         }])
-//        $data = $this -> with(['UserInfo'=>function($query){
-//            $query->field('id,uid,nickname,headurl');
-//        }])
-//            -> alias('v')
             -> where($where)
-//            -> join('tcyy_courses c', ' c.id = v.cid ', 'left')
-////                      -> join('tcyy_user_info u', ' u.id = c.uid ', 'left')
-//            -> field('c.id AS cid,c.title AS ctitle,c.price,c.gid,v.id AS vid,v.title AS vtitle,v.urls,FROM_UNIXTIME(v.ctime) AS ctime,v.views ')
           ->page($page.','.$count)->order($sort)->select();
         return empty($data)?[]:$data;
     }
