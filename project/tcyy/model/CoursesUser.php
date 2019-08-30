@@ -54,7 +54,7 @@ class CoursesUser extends Model {
      * 根据课程查询购买的视频记录 行转列
      * @param $cid
      */
-    public function getBuyVideoIdsByCid($cid){
-        $this -> _collection -> field('GROUP_CONCAT(multiinfo) as multiinfo') -> where(['cid' => $cid]) -> find();
+    public function getBuyVideoIdsByCid($cid,$uid){
+        $this -> _collection -> field('GROUP_CONCAT(multiinfo) as multiinfo') -> where(['cid' => $cid,'uid' => $uid])-> find();
     }
 }

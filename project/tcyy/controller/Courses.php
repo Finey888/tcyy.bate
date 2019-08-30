@@ -64,13 +64,15 @@ class Courses extends Common {
             $cid = $return;
         }else{
             $cid = $get['cid'];
+            $coursesInfo = $this ->model ->getInfoById($cid);
+            $data['price'] = $coursesInfo['price'];
         }
 
         $videoData['cid'] = $cid;
         $videoData['title'] = empty($get['vtitle'])? returnAjax([],'缺少视频标题参数',2):$get['vtitle'];
         $videoData['contents'] = empty($get['vcontents'])?'':$get['vcontents'];
         $videoData['urls'] = $get['urls'];
-        $videoData['prices'] = $get['price'];
+        $videoData['prices'] =  $data['price'];
         $videoData['episodes'] = $get['episodes'];
         $videoData['ctime'] = strtotime(date('Y-m-d H:i:s',time()));
         $result = $this -> videoModel->saveCourseVideoInfo($videoData);
@@ -81,7 +83,7 @@ class Courses extends Common {
     }
 
     /**
-     * 查看课程详情
+     * 根据cid查看个人发布的课程详情
      */
     public function coursesDetails(){
         $get = input('post.');
@@ -91,10 +93,29 @@ class Courses extends Common {
         }
        $cData = $this -> model -> getInfoById($cid);
        $vDataList = $this -> videoModel -> getVideoListByCid($cid);
-       $videoIds = $this -> courseUser -> getBuyVideoIdsByCid($cid);
+//       $videoIds = $this -> courseUser -> getBuyVideoIdsByCid($cid);
        $cData['videosList'] = $vDataList;
-       $cData['videoIds'] = $videoIds;
+//       $cData['videoIds'] = $videoIds;
        returnAjax($cData,'获取数据成功',1);exit();
+    }
+
+    /**
+     * 根据当前用户查看已购买的课程详情
+     */
+    public function purchaseCoursesDetailsByCid(){
+        $get = input('post.');
+        $cid = $get['cid'];
+        if(empty($cid)){
+            returnAjax([],'缺少课程编号参数',2);
+        }
+        $cData = $this -> model -> getInfoById($cid);
+        $vDataList = $this -> videoModel -> getVideoListByCid($cid);
+
+        $uid = $this->userData->id;
+        $videoIds = $this -> courseUser -> getBuyVideoIdsByCid($cid,$uid);
+        $cData['videosList'] = $vDataList;
+        $cData['videoIds'] = $videoIds;
+        returnAjax($cData,'获取数据成功',1);exit();
     }
 
     /**
@@ -113,7 +134,8 @@ class Courses extends Common {
         if(!empty($gid)){
             $where['c.gid'] = ['eq',$gid];
         }
-        $sort = '' ;
+
+        $sort = 'v.ctime desc' ;
         if(!empty($ctime)){
             if($ctime == 'desc'){
                 $sort = 'v.ctime desc';
@@ -123,15 +145,9 @@ class Courses extends Common {
         }
         if(!empty($prices)){
             if($prices == 'desc'){
-                if($sort != '')
-                    $sort = $sort.',v.prices desc';
-                else
-                    $sort = 'v.prices desc';
+               $sort = 'v.prices desc';
             }else{
-                if($sort != '')
-                    $sort = $sort.',v.price asc';
-                else
-                    $sort = 'v.prices asc';
+               $sort = 'v.prices asc';
             }
         }
         if(!empty($isFree)){

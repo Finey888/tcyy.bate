@@ -20,9 +20,11 @@ class Coursesvideos extends Common {
     public function storageViewVideoRecord(){
         $get = input('post.');
         $vid = empty($get['vid']);
-        $vtime = empty($get['vtime']);
+        $vtime = strtotime(date('Y-m-d',time()));
         $uid = $this -> userData -> id;
         $where= ['uid' => $uid,'vtime'=>$vtime];
+        $existCurVideos = $this -> videoModel -> existsUserVideos($uid,$vid);
+        if($existCurVideos > 0) returnAjax([],'该视频为当前用户发布,无需记录',1);
         $existNum = $this -> logModel ->existViewByDate($where);
         if($existNum == 0){
             $data['vid'] = $vid;
@@ -46,5 +48,16 @@ class Coursesvideos extends Common {
         $uid = $this -> userData -> id;
         $data = $this ->logModel->queryWatchLogList($uid,$page,$limit);
         returnAjax(['data'=>$data,'page'=>$page],'获取成功',1);
+    }
+
+    public function deleteVideoInfos(){
+        $get = input('post.');
+        $ids = $get['ids'];
+        if(empty($ids)){
+            returnAjax([],'缺少参数',2);
+        }
+        $this -> videoModel ->deleteVideosByIds ($ids);
+        returnAjax([],'删除成功',1);
+
     }
 }

@@ -4,7 +4,10 @@ namespace app\tcyy\model;
 use think\Db;
 
 class CoursesVideos extends Common {
-
+    //类型转换
+    protected $type = [
+        'ctime' => 'timestamp:Y-m-d H:i:s'
+    ];
     protected $name = 'courses_videos';
 
     //自定义初始化
@@ -17,9 +20,10 @@ class CoursesVideos extends Common {
     public function getVideoListByCid($param){
         $where = [
             'cid' => $param,
-            'status' => '1'
+            'isdel' => '0'
         ];
-        $data = $this :: where($where) -> field('id,title,prices,contents,urls,views,ctime') ->select();
+//        $where = ['cid' => $param];
+        $data = $this :: where($where) -> field('id,title,prices,contents,episodes,urls,views,ctime') -> order('episodes asc') ->select();
         return $data -> toArray();
     }
 
@@ -35,14 +39,24 @@ class CoursesVideos extends Common {
         return $this :: where(['id'=>$id])->update(['views = views + 1']);
     }
 
-    public function getVieosPageByCondition($page=1,$count=10,$where=[],$sort='v.ctime desc'){
+    public function getVieosPageByCondition($page=1,$count=10,$where=[],$sort){
         $data = $this
             ->alias('v')
             ->where($where)
             ->join('tcyy_courses c', ' c.id = v.cid ', 'left')
             ->join('tcyy_user_info u', ' u.id = c.uid ', 'left')
-            ->field('c.id AS cid,c.title AS ctitle,c.price,c.gid,v.id AS vid,v.title AS vtitle,v.urls,DATE_FORMAT(FROM_UNIXTIME(v.ctime),\'%Y-%m-%d\') AS ctime,v.views,u.nickname ')->page($page.','.$count)->order($sort)->select();
-        return empty($data)?[]:$data;
+            ->field('c.id AS cid,c.title AS ctitle,c.price,c.gid,v.id AS vid,v.title AS vtitle,v.urls,DATE_FORMAT(FROM_UNIXTIME(v.ctime),\'%Y-%m-%d\') AS ctimes,v.views,u.nickname ')->page($page.','.$count)->order($sort)->select();
+        return $data;
     }
 
+    public function deleteVideosByIds($ids)
+    {
+        $where['id'] = ['in',$ids];
+        return $this :: where($where)->update(['isdel' => 1]);
+    }
+
+    public function existsUserVideos($uid,$vid)
+    {
+        return $this  -> alias('v') -> join('tcyy_courses c', ' c.id = v.cid ', 'inner') -> where(['c.uid'=>$uid,'v.id' => $vid]) -> field('v.id as vid')->count();
+    }
 }	

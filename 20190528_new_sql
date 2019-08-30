@@ -274,6 +274,7 @@ create table tccybate.tcyy_courses_videos
    status               tinyint(4) default 0 comment '0.待审核  1.审核通过  2.审核未通过',
    episodes             int(11) comment '集数',
    ctime                int(11) comment '创建时间',
+   isdel                int(11) default 0 comment '0-未删除 1-已删除',
    primary key (id)
 );
 
