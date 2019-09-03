@@ -17,10 +17,10 @@ class CoursesVideos extends Common {
 	//根据课程编号获取视频列表
     public function getVideoListByCid($param){
         $where = [
-            'cid' => $param,
-            'status' => '1'
+            'cid' => $param//,
+            //'status' => '1'
         ];
-        $data = $this :: where($where) -> field('id,title,prices,contents,urls,views,ctime') ->select();
+        $data = $this :: where($where) -> field('id,title,prices,contents,urls,episodes,views,ctime') ->select();
         return $data -> toArray();
     }
 

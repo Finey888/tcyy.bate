@@ -33,7 +33,7 @@ class Courses extends Common {
         $page = empty($get['page'])?1:$get['page'];
         $limit = empty($get['limit'])?10:$get['limit'];
         $uid =  $this->userData->id;
-        $where = ['uid' => $uid ];
+        $where = ['uid' => $uid ,'status' => 1];
         $sort = 'creattime desc';
         $rtd = $this -> model -> queryCourseListByUser($page,$limit,$where,$sort);
 
@@ -170,8 +170,8 @@ class Courses extends Common {
             returnAjax([],'缺少课程编号参数',2);
         }
         $num = $this -> courseUser -> getBuyerNumByCid($cid);
-        if($num == 0){
-            returnAjax([],"有购买用户,不能删除该课程!",1);
+        if($num > 0){
+            returnAjax([],"有购买用户,不能删除该课程!",2);
         }
         $this -> model ->delCourse($cid);
         //如果课程能删除 ,将课程对应的视频全部删除掉
