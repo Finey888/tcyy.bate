@@ -162,4 +162,20 @@ class Courses extends Common {
 
         returnAjax(['data'=>$data,'page'=>$page],'获取成功',1);
     }
+
+    public function delCoursesById(){
+        $get = input('post.');
+        $cid = $get['cid'];
+        if(empty($cid)){
+            returnAjax([],'缺少课程编号参数',2);
+        }
+        $num = $this -> courseUser -> getBuyerNumByCid($cid);
+        if($num == 0){
+            returnAjax([],"有购买用户,不能删除该课程!",1);
+        }
+        $this -> model ->delCourse($cid);
+        //如果课程能删除 ,将课程对应的视频全部删除掉
+        $this -> videoModel -> deleteVideosByCid($cid);
+        returnAjax([],"删除成功",1);
+    }
 }

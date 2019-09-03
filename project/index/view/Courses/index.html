@@ -129,19 +129,19 @@
 						}
 
 						dataHtml += '<tr>'
-								+'<td>'+i+'</td>'
-								+'<td>'+content.title+'</td>'
-								+'<td>'+content.contents+'</td>'
-								+'<td>'+content.ctype+'</td>'
-								+'<td>'+content.price+'</td>'
-                            	+'<td>'+content.nickname+'</td>'
-								+'<td>'+content.creattime+'</td>'
-								+'<td>'+content.gtitle+'</td>'
-								+'<td>'
-//								+  st
-								+  '<a class="layui-btn layui-btn-mini layui-btn-normal details" data-id="'+content.id+'"><i class="iconfont icon-edit"></i> 查看详情</a>'
-								+'</td>'
-								+'</tr>';
+								 + '<td>' + i + '</td>'
+								 + '<td>' + content.title + '</td>'
+								 + '<td>' + content.contents + '</td>'
+								 + '<td>' + content.ctype + '</td>'
+								 + '<td>' + content.price + '</td>'
+                            	 + '<td>' + JSON.parse(content.nickname) + '</td>'
+								 + '<td>' + content.creattime + '</td>'
+								 + '<td>' + content.gtitle + '</td>'
+								 + '<td>'
+//								 +   st
+								 +   '<a class="layui-btn layui-btn-mini layui-btn-normal details" data-id="' + content.id + '"><i class="iconfont icon-edit"></i> 查看详情</a>'
+								 + '</td>'
+								 + '</tr>';
 					});
 				}else{
 					dataHtml = '<tr><td colspan="12" align="center">暂无数据</td></tr>';

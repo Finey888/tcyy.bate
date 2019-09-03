@@ -36,7 +36,7 @@ class CoursesVideos extends Common {
 
     public function updateVideoById($id)
     {
-        return $this :: where(['id'=>$id])->update(['views = views + 1']);
+        return $this :: where(['id'=>$id])->setInc('views',1);
     }
 
     public function getVieosPageByCondition($page=1,$count=10,$where=[],$sort){
@@ -49,14 +49,19 @@ class CoursesVideos extends Common {
         return $data;
     }
 
-    public function deleteVideosByIds($ids)
+    public function deleteVideosByIds($vid)
     {
-        $where['id'] = ['in',$ids];
+        $where['id'] = ['eq',$vid];
         return $this :: where($where)->update(['isdel' => 1]);
     }
 
     public function existsUserVideos($uid,$vid)
     {
         return $this  -> alias('v') -> join('tcyy_courses c', ' c.id = v.cid ', 'inner') -> where(['c.uid'=>$uid,'v.id' => $vid]) -> field('v.id as vid')->count();
+    }
+
+    public function deleteVideosByCid($cid){
+        $where['cid'] = ['eq',$cid];
+        return $this :: where($where)->update(['isdel' => 1]);
     }
 }	

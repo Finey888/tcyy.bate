@@ -45,7 +45,7 @@ class Courses extends Common {
 
         //分类id
         if(!empty($get['group_id'])){
-            $where['cs.group_id'] = ['eq', $get['group_id']];
+            $where['cs.gid'] = ['eq', $get['group_id']];
         }
         //课程名称
         if(!empty($get['c_title'])){

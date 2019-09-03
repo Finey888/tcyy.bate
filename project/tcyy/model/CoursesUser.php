@@ -55,6 +55,16 @@ class CoursesUser extends Model {
      * @param $cid
      */
     public function getBuyVideoIdsByCid($cid,$uid){
-        $this -> _collection -> field('GROUP_CONCAT(multiinfo) as multiinfo') -> where(['cid' => $cid,'uid' => $uid])-> find();
+        return $this -> _collection -> field('GROUP_CONCAT(multiinfo) as multiinfo') -> where(['cid' => $cid,'uid' => $uid])-> find();
+    }
+
+    //根据课程编号获取购买者数量
+    public function getBuyerNumByCid($cid){
+        return $this -> where(['cid' => $cid]) -> count();
+    }
+
+    //根据课程编号获取购买者数量
+    public function getBuyerNumByVid($vid){
+        return $this -> where(['find_in_set('. $vid .',multiinfo']) -> count();
     }
 }

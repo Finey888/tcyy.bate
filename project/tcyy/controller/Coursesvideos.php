@@ -11,6 +11,7 @@ class Coursesvideos extends Common {
         parent::__construct($request);
         $this -> videoModel = new \app\tcyy\model\CoursesVideos();
         $this -> logModel = new \app\tcyy\model\CoursesWatchLog();
+        $this-> courseUser = new \app\tcyy\model\CoursesUser();
     }
 
     /**
@@ -19,7 +20,7 @@ class Coursesvideos extends Common {
      */
     public function storageViewVideoRecord(){
         $get = input('post.');
-        $vid = empty($get['vid']);
+        $vid = $get['vid'];
         $vtime = strtotime(date('Y-m-d',time()));
         $uid = $this -> userData -> id;
         $where= ['uid' => $uid,'vtime'=>$vtime];
@@ -50,13 +51,19 @@ class Coursesvideos extends Common {
         returnAjax(['data'=>$data,'page'=>$page],'获取成功',1);
     }
 
-    public function deleteVideoInfos(){
+    public function deleteVideoInfo(){
         $get = input('post.');
-        $ids = $get['ids'];
+        $vid = $get['vid'];
+        $cid = $get['cid'];
         if(empty($ids)){
             returnAjax([],'缺少参数',2);
         }
-        $this -> videoModel ->deleteVideosByIds ($ids);
+        $num = $this -> courseUser -> getBuyerNumByVid($vid);
+        if($num == 0){
+            returnAjax([],"有购买用户,不能删除该课程对应的视频!",1);
+        }
+
+        $this -> videoModel ->deleteVideosByIds ($vid);
         returnAjax([],'删除成功',1);
 
     }

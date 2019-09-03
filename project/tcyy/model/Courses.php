@@ -39,8 +39,8 @@ class Courses extends Common {
 
     //保存课程信息
     public function saveCourseInfo($data){
-        $data = $this::save($data);
-        return $data?$this->id:false;
+        $retData = $this::save($data);
+        return $retData;
     }
 
     //根据主键查看详情
@@ -59,6 +59,11 @@ class Courses extends Common {
             -> where($where)
           ->page($page.','.$count)->order($sort)->select();
         return empty($data)?[]:$data;
+    }
+
+    //删除课程信息
+    public function delCourse($id){
+        return $this::where('id',  $id) -> update(['status' => -1]);
     }
 
 }

@@ -12,7 +12,7 @@
                         </tr>
                         <tr>
                             <td>发布时间</td>
-                            <td>{$data['creatime']}</td>
+                            <td>{$data['creattime']}</td>
                         </tr>
                         <tr>
                             <td>课程描述</td>
@@ -34,11 +34,12 @@
 			<blockquote class="layui-elem-quote title">课程视频列表</blockquote>
 			<table class="layui-table">
 				<colgroup>
-                    <col width="10">
-					<col width="10">
-					<col width="10">
-					<col width="10">
-					<col width="10">
+                    <col width="10%">
+					<col width="20%">
+					<col width="20%">
+					<col width="20%">
+					<col width="10%">
+					<col width="60%">
 				</colgroup>
                 <thead>
                     <th>编号</th>
@@ -49,7 +50,7 @@
                     <th>url地址</th>
                 </thead>
 				<tbody>
-                {volist name='Data' id='dt'}
+                {volist name='vData' id='dt'}
                 <tr class="success">
                     <td>{$dt.id}</td>
                     <td>{$dt.title}</td>
