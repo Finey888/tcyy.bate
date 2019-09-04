@@ -13,6 +13,7 @@ class Courses extends Common {
     protected function initialize()
     {
         parent::initialize();
+        $this -> videoModel = new \app\tcyy\model\CoursesVideos();
     }
 
     public function UserInfo()
@@ -39,8 +40,8 @@ class Courses extends Common {
 
     //保存课程信息
     public function saveCourseInfo($data){
-        $retData = $this::save($data);
-        return $retData;
+        $this::allowField(true) -> save($data);
+        return $this;
     }
 
     //根据主键查看详情
@@ -65,5 +66,4 @@ class Courses extends Common {
     public function delCourse($id){
         return $this::where('id',  $id) -> update(['status' => -1]);
     }
-
 }

@@ -23,7 +23,7 @@ class CoursesVideos extends Common {
             'isdel' => '0'
         ];
 //        $where = ['cid' => $param];
-        $data = $this :: where($where) -> field('id,title,prices,contents,episodes,urls,views,ctime') -> order('episodes asc') ->select();
+        $data = $this :: where($where) -> field('id,title,prices,contents,episodes,urls,views,ctime,previews') -> order('episodes asc') ->select();
         return $data -> toArray();
     }
 
@@ -43,9 +43,9 @@ class CoursesVideos extends Common {
         $data = $this
             ->alias('v')
             ->where($where)
-            ->join('tcyy_courses c', ' c.id = v.cid ', 'left')
+            ->join('tcyy_courses c', ' c.id = v.cid ', 'right')
             ->join('tcyy_user_info u', ' u.id = c.uid ', 'left')
-            ->field('c.id AS cid,c.title AS ctitle,c.price,c.gid,v.id AS vid,v.title AS vtitle,v.urls,DATE_FORMAT(FROM_UNIXTIME(v.ctime),\'%Y-%m-%d\') AS ctimes,v.views,u.nickname ')->page($page.','.$count)->order($sort)->select();
+            ->field('c.id AS cid,c.title AS ctitle,c.price,c.gid,v.id AS vid,v.title AS vtitle,DATE_FORMAT(FROM_UNIXTIME(v.ctime),\'%Y-%m-%d\') AS ctimes,v.views,u.nickname,v.previews ')->page($page.','.$count)->order($sort)->select();
         return $data;
     }
 

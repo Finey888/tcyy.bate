@@ -45,9 +45,9 @@ class CoursesUser extends Model {
 
     //支付成功后保存购买课程视频记录
     public function saveCoureseByUserPaid($data){
-        $rtn =$this::save($data);
+        $rtn = $this::save($data);
         $errors = $this::getError();
-        return empty( $errors) ? ['status' => 1,'data' => $rtn->id] : ['status' => 2,'msg' => $errors];
+        return empty( $errors) ? ['status' => 1,'data' => $this['id']] : ['status' => 2,'msg' => $errors];
     }
 
     /**

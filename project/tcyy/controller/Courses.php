@@ -16,18 +16,18 @@ class Courses extends Common {
     }
 
 
-    //获取登录用户发布的课程下来列表
+    //获取登录用户发布的课程下拉列表
     public function getCoursesList(){
         $get = input('post.');
         $uid =  $this->userData->id;
-        $where = ['uid' =>$uid ];
+        $where = ['uid' =>$uid,'status' => 1 ];
 
         $rtd = $this -> model -> getCourseListByCondition($where);
 
         returnAjax($rtd, '查询成功',1);
     }
 
-    //获取登录用户发布的课程下来列表
+    //获取登录用户发布的课程列表
     public function getCoursesListByCurrentUser(){
         $get = input('post.');
         $page = empty($get['page'])?1:$get['page'];
@@ -53,23 +53,26 @@ class Courses extends Common {
             $data['creattime'] = strtotime(date('Y-m-d H:i:s',time()));
             $data['title'] = empty($get['ctitle'])? returnAjax([],'缺少课程标题参数',2):$get['ctitle'];
             $data['contents'] = empty($get['ccontents'])? returnAjax([],'缺少课程描述参数',2):$get['ccontents'];
+            $videoData['title'] = empty($get['vtitle'])? returnAjax([],'缺少视频标题参数',2):$get['vtitle'];
+            $videoData['previews'] = empty($get['previews'])? returnAjax([],'缺少视频预览图参数',2):$get['previews'];
             $data['ctype'] = $get['ctype'];
             $data['price'] = $get['price']; //课程单价=视频单价
             $data['oneprice'] = $get['oneprice'];  //买断价
             $data['uid'] = $this->userData->id;
-            $return = $this -> model->saveCourseInfo($data);
-            if(!$return){
+            $return = $this -> model -> saveCourseInfo($data);
+            if(empty($return)){
                 returnAjax([], '课程保存失败了!!!',2);
             }
-            $cid = $return;
+            $cid = $return['id'];
         }else{
             $cid = $get['cid'];
-            $coursesInfo = $this ->model ->getInfoById($cid);
+            $coursesInfo = $this -> model -> getInfoById($cid);
             $data['price'] = $coursesInfo['price'];
         }
 
         $videoData['cid'] = $cid;
         $videoData['title'] = empty($get['vtitle'])? returnAjax([],'缺少视频标题参数',2):$get['vtitle'];
+        $videoData['previews'] = empty($get['previews'])? returnAjax([],'缺少视频预览图参数',2):$get['previews'];
         $videoData['contents'] = empty($get['vcontents'])?'':$get['vcontents'];
         $videoData['urls'] = $get['urls'];
         $videoData['prices'] =  $data['price'];
@@ -83,7 +86,7 @@ class Courses extends Common {
     }
 
     /**
-     * 根据cid查看个人发布的课程详情
+     * 根据cid查看课程详情
      */
     public function coursesDetails(){
         $get = input('post.');
@@ -100,7 +103,7 @@ class Courses extends Common {
     }
 
     /**
-     * 根据当前用户查看已购买的课程详情
+     * 根据当前用户查看课程详情并返回已购买视频编号列表
      */
     public function purchaseCoursesDetailsByCid(){
         $get = input('post.');
@@ -108,14 +111,14 @@ class Courses extends Common {
         if(empty($cid)){
             returnAjax([],'缺少课程编号参数',2);
         }
-        $cData = $this -> model -> getInfoById($cid);
-        $vDataList = $this -> videoModel -> getVideoListByCid($cid);
+//        $cData = $this -> model -> getInfoById($cid);
+//        $vDataList = $this -> videoModel -> getVideoListByCid($cid);
 
         $uid = $this->userData->id;
         $videoIds = $this -> courseUser -> getBuyVideoIdsByCid($cid,$uid);
-        $cData['videosList'] = $vDataList;
-        $cData['videoIds'] = $videoIds;
-        returnAjax($cData,'获取数据成功',1);exit();
+//        $cData['videosList'] = $vDataList;
+//        $cData['videoIds'] = $videoIds['multiinfo'];
+        returnAjax($videoIds,'获取数据成功',1);exit();
     }
 
     /**
@@ -130,7 +133,7 @@ class Courses extends Common {
         $prices = empty($get['prices'])?'':$get['prices'];
         $isFree = empty($get['isFree'])?'':$get['isFree'];
         $keywords = empty($get['keywords'])?'':$get['keywords'];
-        $where = [];
+        $where = ['c.status'=>1,'v.isdel'=>0];
         if(!empty($gid)){
             $where['c.gid'] = ['eq',$gid];
         }

@@ -43,7 +43,7 @@ class Coursesuser extends Common {
         $data['cid'] = $get['cid'];
         $data['uid'] = $this->userData->id;
         $data['multiinfo'] = empty($get['multiinfo'])? returnAjax([],'缺少视频编号信息参数',2):$get['multiinfo'];
-        $data['amounts'] = $data['amounts'];
+        $data['amounts'] = $get['amounts'];
         $data['btimes'] = strtotime(date('Y-m-d 00:00:00',time()));
         $result= $this -> model -> saveCoureseByUserPaid($data);
         if($result['status'] == 2){

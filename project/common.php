@@ -20,7 +20,11 @@
 function uploadImg($file,$path,$name=''){
    // 移动到框架应用根目录/public/uploads/ 目录下
    $movepath = strtr($path,"/","\\");
-   $movepath = substr($movepath,0,strlen($movepath)-1); 
+   $movepath = substr($movepath,0,strlen($movepath)-1);
+   $fileExt = $file -> getExtension();
+    if($name == 'videos' && $fileExt != "mp4"){
+        return json_encode(['status'=>-1,'msg'=>'视频文件非mp4格式']);
+    }
    $info = $file->move(ROOT_PATH . 'public' . $movepath);
    if($info){
        $fileurl = $path.strtr($info->getSaveName(),"\\","/");

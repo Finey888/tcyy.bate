@@ -254,6 +254,7 @@ create table tccybate.tcyy_courses_user
    btimes               int(11) default 0 comment '购买时间',
    multiinfo            varchar(500) comment '单集、多集(记录视频编号逗号隔开)、全部',
    amounts              decimal(8,2) comment '支付价格',
+   withdraw             int(11) DEFAULT 0 comment '提现状态 0-未提现 1-已提现',
    primary key (id)
 );
 
@@ -275,6 +276,7 @@ create table tccybate.tcyy_courses_videos
    episodes             int(11) comment '集数',
    ctime                int(11) comment '创建时间',
    isdel                int(11) default 0 comment '0-未删除 1-已删除',
+   previews             VARCHAR(500) COMMENT '预览图',
    primary key (id)
 );
 

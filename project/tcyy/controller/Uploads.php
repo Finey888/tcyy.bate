@@ -31,7 +31,7 @@ class Uploads extends Common
                 break;
             case 3:
                 //病例秀
-                $this->cases($files);
+                $this->cases($files,$get['filetype']);
                 break;
             case 4:
                 //项目用户头像
@@ -44,7 +44,11 @@ class Uploads extends Common
             case 6:
                 //用户自定义图片
                 $this->picture($files);
-                break;    
+                break;
+            case 7:
+                //招聘
+                $this->recruit($files);
+                break;
         }
         
     }
@@ -97,10 +101,15 @@ class Uploads extends Common
     /**
      * @上传病例秀
      */
-    private function cases($tmp_name){
+    private function cases($tmp_name,$filetype){
         $returnImg=[];
+        if($filetype == 1){
+            $filename = 'images';
+        }elseif($filetype == 2){
+            $filename = 'videos';
+        }
         foreach($tmp_name as $tk=>$tv){
-            $return = uploadImg($tv,'/cases/'.$this->userData->id.'/');
+            $return = uploadImg($tv,'/cases/'.$this->userData->id.'/'.$filename.'/',$filename);
             $data = json_decode($return,true);
             if($data['status'] == -1){
                 returnAjax([],$data['msg'],2);
@@ -137,11 +146,9 @@ class Uploads extends Common
             $filename = 'images';
         }elseif($filetype == 2){
             $filename = 'videos';
-        }else{
-            $filename = 'audios';
         }
         foreach($tmp_name as $tk=>$tv){
-            $return = uploadImg($tv,'/curriculum/'.$filename.'/');
+            $return = uploadImg($tv,'/curriculum/'.$filename.'/',$filename);
             $data = json_decode($return,true);
             
             if($data['status'] == -1){
@@ -163,6 +170,25 @@ class Uploads extends Common
             $return = uploadImg($tv,'/picture/'.$filename.'/');
             $data = json_decode($return,true);
             
+            if($data['status'] == -1){
+                returnAjax([],$data['msg'],2);
+            }else{
+                $returnImg[]=['saveUrl'=>$data['data'],'showUrl'=>$_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].$data['data']];
+            }
+        }
+        returnAjax($returnImg,'上传成功！',1);
+    }
+
+    /**
+     * @招聘图片
+     */
+    private function recruit($tmp_name){
+        $returnImg=[];
+        $filename = 'images';
+        foreach($tmp_name as $tk=>$tv){
+            $return = uploadImg($tv,'/recruit/'.$filename.'/');
+            $data = json_decode($return,true);
+
             if($data['status'] == -1){
                 returnAjax([],$data['msg'],2);
             }else{
