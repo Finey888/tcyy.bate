@@ -2,19 +2,14 @@
 namespace app\tcyy\model;
 
 use think\Db;
-use think\Model;
 
-class CoursesUser extends Model {
+class CoursesUser extends Common {
 
     protected $name = 'courses_user';
-
-    //自定义初始化
-//    protected function initialize()
-//    {
-//        //需要调用`Model`的`initialize`方法
-//        parent::initialize();
-//        $this->_collection = Db::name($this->name);
-//    }
+    //类型转换
+    protected $type = [
+        'btimes' => 'timestamp:Y-m-d H:i:s'
+    ];
     public function __construct($data = [])
     {
         parent::__construct($data);
@@ -27,7 +22,7 @@ class CoursesUser extends Model {
             'uid' => $param
         ];
 
-        $data = $this::where($where) -> field('id,FROM_UNIXTIME(btimes) as btimes,multiinfo,amounts') -> page($page.','.$count)->order($sort)->select();
+        $data = $this::where($where) -> field('id,btimes,multiinfo,amounts') -> page($page.','.$count)->order($sort)->select();
         return empty($data)?[]:$data->toArray();
     }
 
@@ -38,14 +33,14 @@ class CoursesUser extends Model {
             ->alias('cu')
             ->where($where)
             ->join('tcyy_courses c', ' c.id = cu.cid ', 'left')
-            ->field('cu.id,cu.cid,cu.uid,FROM_UNIXTIME(cu.btimes) as btimes,cu.multiinfo,cu.amounts ')->page($page.','.$count)->order($sort)->select();
+            ->field('cu.id,cu.cid,cu.uid,cu.btimes,cu.multiinfo,cu.amounts ')->page($page.','.$count)->order($sort)->select();
         return empty($data)?[]:$data->toArray();
 //        return $this::where($where) -> field('') ->select();
     }
 
     //支付成功后保存购买课程视频记录
     public function saveCoureseByUserPaid($data){
-        $rtn = $this::save($data);
+        $rtn = $this::allowField(true)->save($data);
         $errors = $this::getError();
         return empty( $errors) ? ['status' => 1,'data' => $this['id']] : ['status' => 2,'msg' => $errors];
     }

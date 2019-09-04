@@ -289,6 +289,7 @@ create table tccybate.tcyy_courses_watch_log
 (
    id                   int(11) not null auto_increment,
    uid                  int(11) not null comment '用户编号',
+   cid                  int(11) not null comment '课程编号',
    vid                  int(11) not null comment '课程视频编号',
    vtime                int(11) not null comment '观看时间',
    primary key (id)

@@ -21,6 +21,7 @@ class Coursesvideos extends Common {
     public function storageViewVideoRecord(){
         $get = input('post.');
         $vid = $get['vid'];
+        $cid = $get['cid'];
         $vtime = strtotime(date('Y-m-d',time()));
         $uid = $this -> userData -> id;
         $where= ['uid' => $uid,'vtime'=>$vtime];
@@ -31,6 +32,7 @@ class Coursesvideos extends Common {
             $data['vid'] = $vid;
             $data['vtime'] = $vtime;
             $data['uid']=$uid;
+            $data['cid']=$cid;
             $this -> logModel -> saveWatchLog($data);
 
             $this -> videoModel -> updateVideoById($vid);
