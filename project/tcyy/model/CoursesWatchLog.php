@@ -25,8 +25,8 @@ class CoursesWatchLog extends Common {
     }
 
     //保存观看日志信息
-    public function saveWatchLog($data){
-        return $this::allowField(true)->save($data);
+    public function saveWatchLog($data,$where=[]){
+        return $this::allowField(true)->save($data,$where);
     }
 
     /**
@@ -35,6 +35,6 @@ class CoursesWatchLog extends Common {
      * @return int|string
      */
     public function existViewByDate($where){
-        return $this::where($where) -> field('id,vid,vtime') ->count();
+        return $this::where($where) -> field('id,vid,vtime') -> find();
     }
 }	

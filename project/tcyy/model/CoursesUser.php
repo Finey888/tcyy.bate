@@ -17,13 +17,15 @@ class CoursesUser extends Common {
     }
 
 	//获取当前用户购买列表
-    public function getBuyerHistoryListByCondition($page,$count,$param,$sort=[' btimes desc ']){
+    public function getBuyerHistoryListByCondition($page,$count,$param,$sort=[' cu.cid desc ']){
         $where = [
-            'uid' => $param
+            'cu.uid' => $param
         ];
 
-        $data = $this::where($where) -> field('id,btimes,multiinfo,amounts') -> page($page.','.$count)->order($sort)->select();
-        return empty($data)?[]:$data->toArray();
+        $data = $this -> _collection  ->alias('cu') -> where($where) -> join('tcyy_courses c','c.id = cu.cid','inner')->
+        field('GROUP_CONCAT(cu.multiinfo) as multiinfo,cu.cid,c.title') -> page($page.','.$count)
+            ->group('cu.uid,cu.cid')->order($sort)->select();
+        return empty($data)?[]:$data;
     }
 
     //用户售卖记录列表
@@ -32,9 +34,9 @@ class CoursesUser extends Common {
         $data = $this ->_collection
             ->alias('cu')
             ->where($where)
-            ->join('tcyy_courses c', ' c.id = cu.cid ', 'left')
-            ->field('cu.id,cu.cid,cu.uid,cu.btimes,cu.multiinfo,cu.amounts ')->page($page.','.$count)->order($sort)->select();
-        return empty($data)?[]:$data->toArray();
+            ->join('tcyy_courses c', ' c.id = cu.cid ', 'inner')
+            ->field('cu.id,cu.cid,cu.uid,DATE_FORMAT(FROM_UNIXTIME(cu.btimes),\'%Y-%m-%d %h:%i:%s\') as btimes,cu.multiinfo,cu.amounts ')->page($page.','.$count)->order($sort)->select();
+        return empty($data)?[]:$data;
 //        return $this::where($where) -> field('') ->select();
     }
 
@@ -61,5 +63,15 @@ class CoursesUser extends Common {
     //根据课程编号获取购买者数量
     public function getBuyerNumByVid($vid){
         return $this -> where(['find_in_set('. $vid .',multiinfo']) -> count();
+    }
+
+    public function getWithdrawStatInfo($uid){
+        $where = ['a.withdraw' => 0,'a.uid' => $uid];
+        $data = $this ->_collection
+            ->alias('a')
+            ->where($where)
+            ->join('tcyy_courses_user b', ' a.id = b.id and b.withdraw=1 ', 'left')
+            ->field('sum(a.amounts) as nonwithdraw,sum(b.amounts) as withdrawed ') -> find();
+        return empty($data)?[]:$data;
     }
 }

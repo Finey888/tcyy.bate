@@ -22,13 +22,14 @@ class Coursesvideos extends Common {
         $get = input('post.');
         $vid = $get['vid'];
         $cid = $get['cid'];
-        $vtime = strtotime(date('Y-m-d',time()));
+        $condTime = date('Y-m-d',time());
+        $vtime = strtotime(date('Y-m-d H:i:s',time())) ;
         $uid = $this -> userData -> id;
-        $where= ['uid' => $uid,'vtime'=>$vtime];
+        $where= ['uid' => $uid,'DATE_FORMAT(FROM_UNIXTIME(vtime),\'%Y-%m-%d\')' => $condTime,'vid' => $vid];
         $existCurVideos = $this -> videoModel -> existsUserVideos($uid,$vid);
-        if($existCurVideos > 0) returnAjax([],'该视频为当前用户发布,无需记录',1);
-        $existNum = $this -> logModel ->existViewByDate($where);
-        if($existNum == 0){
+        if($existCurVideos > 0) returnAjax([],'该视频为当前用户发布,无需记录',2);
+        $existLog = $this -> logModel ->existViewByDate($where);
+        if(empty($existLog['id'])){
             $data['vid'] = $vid;
             $data['vtime'] = $vtime;
             $data['uid']=$uid;
@@ -37,6 +38,9 @@ class Coursesvideos extends Common {
 
             $this -> videoModel -> updateVideoById($vid);
             returnAjax([],'记录成功',1);
+        }else{
+            $data['vtime'] = $vtime;
+            $this -> logModel -> saveWatchLog($data,['id'=>$existLog['id']]);
         }
         returnAjax([],'记录成功',1);
     }
@@ -57,7 +61,7 @@ class Coursesvideos extends Common {
         $get = input('post.');
         $vid = $get['vid'];
         $cid = $get['cid'];
-        if(empty($ids)){
+        if(empty($vid)){
             returnAjax([],'缺少参数',2);
         }
         $num = $this -> courseUser -> getBuyerNumByVid($vid);

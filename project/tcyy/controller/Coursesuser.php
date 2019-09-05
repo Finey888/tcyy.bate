@@ -51,4 +51,15 @@ class Coursesuser extends Common {
         }
         returnAjax([], '记录成功',1);
     }
+
+    //根据当前登录用户获取统计提现情况
+    public function getWithdrawStatByCurrentUser(){
+        $get = input('post.');
+        $uid = $this->userData->id;
+        $result = $this -> model -> getWithdrawStatInfo($uid);
+        returnAjax($result,'获取成功',1);
+        exit();
+
+
+    }
 }
