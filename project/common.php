@@ -22,7 +22,7 @@ function uploadImg($file,$path,$name=''){
    $movepath = strtr($path,"/","\\");
    $movepath = substr($movepath,0,strlen($movepath)-1);
    $fileExt = $file -> getExtension();
-    if($name == 'videos' && $fileExt != "mp4"){
+    if($name == 'videos' && !strcasecmp($fileExt, "mp4") == 0){
         return json_encode(['status'=>-1,'msg'=>'视频文件非mp4格式']);
     }
    $info = $file->move(ROOT_PATH . 'public' . $movepath);

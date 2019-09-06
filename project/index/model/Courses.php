@@ -34,4 +34,25 @@ class Courses extends Common {
     public function getCourseInfoById($id){
         return $this->where(['id'=>$id])->find();
     }
+
+    public function getCoursesOrdersList($page,$count,$where){
+        $data = $this -> alias("c")
+            -> join('tcyy_courses_user cu','c.id = cu.cid')
+            -> where($where)
+            -> field('cu.id,c.title,u.nickname as publisher,DATE_FORMAT(FROM_UNIXTIME(cu.btimes),\'%Y-%m-%d %h:%i:%s\') as btimes,cu.cid,cu.multiinfo,cu.amounts,u1.nickname as buyer,cu.withdraw')
+            -> join("tcyy_user_info u","u.uid=c.uid")
+            -> join("tcyy_user_info u1","u1.uid=cu.uid")
+            -> page($page.','.$count)
+            -> order('cu.btimes desc')
+            -> select();
+
+        return empty($data)?[]:$data->toArray();
+    }
+
+    public function getOrdersCount($where){
+        return  $this -> alias("c")
+            -> join('tcyy_courses_user cu','c.id = cu.cid','inner')
+            -> where($where)
+            -> count();
+    }
 }	

@@ -35,7 +35,7 @@ class CoursesUser extends Common {
             ->alias('cu')
             ->where($where)
             ->join('tcyy_courses c', ' c.id = cu.cid ', 'inner')
-            ->field('cu.id,cu.cid,cu.uid,DATE_FORMAT(FROM_UNIXTIME(cu.btimes),\'%Y-%m-%d %h:%i:%s\') as btimes,cu.multiinfo,cu.amounts ')->page($page.','.$count)->order($sort)->select();
+            ->field('cu.id,cu.cid,cu.uid,DATE_FORMAT(FROM_UNIXTIME(cu.btimes),\'%Y-%m-%d %h:%i:%s\') as btimes,cu.multiinfo,cu.amounts,c.title,cu.withdraw ')->page($page.','.$count)->order($sort)->select();
         return empty($data)?[]:$data;
 //        return $this::where($where) -> field('') ->select();
     }
@@ -66,12 +66,13 @@ class CoursesUser extends Common {
     }
 
     public function getWithdrawStatInfo($uid){
-        $where = ['a.withdraw' => 0,'a.uid' => $uid];
-        $data = $this ->_collection
-            ->alias('a')
-            ->where($where)
-            ->join('tcyy_courses_user b', ' a.id = b.id and b.withdraw=1 ', 'left')
-            ->field('sum(a.amounts) as nonwithdraw,sum(b.amounts) as withdrawed ') -> find();
+        $where = ['a.withdraw' => 0,'c.uid' => $uid];
+        $data = $this -> _collection
+            -> alias('a')
+            -> where($where)
+            -> join('tcyy_courses c', ' c.id = a.cid ', 'left')
+            -> join('tcyy_courses_user b', ' a.id = b.id and b.withdraw=1 ', 'left')
+            -> field('c.uid,IFNULL(sum(a.amounts),0) as nonwithdraw,IFNULL(sum(b.amounts),0) as withdrawed ') -> find();
         return empty($data)?[]:$data;
     }
 }

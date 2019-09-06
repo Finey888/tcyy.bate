@@ -1,0 +1,187 @@
+{layout name="Public/layout" /}
+<body class="childrenBody">
+<blockquote class="layui-elem-quote news_search">
+	<form id="searchForm" action="{:url('Courses/ordersList')}" method="get">
+		<div class="layui-inline">
+
+			<div class="layui-input-inline">
+				<input type="text" id="publisher" name='publisher' placeholder="请输入发布者名称" class="layui-input search_input" value="{:input('param.publisher')}">
+			</div>
+			<div class="layui-input-inline">
+				<input type="text" id="c_title" name='c_title' placeholder="请输入课程名称" class="layui-input search_input" value="{:input('param.c_title')}">
+			</div>
+			<div class="layui-inline layui-form">
+			<select lay-filter="browseLook" id="o_withdraw" name='o_withdraw'>
+				<option value="-1" {eq name=":input('param.o_withdraw')" value='-1'}selected = "selected"{/eq}>全部</option>
+				<option value="0" {eq name=":input('param.o_withdraw')" value='0'}selected = "selected"{/eq}>未提现</option>
+				<option value="1" {eq name=":input('param.o_withdraw')" value='1'}selected = "selected"{/eq}>已提现</option>
+			</select>
+		</div>
+
+			<a class="layui-btn search_btn" href="javascript:;" id="search">查询 </a>
+		</div>
+		<div class="layui-inline">
+			<!--			<a class="layui-btn layui-btn-normal newsAdd_btn">添加区域</a>-->
+		</div>
+		<div class="layui-inline">
+			<div class="layui-form-mid layui-word-aux">本页面刷新后除新添加的外所有操作无效，关闭页面所有数据重置</div>
+		</div>
+	</form>
+</blockquote>
+<div class="layui-form news_list">
+	<table class="layui-table">
+		<colgroup>
+			<col width="5%">
+			<col width="9%">
+			<col width="8%">
+			<col width="8%">
+			<col width="6%">
+			<col width="9%">
+			<col width="9%">
+			<col width="9%">
+			<col width="9%">
+			<col>
+		</colgroup>
+		<thead>
+		<tr>
+			<th>序号</th>
+			<th>订单时间</th>
+			<th>购买课程</th>
+			<th>课程发布者</th>
+			<th>购买人</th>
+			<th>购买集数</th>
+			<th>支付金额</th>
+			<th>订单状态</th>
+			<th>操作</th>
+		</tr>
+		</thead>
+		<tbody class="orders_content"></tbody>
+	</table>
+</div>
+<div id="page"></div>
+<script type="text/javascript">
+	var dataUrl = "{:url('Courses/queryCoursesOrdersList')}";
+	layui.config({
+		base : "admin/js/"
+	}).use(['form','layer','jquery','laypage'],function(){
+		var form = layui.form(),
+				layer = parent.layer === undefined ? layui.layer : parent.layer,
+				laypage = layui.laypage,
+				$ = layui.jquery;
+		var nums = 10; //每页出现的数据量
+		var countPage = parseInt("{$countPage}");//总页数
+		var newsData = '';
+		//加载页面数据
+		newsList();
+
+        //提现操作
+        $("body").on("click",".withdrawOp",function(){
+            var id = $(this).attr('data-id');
+            var _this = $(this);
+            layer.confirm('确认提现吗?',{icon:3, title:'提示信息'},function(index){
+                $.ajax({
+                    type: "POST",
+                    url: "{:url('Courses/withdrawOperation')}",
+                    data: {id:id},
+                    dataType: "json",
+                    success: function(data){
+                        if(data.status == 1){
+                            layer.close(index);
+                            layer.msg(data.msg, {icon: 6});newsList();
+                        }else{
+                            layer.close(index);
+                            layer.msg(data.msg, {
+                                icon: 5
+                                ,btn: ['知道了']
+                            });
+                        }
+                    }
+                });
+
+            });
+        })
+
+		function newsList(that){
+			//渲染数据
+			function renderDate(data){
+				var dataHtml = '';
+				if(data.length != 0){
+					var i=0;
+					$.each(data,function(index,content){
+						i += 1;
+
+						if(content.withdraw == '1') {
+                            st = '-';
+                        }else{
+							st = '<a class="layui-btn layui-btn-mini layui-btn-normal withdrawOp" data-id="' + content.id + '"><i class="iconfont icon-edit"></i> 提现</a>'
+						}
+
+						if(content.withdraw == '0'){
+							content.withdraw = '未提现';
+						}else{
+							content.withdraw = '已提现';
+						}
+
+						dataHtml += '<tr>'
+								 + '<td>' + i + '</td>'
+								 + '<td>' + content.btimes + '</td>'
+								 + '<td>' + content.title + '</td>'
+							     + '<td>' + JSON.parse(content.publisher) + '</td>'
+						         + '<td>' + JSON.parse(content.buyer) + '</td>'
+								 + '<td>' + content.multiinfo + '</td>'
+								 + '<td>' + content.amounts + '</td>'
+								 + '<td>' + content.withdraw + '</td>'
+								 + '<td>'
+								 +   st
+								 + '</td>'
+								 + '</tr>';
+					});
+				}else{
+					dataHtml = '<tr><td colspan="12" align="center">暂无数据</td></tr>';
+				}
+				return dataHtml;
+			}
+
+			if(that){
+				newsData = that;
+			}
+
+			page();
+			function page(){
+				laypage({
+					cont : "page",
+					pages : Math.ceil(countPage/nums),
+					skip:true,
+					jump : function(obj){
+						var loadIndex = layer.load(2);
+						$.ajax({
+							type: "GET",
+							url: dataUrl,
+							data: {page:obj.curr,count:nums,o_withdraw:$('#o_withdraw').val(),c_title:$('#c_title').val(),publisher:$('#publisher').val()},
+							dataType: "json",
+							success: function(data){
+								if(data.status == 1){
+									//正常加载信息
+									countPage = data.pagecount;
+									newsData = data.data;
+									$(".orders_content").html(renderDate(newsData));
+									form.render();
+								}else{
+									layer.msg(data.msg);
+								}
+								layer.close(loadIndex);
+							}
+						});
+					}
+				})
+			}
+		}
+
+
+		$('#search').click(function(){
+			$('#searchForm').submit();
+		})
+	})
+</script>
+</body>
+</html>
