@@ -1,7 +1,7 @@
 {layout name="Public/layout" /}
 <body class="childrenBody">
 	<div class="row">
-        <div class="col" style='width: 20%; float: left'>
+        <div class="col" style='width: 30%; float: left'>
             <blockquote class="layui-elem-quote title">课程基础信息</blockquote>
             <div class="layui-elem-quote layui-quote-nm">
                 <table class="layui-table">
@@ -30,39 +30,68 @@
                 </table>
             </div>
         </div>
-		<div class="col" style='width: 40%;float: left'>
+		<div class="col" style='width: 70%;float: left'>
 			<blockquote class="layui-elem-quote title">课程视频列表</blockquote>
 			<table class="layui-table">
 				<colgroup>
-                    <col width="10%">
-					<col width="20%">
-					<col width="20%">
-					<col width="20%">
-					<col width="10%">
-					<col width="60%">
+                    <col>
+					<col>
+					<col>
+					<col>
+                    <col>                    
+					<col>
 				</colgroup>
                 <thead>
                     <th>编号</th>
                     <th>标题</th>
-                    <th>描述</th>
                     <th>阅读量</th>
                     <th>集数</th>
-                    <th>url地址</th>
+                    <th>封面图</th>
+                    <th>视频</th>
                 </thead>
 				<tbody>
                 {volist name='vData' id='dt'}
                 <tr class="success">
                     <td>{$dt.id}</td>
                     <td>{$dt.title}</td>
-                    <td>{$dt.contents}</td>
                     <td>{$dt.views}</td>
                     <td>{$dt.episodes}</td>
-                    <td>{$dt.urls}</td>
+                    <td><img style="width:50px;" src="{$dt.previews}" /></td>
+                    <td>
+                        <a class="layui-btn layui-btn-danger layui-btn-mini news_player" data-url="$dt.urls"><i class="layui-icon">&#xe652;</i>播放</a>
+                    </td>
                 </tr> 
                 {/volist}
 				</tbody>
 			</table>
 		</div>
-	</div>
+    </div>
+    <script type="text/javascript">
+        layui.config({
+            base : "admin/js/"
+        }).use(['form','layer','jquery','laypage'],function(){
+            var $ = layui.jquery,
+            layer = parent.layer === undefined ? layui.layer : parent.layer;
+
+            $("body").on("click", ".news_player", function(){
+                var videourl = $(this).attr('data-url');
+                layer.open({
+                    type: 1,
+                    area: ['854px', '505px'],
+                    shade: 0.6, //点击遮罩关闭
+                    shift:0,
+                    title:'播放',
+                    content: '<div style="margin-top:-25px;" id="video">' +
+                    '<video class="video-js vjs-default-skin" src="'+videourl+'" controls="controls" preload="auto" width="854px" height="480px" data-setup="{}">' +
+                    '<source src="'+videourl+'" type="video/mp4" />' +
+                    '<source src="'+videourl+'" type="video/webm" />' +
+                    '<source src="'+videourl+'" type="video/ogg" />' +
+                    '</video>' +
+                    '</div>'
+                });
+            });
+        });
+        
+    </script>
 </body>
 </html>
