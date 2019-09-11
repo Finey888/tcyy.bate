@@ -20,7 +20,7 @@ class CoursesVideos extends Common {
             'cid' => $param//,
             //'status' => '1'
         ];
-        $data = $this :: where($where) -> field('id,title,prices,contents,urls,episodes,views,ctime') ->select();
+        $data = $this :: where($where) -> field('id,title,prices,contents,urls,episodes,previews,views,ctime') ->select();
         return $data -> toArray();
     }
 
