@@ -95,7 +95,7 @@ class Courses extends Common {
             $where['c.title'] = ['like', '%'.$get['c_title'].'%'];
         }
         //订单状态
-        if(!empty($get['o_withdraw']) && ($get['o_withdraw'] != '-')){
+        if($get['o_withdraw'] != '-'){
             $where['cu.withdraw'] = ['eq', $get['o_withdraw']];
         }
 
