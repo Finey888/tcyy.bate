@@ -10,9 +10,9 @@
 			<div class="layui-input-inline">
 				<input type="text" id="c_title" name='c_title' placeholder="请输入课程名称" class="layui-input search_input" value="{:input('param.c_title')}">
 			</div>
-			<div class="layui-inline layui-form">
+			<div class="layui-input-inline layui-form">
 			<select lay-filter="browseLook" id="o_withdraw" name='o_withdraw'>
-				<option value="-1" {eq name=":input('param.o_withdraw')" value='-1'}selected = "selected"{/eq}>全部</option>
+				<option value="-" {eq name=":input('param.o_withdraw')" value=''}selected = "selected"{/eq}>全部</option>
 				<option value="0" {eq name=":input('param.o_withdraw')" value='0'}selected = "selected"{/eq}>未提现</option>
 				<option value="1" {eq name=":input('param.o_withdraw')" value='1'}selected = "selected"{/eq}>已提现</option>
 			</select>
@@ -122,19 +122,30 @@
 							content.withdraw = '已提现';
 						}
 
-						dataHtml += '<tr>'
-								 + '<td>' + i + '</td>'
-								 + '<td>' + content.btimes + '</td>'
-								 + '<td>' + content.title + '</td>'
-							     + '<td>' + JSON.parse(content.publisher) + '</td>'
-						         + '<td>' + JSON.parse(content.buyer) + '</td>'
-								 + '<td>' + content.multiinfo + '</td>'
-								 + '<td>' + content.amounts + '</td>'
-								 + '<td>' + content.withdraw + '</td>'
-								 + '<td>'
-								 +   st
-								 + '</td>'
-								 + '</tr>';
+                        publisher = content.publisher;
+                        buyer = content.buyer;
+
+                        if(publisher.search("\\u") != -1){
+                            publisher =	JSON.parse(publisher);
+                        }
+
+                        if(buyer.search("\\u") != -1){
+                            buyer = JSON.parse(buyer);
+                        }
+
+                        dataHtml += '<tr>'
+                            + '<td>' + i + '</td>'
+                            + '<td>' + content.btimes + '</td>'
+                            + '<td>' + content.title + '</td>'
+                            + '<td>' + publisher + '</td>'
+                            + '<td>' + buyer + '</td>'
+                            + '<td>' + content.multiinfo + '</td>'
+                            + '<td>' + content.amounts + '</td>'
+                            + '<td>' + content.withdraw + '</td>'
+                            + '<td>'
+                            +   st
+                            + '</td>'
+                            + '</tr>';
 					});
 				}else{
 					dataHtml = '<tr><td colspan="12" align="center">暂无数据</td></tr>';
