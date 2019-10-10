@@ -31,10 +31,10 @@ class Paycallback extends Base
                 }
         }
        
-	$payModel = new \app\tcyy\model\Pay();
+	    $payModel = new \app\tcyy\model\Pay();
         $datauser = $payModel->getDataByTrade($data['out_trade_no']);
         
-        if($datauser['paytype']!=1){
+        if($datauser['paytype'] != 1){
             $datareturn['return_code'] = 'SUCCESS';
             $datareturn['return_msg'] = 'OK';
             echo $this->data_to_xml( $data );
@@ -46,7 +46,7 @@ class Paycallback extends Base
             $this->rechargeVip($datauser['uid'], $datauser['vip_id']);
         }else{
             //充值课堂
-            $this->curriculum($datauser['uid'], $datauser['vip_id']);
+            $this->curriculum($datauser);
         }
         
         //修改充值记录
@@ -108,20 +108,27 @@ class Paycallback extends Base
    }
    
    /**
-    * @充值课堂
-    * uid 用户ID
-    * id 课堂ID
+    * 购买课程
+    * @payData 支付成功通知,支付实体信息
     */
-   private function curriculum($uid,$id){
-       $CurriculumUserMode = new \app\tcyy\model\CurriculumUser();
-       $CurriculumUserMode->saveData($uid,$id);
+   private function curriculum($payData){
+       $coursesUserModel = new \app\tcyy\model\CoursesUser();
        
-       $CurriculumModel = new \app\tcyy\model\Curriculum();
-       $data = $CurriculumModel->getDataById($id);
-       
+       $coursesModel = new \app\tcyy\model\Courses();
+
+       $data['cid'] = $payData['vip_id'];
+       $data['uid'] = $payData['uid'];
+       $data['multiinfo'] = $payData['body'];
+       $data['amounts'] = $payData['price'];
+       $data['btimes'] = strtotime(date('Y-m-d H-i-s',time()));
+
+       $coursesUserModel->saveCoureseByUserPaid($data);
+
+       $data = $coursesModel -> getInfoById($data['cid']);
+
         //插入消息库
         $mesModel = new \app\tcyy\model\Message();
-        $mesModel->addData('恭喜购买课程成功', 1, $uid,'','成功购买课程《 '.$data['title']."》",'');
+        $mesModel->addData('恭喜购买课程成功', 1, $data['uid'],'','成功购买课程《' . $data['title'] . ‘》’ .$payData['body'] . ' 集视频','');
    }
    
 }

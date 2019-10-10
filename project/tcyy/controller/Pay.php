@@ -25,7 +25,7 @@ class Pay extends Base
             $title = '充值会员';
             $sn = $return['vipData']['out_trade_no'];
         }else{
-            //充值课堂
+            //购买课堂
             $return = $this->payCurriculum($data);
             $price = $return['curriculumData']['price']*100;
             $title = '购买课程';
@@ -119,32 +119,29 @@ class Pay extends Base
    
    //充值课堂
    private function payCurriculum($data){
-       //获取课程价格
-       $curriculumModel = new \app\tcyy\model\Curriculum();
-       $curriculumData = $curriculumModel->getDataById($data['id']);
-       
+
         //生成本地账单号
         $payModel = new \app\tcyy\model\Pay();
         $payData = $payModel->getDataFind();
         $sn = 'No'.date('YmdHis',  time()).($payData['id']+1);
         
         $parm = array(
-            'datatype'=>2,//1.会员支付   2.课堂购买
-            'type'=>1,//1.微信支付
-            'title'=>'购买课堂',
+            'datatype'=>2,                      //1.会员支付   2.课程购买
+            'type'=>1,                          //1.微信支付
+            'title'=>'课程购买',
             'uid'=>$data['userid'],
             'order_sn'=>$sn,
-            'appid'=>'wx0ee582c9c218e1c1',//调用接口提交的应用ID
-            'mch_id'=>'1409315202',//商户ID
-            'body'=>'购买会员',//商品描述
-            'out_trade_no'=>$sn,//out_trade_no
-            'spbill_create_ip'=>$this->getIP(),// 终端IP
-            'createtime'=>time(),//交易其实时间
-            'notify_url'=>'回调地址',//商品价格 分
-            'trade_type'=>'APP',//商品价格 分
-            'paytype'=>1,//1.未支付
-            'vip_id'=>$data['id'],
-            'price'=>$curriculumData['price']
+            'appid'=>'wx0ee582c9c218e1c1',      //调用接口提交的应用ID
+            'mch_id'=>'1409315202',             //商户ID
+            'body'=> $data['multiinfo'],        //视频编号信息
+            'out_trade_no'=>$sn,                //out_trade_no
+            'spbill_create_ip'=>$this->getIP(), //终端IP
+            'createtime'=>time(),               //交易起始时间
+            'notify_url'=>'回调地址',            //通知地址
+            'trade_type'=>'APP',                //交易类型
+            'paytype'=>1,                       //1.未支付
+            'vip_id'=>$data['cid'],
+            'price'=>$data['price']
         );
         
         //生成订单
