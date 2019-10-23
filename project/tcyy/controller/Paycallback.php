@@ -40,7 +40,7 @@ class Paycallback extends Base
             echo $this->data_to_xml( $data );
             die();
         }
-        
+
         if($datauser['datatype'] == 1){
             //充值会员
             $this->rechargeVip($datauser['uid'], $datauser['vip_id']);
@@ -120,7 +120,7 @@ class Paycallback extends Base
        $data['uid'] = $payData['uid'];
        $data['multiinfo'] = $payData['body'];
        $data['amounts'] = $payData['price'];
-       $data['btimes'] = strtotime(date('Y-m-d H-i-s',time()));
+       $data['btimes'] = time();
 
        $coursesUserModel->saveCoureseByUserPaid($data);
 
@@ -128,7 +128,7 @@ class Paycallback extends Base
 
         //插入消息库
         $mesModel = new \app\tcyy\model\Message();
-        $mesModel->addData('恭喜购买课程成功', 1, $data['uid'],'','成功购买课程《' . $data['title'] . ‘》’ .$payData['body'] . ' 集视频','');
+        $mesModel->addData('恭喜购买课程成功', 1, $data['uid'],'','成功购买课程为-' . $data['title'] .'-' .$payData['body'] . ' 集视频',$payData['id']);
    }
    
 }
