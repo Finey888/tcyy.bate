@@ -128,13 +128,24 @@
 							content.ctype = '多集';
 						}
 
+                        publisher = content.nickname;
+//                        if(publisher.search("\\u") != -1){
+//                            publisher =	JSON.parse(publisher);
+//                        }
+
+                        try{
+                            publisher =	JSON.parse(content.nickname);
+						}catch(e){
+                            console.clear();
+						}
+
 						dataHtml += '<tr>'
 								 + '<td>' + i + '</td>'
 								 + '<td>' + content.title + '</td>'
 								 + '<td>' + content.contents + '</td>'
 								 + '<td>' + content.ctype + '</td>'
 								 + '<td>' + content.price + '</td>'
-                            	 + '<td>' + JSON.parse(content.nickname) + '</td>'
+                            	 + '<td>' + publisher + '</td>'
 								 + '<td>' + content.creattime + '</td>'
 								 + '<td>' + content.gtitle + '</td>'
 								 + '<td>'

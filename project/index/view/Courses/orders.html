@@ -125,13 +125,19 @@
                         publisher = content.publisher;
                         buyer = content.buyer;
 
-                        if(publisher.search("\\u") != -1){
-                            publisher =	JSON.parse(publisher);
-                        }
+//                        if(publisher.search("\\u") != -1){
+//                            publisher =	JSON.parse(publisher);
+//                        }
 
-                        if(buyer.search("\\u") != -1){
-                            buyer = JSON.parse(buyer);
-                        }
+						try{
+                            publisher =	JSON.parse(publisher);
+                          	buyer = JSON.parse(buyer);
+						}catch(e){
+                            console.clear();
+						}
+//                        if(buyer.search("\\u") != -1){
+//                            buyer = JSON.parse(buyer);
+//                        }
 
                         dataHtml += '<tr>'
                             + '<td>' + i + '</td>'
